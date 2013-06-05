@@ -1,0 +1,1 @@
+-- The GetFileName was reading up to 128 characters. Now is reading up to 1028.
