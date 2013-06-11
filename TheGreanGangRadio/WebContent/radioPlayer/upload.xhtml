@@ -1,0 +1,17 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:cdgs="http://java.sun.com/jsf/composite/cdgs">
+
+	<h:form enctype="multipart/form-data">
+
+		<p:fileUpload fileUploadListener="#{fileUploadController.upload}"
+			 update="messages" multiple="true" />
+
+		<p:growl id="messages" showDetail="true" />
+
+	</h:form>
+</ui:composition>
