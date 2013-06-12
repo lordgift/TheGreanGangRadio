@@ -7,24 +7,20 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	>
-	
+<h:head>
+</h:head>	
 <h:body>
 	<h:form>
-		<f:view>
-
 			<h:outputText value="#{winampBean.prompt}" />
 
-			<h:commandButton value="play" action="#{winampBean.play}">
-				<f:ajax render="textStatus"></f:ajax>
-			</h:commandButton>
+			<p:commandButton value="play" action="#{winampBean.play}" update="textStatus">
+			</p:commandButton>
 			
-			<h:commandButton value="pause" action="#{winampBean.pause}">
-				<f:ajax render="textStatus"></f:ajax>
-			</h:commandButton>
+			<p:commandButton value="pause" action="#{winampBean.pause}" update="textStatus">
+			</p:commandButton>
 
 
 			<h:outputText id="textStatus" value="#{winampBean.textStatus}" />
-		</f:view>
 	</h:form>
 </h:body>
 </html>
