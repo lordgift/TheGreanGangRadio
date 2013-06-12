@@ -11,6 +11,7 @@
 </h:head>	
 <h:body>
 	<h:form>
+	user
 			<h:outputText value="#{winampBean.prompt}" />
 
 			<p:commandButton value="play" action="#{winampBean.play}" update="textStatus">
@@ -21,6 +22,7 @@
 
 
 			<h:outputText id="textStatus" value="#{winampBean.textStatus}" />
+			
 	</h:form>
 </h:body>
 </html>

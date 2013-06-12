@@ -21,9 +21,10 @@ public class LogUtils {
 			// String logFile = "log4j.properties";
 
 			InputStream logStream = LogUtils.class.getClassLoader().getResourceAsStream(logFile);
-
 			log4jProperties.load(logStream);
+			
 			PropertyConfigurator.configure(log4jProperties);
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
