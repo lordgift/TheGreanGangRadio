@@ -1,10 +1,18 @@
 package app.util;
 
-import static com.qotsa.jni.controller.WinampController.*;
+import static com.qotsa.jni.controller.WinampController.getPlayListLength;
+import static com.qotsa.jni.controller.WinampController.pause;
+import static com.qotsa.jni.controller.WinampController.play;
+import static com.qotsa.jni.controller.WinampController.resume;
+import static com.qotsa.jni.controller.WinampController.stop;
+
+import org.apache.log4j.Logger;
 
 import com.qotsa.exception.InvalidHandle;
 
 public class WinampUtils {
+	private static final Logger log = LogUtils.getLogger(WinampUtils.class);
+	
 	private static final String ACTION_STOP = "stop";
 	private static final String ACTION_PAUSE = "pause";
 	private static final String ACTION_RESUME = "resume";
@@ -20,6 +28,8 @@ public class WinampUtils {
 	 * @return String of status of winamp
 	 */
 	public static String playerControl(String event) {
+		log.debug("Enter playerControl : "+event);
+		
 		try {
 			if (ACTION_PLAY.equalsIgnoreCase(event)) {
 				play();

@@ -1,19 +1,14 @@
 package app.managedBean;
 
-import java.util.Map;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 
 import app.util.WinampUtils;
-
-import com.qotsa.exception.InvalidHandle;
-import com.qotsa.jni.controller.WinampController;
 
 @ManagedBean(name = "winampBean")
 @RequestScoped
 public class WinampBean {
+	
 	String textStatus;
 	String prompt;
 
@@ -41,7 +36,7 @@ public class WinampBean {
 		textStatus = WinampUtils.playerControl("play");
 	}
 	public void pause() {
-		textStatus = WinampUtils.playerControl("pause");	
+		textStatus = WinampUtils.playerControl("pause");
 	}
 
 }
