@@ -13,9 +13,7 @@ public class FileUtils {
 	private static final FileUtils INSTANCE = new FileUtils();
 	private static final Logger log = LogUtils.getLogger(FileUtils.class);
 	
-	public static final String ABSOLUTEPATH_MUSIC = "D:/TheGreanGangRadio/music/";
-	private static final String ABSOLUTEPATH_NATIVE_LIB = "D:/TheGreanGangRadio/native lib/";
-	private static final String ABSOLUTEPATH_THE_GREAN_GANG_RADIO = "D:/TheGreanGangRadio/";
+	public static final String ABSOLUTEPATH_THE_GREAN_GANG_RADIO = "D:/TheGreanGangRadio/";
 
 	
 	private FileUtils(){};
@@ -27,27 +25,11 @@ public class FileUtils {
 	public void initialEnvironment() {
 		log.debug("Enter initialEnvironment");
 		
-//		FacesContext fc = 
-//		FaceletContext faceletContext = (FaceletContext) facesContext.getAttributes().get(FaceletContext.FACELET_CONTEXT_KEY); 
-		File file = new File("../");
-		System.out.println(file.getAbsolutePath());
-		
 		//root of TheGreanGangRadio Environment
 		File theGreanGangFolder = new File(ABSOLUTEPATH_THE_GREAN_GANG_RADIO);
 		if(!theGreanGangFolder.exists()) {
-			theGreanGangFolder.mkdir();			
-		}
-		
-		//folder to place wpcom.dll
-		File dllFolder = new File(ABSOLUTEPATH_NATIVE_LIB);
-		if(!dllFolder.exists()) {
-			dllFolder.mkdir();			
-		}
-		
-		//music folder 
-		File musicServerFolder = new File(ABSOLUTEPATH_MUSIC);
-		if(!musicServerFolder.exists()) {
-			musicServerFolder.mkdir();
+			theGreanGangFolder.mkdir();
+			log.debug("path to place music has been created at " + ABSOLUTEPATH_THE_GREAN_GANG_RADIO);
 		}
 		
 		log.debug("Quit initialEnvironment");

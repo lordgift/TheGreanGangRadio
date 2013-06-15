@@ -24,7 +24,7 @@ public class UserController {
 
 	public String getFileName() {
 		
-		List<String> fileList = FileUtils.getInstance().getMusicListFromDirectory(FileUtils.ABSOLUTEPATH_MUSIC);
+		List<String> fileList = FileUtils.getInstance().getMusicListFromDirectory(FileUtils.ABSOLUTEPATH_THE_GREAN_GANG_RADIO);
 		
 		StringBuilder fileName = new StringBuilder();
 		for(int i=0;i<fileList.size();++i)
