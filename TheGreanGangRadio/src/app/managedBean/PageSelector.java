@@ -28,11 +28,11 @@ public class PageSelector {
 		
 		log.debug("Entering IP="+remoteIP);
 		
-		if(IP_LOCALHOST.equals(remoteIP)) {
-			page = PAGE_DJ;
-		} else {
+//		if(IP_LOCALHOST.equals(remoteIP)) {
+//			page = PAGE_DJ;
+//		} else {
 			page = PAGE_USERS;
-		}
+//		}
 		
 		log.debug("forwarding to "+page);
 		return page;

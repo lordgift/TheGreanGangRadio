@@ -5,14 +5,14 @@ import javax.faces.bean.RequestScoped;
 
 import app.util.WinampUtils;
 
-@ManagedBean(name = "winampBean")
+@ManagedBean(name = "djController")
 @RequestScoped
-public class WinampBean {
+public class DjController {
 	
 	String textStatus;
 	String prompt;
 
-	public WinampBean() {
+	public DjController() {
 		this.prompt = "Winamp : ";
 	}
 

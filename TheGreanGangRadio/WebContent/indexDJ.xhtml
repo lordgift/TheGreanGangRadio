@@ -11,16 +11,16 @@
 </h:head>	
 <h:body>
 	<h:form>
-			<h:outputText value="#{winampBean.prompt}" />
+			<h:outputText value="#{djController.prompt}" />
 
-			<p:commandButton value="play" action="#{winampBean.play}" update="textStatus">
+			<p:commandButton value="play" action="#{djController.play}" update="textStatus">
 			</p:commandButton>
 			
-			<p:commandButton value="pause" action="#{winampBean.pause}" update="textStatus">
+			<p:commandButton value="pause" action="#{djController.pause}" update="textStatus">
 			</p:commandButton>
 
 
-			<h:outputText id="textStatus" value="#{winampBean.textStatus}" />
+			<h:outputText id="textStatus" value="#{djController.textStatus}" />
 			
 	</h:form>
 </h:body>

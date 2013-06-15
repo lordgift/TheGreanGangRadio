@@ -11,18 +11,14 @@
 </h:head>	
 <h:body>
 	<h:form>
-	user
-			<h:outputText value="#{winampBean.prompt}" />
+    <p:fileUpload fileUploadListener="#{userController.handleFileUpload}"
+            mode="advanced" 
+            update="messages"            
+            allowTypes="/(\.|\/)(mp3|flac)$/" />
 
-			<p:commandButton value="play" action="#{winampBean.play}" update="textStatus">
-			</p:commandButton>
-			
-			<p:commandButton value="pause" action="#{winampBean.pause}" update="textStatus">
-			</p:commandButton>
-
-
-			<h:outputText id="textStatus" value="#{winampBean.textStatus}" />
-			
+    <p:growl id="messages" showDetail="true"/>
+    
+	<h:outputText id="fileName" value="#{userController.fileName}" />		
 	</h:form>
 </h:body>
 </html>
