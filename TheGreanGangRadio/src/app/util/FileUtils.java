@@ -48,19 +48,18 @@ public class FileUtils {
 	/**
 	 * use for get all music name in specific folder 
 	 * 
-	 * @param musicDirectory path of specific folder 
 	 * @return list of music name
 	 */
-	public List<String> getMusicListFromDirectory(String musicDirectory) {
+	public List<String> getMusicListFromDirectory() {
 		log.debug("Enter getMusicListFromDirectory");
 		
 		List<String> musicNames = new ArrayList<String>();
 		
-		File directoryFile = new File(musicDirectory);		
+		File directoryFile = new File(ABSOLUTEPATH_THE_GREAN_GANG_RADIO);		
 		for (File file : directoryFile.listFiles()) {
 			musicNames.add(file.getName());
 		}
-		log.debug(musicNames);
+		log.debug(musicNames);		
 		
 		log.debug("Quit getMusicListFromDirectory");
 		return musicNames;

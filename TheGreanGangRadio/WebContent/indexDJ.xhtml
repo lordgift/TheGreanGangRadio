@@ -16,17 +16,16 @@
 			<h:outputText id="playingMusic" value="#{djController.playingMusic}"/>
 
 			<p:commandButton value="play" action="#{djController.playerControl('play')}" update="textStatus,playingMusic" />
-			
 			<p:commandButton value="pause" action="#{djController.playerControl('pause')}" update="textStatus,playingMusic" />
-			
 			<p:commandButton value="stop" action="#{djController.playerControl('stop')}" update="textStatus,playingMusic" />
-			
 			<p:commandButton value="next" action="#{djController.playerControl('next')}" update="textStatus,playingMusic" />
-			
 			<p:commandButton value="back" action="#{djController.playerControl('back')}" update="textStatus,playingMusic" />
 
 			<h:outputText id="textStatus" value="#{djController.textStatus}" />
 
+			<p:pickList id="pickList" value="#{djController.songs}" var="song" itemLabel="#{song}" itemValue="#{song}" >
+				<p:ajax event="transfer" listener="#{djController.onTransfer}" />  
+			</p:pickList>  
 
     		<p:fileUpload fileUploadListener="#{djController.handleFileUpload}"
 	            mode="advanced" 
