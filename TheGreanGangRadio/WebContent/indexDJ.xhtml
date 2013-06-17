@@ -21,7 +21,16 @@
 
 
 			<h:outputText id="textStatus" value="#{djController.textStatus}" />
-			
+
+    		<p:fileUpload fileUploadListener="#{djController.handleFileUpload}"
+	            mode="advanced" 
+	            multiple="true"
+	            update="messages"            
+	            allowTypes="/(\.|\/)(mp3|flac)$/" />
+	            
+    		<p:growl id="messages" showDetail="true"/>
+    		
+    			            			
 	</h:form>
 </h:body>
 </html>

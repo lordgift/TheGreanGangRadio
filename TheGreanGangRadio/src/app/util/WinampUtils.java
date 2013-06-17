@@ -46,7 +46,7 @@ public class WinampUtils {
 			}
 
 		} catch (InvalidHandle ihe) {
-			ihe.printStackTrace();
+			log.error("Error in playerControl",ihe);
 		} finally {
 			log.debug("Quit playerControl");
 		}
