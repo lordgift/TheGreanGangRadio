@@ -1,10 +1,6 @@
 package app.util;
 
-import static com.qotsa.jni.controller.WinampController.getPlayListLength;
-import static com.qotsa.jni.controller.WinampController.pause;
-import static com.qotsa.jni.controller.WinampController.play;
-import static com.qotsa.jni.controller.WinampController.resume;
-import static com.qotsa.jni.controller.WinampController.stop;
+import static com.qotsa.jni.controller.WinampController.*;
 
 import org.apache.log4j.Logger;
 
@@ -17,6 +13,10 @@ public class WinampUtils {
 	private static final String ACTION_PAUSE = "pause";
 	private static final String ACTION_RESUME = "resume";
 	private static final String ACTION_PLAY = "play";
+	private static final String ACTION_RUN = "run";
+	private static final String ACTION_NEXT = "next";
+	private static final String ACTION_BACK = "back";
+	
 	public static final String SYNCHRONIZE_MODE_WINAMP = "1";
 	public static final String SYNCHRONIZE_MODE_WEB = "2";
 
@@ -31,7 +31,10 @@ public class WinampUtils {
 		log.debug("Enter playerControl : "+event);
 		
 		try {
-			if (ACTION_PLAY.equalsIgnoreCase(event)) {
+			
+			if (ACTION_RUN.equalsIgnoreCase(event)) {
+				run();
+			} else if (ACTION_PLAY.equalsIgnoreCase(event)) {
 				play();
 				return "playing";
 			} else if (ACTION_RESUME.equalsIgnoreCase(event)) {
@@ -43,10 +46,16 @@ public class WinampUtils {
 			} else if (ACTION_STOP.equalsIgnoreCase(event)) {
 				stop();
 				return "stopped";
+			} else if (ACTION_NEXT.equalsIgnoreCase(event)) {
+				nextTrack();
+			} else if (ACTION_BACK.equalsIgnoreCase(event)) {
+				previousTrack();
 			}
 
 		} catch (InvalidHandle ihe) {
-			log.error("Error in playerControl",ihe);
+			log.error("Error in playerControl", ihe);
+		} catch (Exception e) {
+			log.error("Error in playerControl", e);
 		} finally {
 			log.debug("Quit playerControl");
 		}
@@ -74,5 +83,6 @@ public class WinampUtils {
 		return winampPlaylistLength > webPlaylistLength ? SYNCHRONIZE_MODE_WINAMP : SYNCHRONIZE_MODE_WEB;
 
 	}
+		
 
 }

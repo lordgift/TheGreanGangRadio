@@ -11,6 +11,9 @@ import javax.faces.context.FacesContext;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 
+import com.qotsa.exception.InvalidHandle;
+import com.qotsa.jni.controller.WinampController;
+
 import app.util.FileUtils;
 import app.util.WinampUtils;
 
@@ -19,10 +22,12 @@ import app.util.WinampUtils;
 public class DjController {
 	private static final Logger log = Logger.getLogger(DjController.class);
 	
-	String textStatus;
-	String prompt;
+	private String textStatus;
+	private String prompt;
+	private String playingMusic;
 
 	public DjController() {
+		WinampUtils.playerControl("run");
 		this.prompt = "Winamp : ";
 	}
 
@@ -42,11 +47,21 @@ public class DjController {
 		this.prompt = prompt;
 	}
 
-	public void play() {
-		textStatus = WinampUtils.playerControl("play");
+	public String getPlayingMusic() {
+		try {
+			playingMusic = WinampController.getFileNamePlaying();
+		} catch (InvalidHandle e) {
+			log.error("Error in getPlayingMusic", e);
+		}
+		return playingMusic;
 	}
-	public void pause() {
-		textStatus = WinampUtils.playerControl("pause");
+
+	public void setPlayingMusic(String playingMusic) {
+		this.playingMusic = playingMusic;
+	}	
+	
+	public void playerControl(String clickedButton) {
+		textStatus = WinampUtils.playerControl(clickedButton);
 	}
 	
     public void handleFileUpload(FileUploadEvent event) {
