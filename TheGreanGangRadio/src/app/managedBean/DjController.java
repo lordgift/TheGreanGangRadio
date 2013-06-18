@@ -58,30 +58,30 @@ public class DjController {
 	}
 	
     public void onTransfer(TransferEvent event) {  
+    	log.debug("Enter onTransfer");
         StringBuilder builder = new StringBuilder();  
         for(Object item : event.getItems()) {  
         	String name = (String) item;
-            builder.append(name).append("<br />");
+            builder.append(name).append("<BR />");
             try {
-				WinampController.appendToPlayList(FileUtils.ABSOLUTEPATH_THE_GREAN_GANG_RADIO+name);
-				WinampController.refreshPlayListCache();
-			} catch (InvalidHandle e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvalidParameter e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+//				WinampController.appendToPlayList(FileUtils.ABSOLUTEPATH_THE_GREAN_GANG_RADIO+name);
+            	String command = "cmd /C \"\"C:/Program Files (x86)/winamp/winamp.exe\" /add \""+FileUtils.ABSOLUTEPATH_THE_GREAN_GANG_RADIO+name +"\"\" ";
+            	
+            	log.debug(command);
+            	Process p = Runtime.getRuntime().exec(command);
+//            	p.waitFor();
+			} catch (IOException e) {
+				log.error("Error in onTransfer",e);
 			}
         }  
-        
-        
-          
+             
         FacesMessage msg = new FacesMessage();  
         msg.setSeverity(FacesMessage.SEVERITY_INFO);  
         msg.setSummary("Items Transferred");  
         msg.setDetail(builder.toString());  
           
-        FacesContext.getCurrentInstance().addMessage(null, msg);  
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+        log.debug("Quit onTransfer");
     } 	
 	
 	public String getTextStatus() {

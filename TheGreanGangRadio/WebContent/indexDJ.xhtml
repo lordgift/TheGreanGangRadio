@@ -24,7 +24,7 @@
 			<h:outputText id="textStatus" value="#{djController.textStatus}" />
 
 			<p:pickList id="pickList" value="#{djController.songs}" var="song" itemLabel="#{song}" itemValue="#{song}" >
-				<p:ajax event="transfer" listener="#{djController.onTransfer}" />  
+				<p:ajax event="transfer" listener="#{djController.onTransfer}" update="messages"/>  
 			</p:pickList>  
 
     		<p:fileUpload fileUploadListener="#{djController.handleFileUpload}"
