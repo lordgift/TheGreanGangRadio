@@ -75,6 +75,7 @@ public class DjController {
 			}
         }  
              
+        
         FacesMessage msg = new FacesMessage();  
         msg.setSeverity(FacesMessage.SEVERITY_INFO);  
         msg.setSummary("Items Transferred");  
