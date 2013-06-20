@@ -2,6 +2,8 @@ package app.util;
 
 import static com.qotsa.jni.controller.WinampController.*;
 
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
 
 import com.qotsa.exception.InvalidHandle;
@@ -61,7 +63,34 @@ public class WinampUtils {
 		}
 		return null;
 	}
-
+	
+	/**
+	 * append file to winamp playlist
+	 * @param fileName filename without path 
+	 */
+	public static void appendFileToPlaylist(String fileName) {
+		log.debug("Enter appendFileToPlaylist");
+        try {
+//			WinampController.appendToPlayList(FileUtils.ABSOLUTEPATH_THE_GREAN_GANG_RADIO+name);
+        	
+        	//using command-line to avoid UTF-8 problem of WinampController.appendToPlayList 
+        	StringBuilder command = new StringBuilder(); 
+        	command.append("cmd /C");
+        	command.append("\"");
+        	command.append("\"C:/Program Files (x86)/winamp/winamp.exe\"");
+        	command.append(" /add ");
+        	command.append("\"" + FileUtils.ABSOLUTEPATH_THE_GREAN_GANG_RADIO + fileName + "\"");
+        	command.append("\"");
+        	
+        	log.debug(command.toString());
+        	Process p = Runtime.getRuntime().exec(command.toString());
+//        	p.waitFor();
+		} catch (IOException e) {
+			log.error("Error in onTransfer",e);
+		} finally {
+			log.debug("Quit appendFileToPlaylist");
+		}
+	}
 	/**
 	 * get playlist from webpage and synchronize to winamp's playlist
 	 */

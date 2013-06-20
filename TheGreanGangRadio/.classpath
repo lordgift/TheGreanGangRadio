@@ -30,8 +30,9 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/primeface/primefaces-3.5.jar">
+	<classpathentry kind="lib" path="lib/primeface/primefaces-4.0-20130605.174828-3.jar" sourcepath="lib/primeface/primefaces-4.0-20130605.174828-3-sources.jar">
 		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/TheGreanGangRadio/lib/primeface/primefaces-3.5.zip!/apidocs"/>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>

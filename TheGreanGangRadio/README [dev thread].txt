@@ -1,5 +1,4 @@
 ##### for JavaWinampAPI #####
-
 1. Server&Project must run on 32-bit JVM
 2. to know wpcom.dll
 	- copy wpcom.dll to  <jboss root>\bin 
@@ -13,7 +12,12 @@
 	- export into .jar then Add to Build Path to build path
 		or, copy log4j.properties to WEB-INF/classes/<place-here>   
 
+##### PushServlet #####
+1. atmosphere-runtime-1.1.0.RC3.jar required!
+2. don't forget to map web.xml for /primepush
 
+##### primeface #####
+1. use primefaces-4.0 for avoid bug of primeface-3.5 in case filterMatchMode="contains" NOT WORKING! 
  
 ERROR!!
 java.lang.UnsatisfiedLinkError: Native Library ..............\wpcom.dll already loaded in another classloader 
