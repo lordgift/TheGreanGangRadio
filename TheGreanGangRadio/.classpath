@@ -25,8 +25,9 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/primeface/primefaces-3.5.jar">
+	<classpathentry kind="lib" path="lib/primeface/primefaces-4.0-20130605.174828-3.jar" sourcepath="lib/primeface/primefaces-4.0-20130605.174828-3-sources.jar">
 		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/TheGreanGangRadio/lib/primeface/primefaces-3.5.zip!/apidocs"/>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
@@ -45,7 +46,15 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
+<<<<<<< HEAD
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/primeface/primefaces-3.5-sources.jar"/>
+=======
+	<classpathentry kind="lib" path="lib/primeface/theme/ui-darkness-1.0.10.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+>>>>>>> 359626cb3e554e189780ba97f2c49f507cf0c8f5
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

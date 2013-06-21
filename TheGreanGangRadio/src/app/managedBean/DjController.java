@@ -11,8 +11,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.primefaces.component.picklist.PickList;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
@@ -24,29 +26,32 @@ import com.qotsa.jni.controller.WinampController;
 import app.util.FileUtils;
 import app.util.WinampUtils;
 
-@ManagedBean(name = "djController")
+@ManagedBean
 @SessionScoped
 public class DjController {
 	private static final Logger log = Logger.getLogger(DjController.class);
 	
-	private String textStatus;
-	private String prompt;
+	private String playingImage;
 	private String playingMusic;
-	
+	private String promptTextHost;
+	private String hostAddress;
+	private boolean playing;
+	private boolean stopping;
+
 	// Modifier this class (DualListModel) ;
 	private DualListModel<String> songs;
 
 	public DjController() {
 		//start winamp
-		WinampUtils.playerControl("run");
+		WinampUtils.playerControl(WinampUtils.PLAYER_ACTION_RUN);
 		
 		//preparing DualListModel
 		List<String> sourceSong = new ArrayList<String>();
 		List<String> targetSong = FileUtils.getInstance().getMusicListFromDirectory();
 		
 		songs = new DualListModel<String>(sourceSong, targetSong);
-		
-		this.prompt = "Winamp : ";
+
+		promptTextHost = "Please connect your music player to : ";
 	}
 
 	public DualListModel<String> getSongs() {
@@ -57,56 +62,84 @@ public class DjController {
 		this.songs = songs;
 	}
 	
+	/**
+	 * when transferring item(s) in PickList<BR />
+	 * <p>
+	 * Source - Winamp Playlist <BR/>
+	 * Destination - Music Directory
+	 * </p>
+	 * 
+	 * @param event object of transferring
+	 */
     public void onTransfer(TransferEvent event) {  
     	log.debug("Enter onTransfer");
-        StringBuilder builder = new StringBuilder();  
-        for(Object item : event.getItems()) {  
-        	String name = (String) item;
-            builder.append(name).append("<BR />");
-            try {
-//				WinampController.appendToPlayList(FileUtils.ABSOLUTEPATH_THE_GREAN_GANG_RADIO+name);
-            	String command = "cmd /C \"\"C:/Program Files (x86)/winamp/winamp.exe\" /add \""+FileUtils.ABSOLUTEPATH_THE_GREAN_GANG_RADIO+name +"\"\" ";
-            	
-            	log.debug(command);
-            	Process p = Runtime.getRuntime().exec(command);
-//            	p.waitFor();
-			} catch (IOException e) {
-				log.error("Error in onTransfer",e);
-			}
-        }  
-             
-        
-        FacesMessage msg = new FacesMessage();  
-        msg.setSeverity(FacesMessage.SEVERITY_INFO);  
-        msg.setSummary("Items Transferred");  
-        msg.setDetail(builder.toString());  
-          
-        FacesContext.getCurrentInstance().addMessage(null, msg);
+    	
+    	if(event.isAdd()) {
+    		//add=true is transfer source to destination
+    		log.debug("removing Winamp Playlist(transferring source to destination)");
+    		
+    	} else {
+    		//add=false is transfer destination to source ( can change to event.isRemove() )
+    		log.debug("adding music(s) to Winamp Playlist(transferring destination to source)");
+        	
+            StringBuilder builder = new StringBuilder();  
+            for(Object item : event.getItems()) {  
+            	String fileName = (String) item;
+                builder.append(fileName).append("<BR/>");
+                WinampUtils.appendFileToPlaylist(fileName);
+            }  
+                 
+            FacesMessage msg = new FacesMessage();  
+            msg.setSeverity(FacesMessage.SEVERITY_INFO);  
+            msg.setSummary("Items Transferred");  
+            msg.setDetail(builder.toString());  
+            
+            FacesContext.getCurrentInstance().addMessage(null, msg);    	
+    	}
+    	
         log.debug("Quit onTransfer");
     } 	
 	
-	public String getTextStatus() {
-		return textStatus;
+	public String getPromptTextHost() {
+		return promptTextHost;
 	}
 
-	public void setTextStatus(String textStatus) {
-		this.textStatus = textStatus;
+	public String getHostAddress() {
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();  
+		String serverIP = request.getLocalAddr();
+		
+		return (!"".equals(serverIP) && serverIP != null) ? serverIP : "&lt;cannot get server's IP&gt;";
 	}
-
-	public String getPrompt() {
-		return prompt;
-	}
-
-	public void setPrompt(String prompt) {
-		this.prompt = prompt;
-	}
-
-	public String getPlayingMusic() {
-		try {
-			playingMusic = WinampController.getFileNamePlaying();
-		} catch (InvalidHandle e) {
-			log.error("Error in getPlayingMusic", e);
+	public void playOrPause() {
+		if(playing) {
+			WinampUtils.playerControl(WinampUtils.PLAYER_ACTION_PLAY);
+		} else {
+			WinampUtils.playerControl(WinampUtils.PLAYER_ACTION_PAUSE);
 		}
+	}
+
+	public String getPlayingImage() {
+		
+		try {
+			if(WinampController.getStatus() == WinampController.PLAYING) {
+				playingImage = "../img/baby-dance.gif";
+			} else {
+				playingImage = "../img/baby-dance.jpg";
+			}
+		} catch (InvalidHandle e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return playingImage;
+	}
+
+	public void setPlayingImage(String playingImage) {
+		this.playingImage = playingImage;
+	}
+	
+	public String getPlayingMusic() {
+		
+		playingMusic = WinampUtils.getFileNamePlaying();
 		return playingMusic;
 	}
 
@@ -115,7 +148,7 @@ public class DjController {
 	}	
 	
 	public void playerControl(String clickedButton) {
-		textStatus = WinampUtils.playerControl(clickedButton);
+		WinampUtils.playerControl(clickedButton);
 	}
 	
     public void handleFileUpload(FileUploadEvent event) {
@@ -137,4 +170,23 @@ public class DjController {
 			log.debug("Quit handleFileUpload");
 		}
 	}
+    
+	public boolean isPlaying() {
+		if(stopping) playing = false;
+		return playing;
+	}
+
+	public void setPlaying(boolean playing) {
+		this.playing = playing;
+	}
+
+	public boolean isStopping() {
+		if(playing) stopping = false;
+		return stopping;
+	}
+
+	public void setStopping(boolean stopping) {
+		this.stopping = stopping;
+	}
+	
 }

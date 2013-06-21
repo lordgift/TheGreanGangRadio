@@ -9,33 +9,94 @@
 	>
 <h:head>
 </h:head>	
-<h:body>
+<h:body style="background-image:url('../img/Simple-Design-for-Abstract-Wallpaper.jpg');background-attachment:fixed">
 	<h:form>
-			<h:outputText value="#{djController.prompt}" />
+			<table width="100%" align="center" >
+				<tr>
+					<td align="center" colspan="2">
+						<img src="../img/TheGreanGangRadioText.png" id="logo" 
+							style="border-radius:25px" onmouseover="this.src='../img/DSC_8085500331.JPG'" 
+							onmouseout="this.src='../img/DSC_8084500331.JPG';setTimeout(function(){document.getElementById('logo').src='../img/TheGreanGangRadioText.png';},3000);" />
+					</td>
+				</tr>
+				<tr><td>&nbsp;</td></tr>
+				<tr>
+					<td align="left">
+						<p:panel>
+							<h:outputText value="#{djController.promptTextHost}"/>
+							<h:outputText value="#{djController.hostAddress}"/>
+						</p:panel>
+					</td>
+					<td align="center" rowspan="2">
+						<p:pickList id="pickList" value="#{djController.songs}" var="song" itemLabel="#{song}" itemValue="#{song}"							 
+							showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" style="width:500px">
+							
+							<f:facet name="sourceCaption">winampPlaylist</f:facet>
+							<f:facet name="targetCaption">Directory</f:facet>  
+							 
+							<p:ajax event="transfer" listener="#{djController.onTransfer}" update="messages"/>  
+						</p:pickList> 
+					</td>
+				</tr>
+				<tr>
+					<td width="40%" valign="top">
+						<p:panel header="Controller" footer="powered by JSF,Primeface,JavaWinampAPI">
+							<h:graphicImage id="playingImage" value="#{djController.playingImage}" width="80" height="106"></h:graphicImage>
+							<h:outputText id="playingMusic" value="#{djController.playingMusic}"/>
+							<BR/>
+							<!--
+								for class with icon(from jQuery UI) 
+								http://jquery-ui.googlecode.com/svn/tags/1.6rc5/tests/static/icons.html
+							-->
+	                     	<p:selectBooleanButton id="playing" value="#{djController.playing}" onLabel="pause" offLabel="play" onIcon="ui-icon-pause" offIcon="ui-icon-play">  
+	            				<p:ajax listener="#{djController.playOrPause}" update="playingMusic,playingImage,stopping"/>  
+	        				</p:selectBooleanButton>
+	        				<p:selectBooleanButton id="stopping" value="#{djController.stopping}" onLabel="stop" offLabel="stop" onIcon="ui-icon-stop" offIcon="ui-icon-stop">  
+	            				<p:ajax listener="#{djController.playerControl('stop')}" update="playingMusic,playingImage,playing"/>  
+	        				</p:selectBooleanButton>    
+							<p:commandButton value="previous" icon="ui-icon-seek-first" action="#{djController.playerControl('previous')}" update="playingMusic" />
+							<p:commandButton value="next" icon="ui-icon-seek-end" action="#{djController.playerControl('next')}" update="playingMusic" />
+							<BR/>
+						</p:panel>						
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td align="center">
+						<p:inplace id="uploader" editor="true" label="upload more file to Server">
+					    	<p:fileUpload fileUploadListener="#{djController.handleFileUpload}"
+		            			mode="advanced" 
+		            			multiple="true"
+		            			update="messages"            
+		            			allowTypes="/(\.|\/)(mp3|flac)$/" />
+	            		</p:inplace>
+					</td>
+				</tr>
+				<tr><td>&nbsp;</td></tr>
+			</table>
 			
-			<h:outputText id="playingMusic" value="#{djController.playingMusic}"/>
-
-			<p:commandButton value="play" action="#{djController.playerControl('play')}" update="textStatus,playingMusic" />
-			<p:commandButton value="pause" action="#{djController.playerControl('pause')}" update="textStatus,playingMusic" />
-			<p:commandButton value="stop" action="#{djController.playerControl('stop')}" update="textStatus,playingMusic" />
-			<p:commandButton value="next" action="#{djController.playerControl('next')}" update="textStatus,playingMusic" />
-			<p:commandButton value="back" action="#{djController.playerControl('back')}" update="textStatus,playingMusic" />
-
-			<h:outputText id="textStatus" value="#{djController.textStatus}" />
-
-			<p:pickList id="pickList" value="#{djController.songs}" var="song" itemLabel="#{song}" itemValue="#{song}" >
-				<p:ajax event="transfer" listener="#{djController.onTransfer}" update="messages"/>  
-			</p:pickList>  
-
-    		<p:fileUpload fileUploadListener="#{djController.handleFileUpload}"
-	            mode="advanced" 
-	            multiple="true"
-	            update="messages"            
-	            allowTypes="/(\.|\/)(mp3|flac)$/" />
-	            
-    		<p:growl id="messages" showDetail="true"/>
-    		
+    		<p:growl id="messages" showDetail="true" escape="false"/>    		
     			            			
 	</h:form>
 </h:body>
+<style type="text/css">
+td {
+	color: gray;
+}
+
+.ui-picklist .ui-picklist-list {
+	list-style-type: none;
+	margin: 0;
+	padding: 10px;
+	overflow: auto;
+	height: 300px;
+	width: 200px;
+}
+
+.ui-panel-footer {
+	font-size: 12px;
+	height:10px;
+}
+
+</style>
 </html>

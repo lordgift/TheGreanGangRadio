@@ -10,6 +10,8 @@
 		<welcome-file>default.htm</welcome-file>
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
+	
+	<!-- JSF -->
 	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
@@ -21,6 +23,7 @@
 		<url-pattern>/faces/*</url-pattern>
 	</servlet-mapping>
 
+	<!-- Push with primepush -->
 	<servlet>
 		<servlet-name>Push Servlet</servlet-name>
 		<servlet-class>org.primefaces.push.PushServlet</servlet-class>
@@ -42,5 +45,9 @@
 		<servlet-name>Faces Servlet</servlet-name>
 	</filter-mapping>
 
-
+	<!-- primefaces theme -->
+	<context-param>
+		<param-name>primefaces.THEME</param-name>
+		<param-value>ui-darkness</param-value>
+	</context-param>  
 </web-app>
