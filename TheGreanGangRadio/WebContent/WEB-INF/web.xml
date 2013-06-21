@@ -14,7 +14,7 @@
 		<servlet-name>Faces Servlet</servlet-name>
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
 		<async-supported>true</async-supported>
-		<load-on-startup>1</load-on-startup>
+<!-- 		<load-on-startup>1</load-on-startup> -->
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Faces Servlet</servlet-name>
