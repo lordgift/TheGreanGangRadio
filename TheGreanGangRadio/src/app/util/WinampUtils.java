@@ -7,17 +7,18 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 
 import com.qotsa.exception.InvalidHandle;
+import com.qotsa.jni.controller.WinampController;
 
 public class WinampUtils {
 	private static final Logger log = LogUtils.getLogger(WinampUtils.class);
 	
-	private static final String ACTION_STOP = "stop";
-	private static final String ACTION_PAUSE = "pause";
-	private static final String ACTION_RESUME = "resume";
-	private static final String ACTION_PLAY = "play";
-	private static final String ACTION_RUN = "run";
-	private static final String ACTION_NEXT = "next";
-	private static final String ACTION_BACK = "back";
+	public static final String PLAYER_ACTION_STOP = "stop";
+	public static final String PLAYER_ACTION_PAUSE = "pause";
+	public static final String PLAYER_ACTION_RESUME = "resume";
+	public static final String PLAYER_ACTION_PLAY = "play";
+	public static final String PLAYER_ACTION_RUN = "run";
+	public static final String PLAYER_ACTION_NEXT = "next";
+	public static final String PLAYER_ACTION_PREVIOUS = "previous";
 	
 	public static final String SYNCHRONIZE_MODE_WINAMP = "1";
 	public static final String SYNCHRONIZE_MODE_WEB = "2";
@@ -26,31 +27,26 @@ public class WinampUtils {
 	 * do anything follow from command
 	 * 
 	 * @param event
-	 *            of the action from form
-	 * @return String of status of winamp
+	 *            of the player action from form
 	 */
-	public static String playerControl(String event) {
+	public static void playerControl(String event) {
 		log.debug("Enter playerControl : "+event);
 		
 		try {
 			
-			if (ACTION_RUN.equalsIgnoreCase(event)) {
+			if (PLAYER_ACTION_RUN.equalsIgnoreCase(event)) {
 				run();
-			} else if (ACTION_PLAY.equalsIgnoreCase(event)) {
+			} else if (PLAYER_ACTION_PLAY.equalsIgnoreCase(event)) {
 				play();
-				return "playing";
-			} else if (ACTION_RESUME.equalsIgnoreCase(event)) {
+			} else if (PLAYER_ACTION_RESUME.equalsIgnoreCase(event)) {
 				resume();
-				return "resumed";
-			} else if (ACTION_PAUSE.equalsIgnoreCase(event)) {
+			} else if (PLAYER_ACTION_PAUSE.equalsIgnoreCase(event)) {
 				pause();
-				return "pause";
-			} else if (ACTION_STOP.equalsIgnoreCase(event)) {
+			} else if (PLAYER_ACTION_STOP.equalsIgnoreCase(event)) {
 				stop();
-				return "stopped";
-			} else if (ACTION_NEXT.equalsIgnoreCase(event)) {
+			} else if (PLAYER_ACTION_NEXT.equalsIgnoreCase(event)) {
 				nextTrack();
-			} else if (ACTION_BACK.equalsIgnoreCase(event)) {
+			} else if (PLAYER_ACTION_PREVIOUS.equalsIgnoreCase(event)) {
 				previousTrack();
 			}
 
@@ -61,7 +57,6 @@ public class WinampUtils {
 		} finally {
 			log.debug("Quit playerControl");
 		}
-		return null;
 	}
 	
 	/**
@@ -91,6 +86,31 @@ public class WinampUtils {
 			log.debug("Quit appendFileToPlaylist");
 		}
 	}
+	
+	/**
+	 * get playing file name from Winamp 
+	 * 
+	 * <BR/><BR />because,
+	 * {@link WinampController#getFileNamePlaying} return absolute path of playing file<BR />
+	 * 
+	 * @return only name of playing file
+	 */
+	public static String getFileNamePlaying() {
+		log.debug("Enter getFileNamePlaying");
+		String fileName = null;
+		try {
+			
+			String fullPathName = WinampController.getFileNamePlaying();
+			fileName = fullPathName.substring(fullPathName.lastIndexOf('\\')+1);
+			
+		} catch (InvalidHandle e) {
+			log.error("Error in getFileNamePlaying", e);
+		} finally {
+			log.debug("Quit getFileNamePlaying");
+		}
+		return fileName;
+	}
+	
 	/**
 	 * get playlist from webpage and synchronize to winamp's playlist
 	 */

@@ -31,19 +31,19 @@ import app.util.WinampUtils;
 public class DjController {
 	private static final Logger log = Logger.getLogger(DjController.class);
 	
-	private String textStatus;
+	private String playingImage;
 	private String playingMusic;
 	private String promptTextHost;
 	private String hostAddress;
-	
-
+	private boolean playing;
+	private boolean stopping;
 
 	// Modifier this class (DualListModel) ;
 	private DualListModel<String> songs;
 
 	public DjController() {
 		//start winamp
-		WinampUtils.playerControl("run");
+		WinampUtils.playerControl(WinampUtils.PLAYER_ACTION_RUN);
 		
 		//preparing DualListModel
 		List<String> sourceSong = new ArrayList<String>();
@@ -100,14 +100,6 @@ public class DjController {
         log.debug("Quit onTransfer");
     } 	
 	
-	public String getTextStatus() {
-		return textStatus;
-	}
-
-	public void setTextStatus(String textStatus) {
-		this.textStatus = textStatus;
-	}
-
 	public String getPromptTextHost() {
 		return promptTextHost;
 	}
@@ -118,13 +110,36 @@ public class DjController {
 		
 		return (!"".equals(serverIP) && serverIP != null) ? serverIP : "&lt;cannot get server's IP&gt;";
 	}
-
-	public String getPlayingMusic() {
-		try {
-			playingMusic = WinampController.getFileNamePlaying();
-		} catch (InvalidHandle e) {
-			log.error("Error in getPlayingMusic", e);
+	public void playOrPause() {
+		if(playing) {
+			WinampUtils.playerControl(WinampUtils.PLAYER_ACTION_PLAY);
+		} else {
+			WinampUtils.playerControl(WinampUtils.PLAYER_ACTION_PAUSE);
 		}
+	}
+
+	public String getPlayingImage() {
+		
+		try {
+			if(WinampController.getStatus() == WinampController.PLAYING) {
+				playingImage = "../img/baby-dance.gif";
+			} else {
+				playingImage = "../img/baby-dance.jpg";
+			}
+		} catch (InvalidHandle e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return playingImage;
+	}
+
+	public void setPlayingImage(String playingImage) {
+		this.playingImage = playingImage;
+	}
+	
+	public String getPlayingMusic() {
+		
+		playingMusic = WinampUtils.getFileNamePlaying();
 		return playingMusic;
 	}
 
@@ -133,7 +148,7 @@ public class DjController {
 	}	
 	
 	public void playerControl(String clickedButton) {
-		textStatus = WinampUtils.playerControl(clickedButton);
+		WinampUtils.playerControl(clickedButton);
 	}
 	
     public void handleFileUpload(FileUploadEvent event) {
@@ -155,4 +170,23 @@ public class DjController {
 			log.debug("Quit handleFileUpload");
 		}
 	}
+    
+	public boolean isPlaying() {
+		if(stopping) playing = false;
+		return playing;
+	}
+
+	public void setPlaying(boolean playing) {
+		this.playing = playing;
+	}
+
+	public boolean isStopping() {
+		if(playing) stopping = false;
+		return stopping;
+	}
+
+	public void setStopping(boolean stopping) {
+		this.stopping = stopping;
+	}
+	
 }
