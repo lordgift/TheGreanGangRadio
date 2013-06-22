@@ -1,6 +1,5 @@
 package app.managedBean;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -8,23 +7,23 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
-import org.primefaces.component.picklist.PickList;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
-
-import com.qotsa.exception.InvalidHandle;
-import com.qotsa.exception.InvalidParameter;
-import com.qotsa.jni.controller.WinampController;
+import org.primefaces.push.PushContext;
+import org.primefaces.push.PushContextFactory;
 
 import app.util.FileUtils;
+import app.util.ThreadMonitorWinamp;
 import app.util.WinampUtils;
+
+import com.qotsa.exception.InvalidHandle;
+import com.qotsa.jni.controller.WinampController;
 
 @ManagedBean
 @SessionScoped
@@ -37,6 +36,7 @@ public class DjController {
 	private String hostAddress;
 	private boolean playing;
 	private boolean stopping;
+	private ThreadMonitorWinamp threadMonitorWinamp;
 
 	// Modifier this class (DualListModel) ;
 	private DualListModel<String> songs;
@@ -45,11 +45,16 @@ public class DjController {
 		//start winamp
 		WinampUtils.playerControl(WinampUtils.PLAYER_ACTION_RUN);
 		
-		//preparing DualListModel
-		List<String> sourceSong = new ArrayList<String>();
-		List<String> targetSong = FileUtils.getInstance().getMusicListFromDirectory();
+		threadMonitorWinamp = new ThreadMonitorWinamp();
+		threadMonitorWinamp.start();
 		
-		songs = new DualListModel<String>(sourceSong, targetSong);
+		WinampUtils.clearWinampPlayList();
+		
+		//preparing DualListModel
+		List<String> sourceSongs = new ArrayList<String>();
+		List<String> targetSongs = FileUtils.getInstance().getMusicListFromDirectory();
+		
+		songs = new DualListModel<String>(sourceSongs, targetSongs);
 
 		promptTextHost = "Please connect your music player to : ";
 	}
@@ -60,6 +65,11 @@ public class DjController {
 	
 	public void setSongs(DualListModel<String> songs) {
 		this.songs = songs;
+	}
+	
+	public void refreshFileList() {		
+		List<String> targetSongs = FileUtils.getInstance().getMusicListFromDirectory();
+		songs.setTarget(targetSongs);
 	}
 	
 	/**
@@ -91,7 +101,7 @@ public class DjController {
                  
             FacesMessage msg = new FacesMessage();  
             msg.setSeverity(FacesMessage.SEVERITY_INFO);  
-            msg.setSummary("Items Transferred");  
+            msg.setSummary("Music added to playlist");  
             msg.setDetail(builder.toString());  
             
             FacesContext.getCurrentInstance().addMessage(null, msg);    	
@@ -139,7 +149,11 @@ public class DjController {
 	
 	public String getPlayingMusic() {
 		
-		playingMusic = WinampUtils.getFileNamePlaying();
+		playingMusic = threadMonitorWinamp.getPlayingMusic();
+		
+		PushContext pushContext = PushContextFactory.getDefault().getPushContext();
+		pushContext.push("/notifications", playingMusic);
+		
 		return playingMusic;
 	}
 
@@ -151,6 +165,12 @@ public class DjController {
 		WinampUtils.playerControl(clickedButton);
 	}
 	
+	/**
+	 * handle upload, copy file to main directory, check duplicate before update pickList 
+	 * <BR/>and send message to uploader
+	 * 
+	 * @param event
+	 */
     public void handleFileUpload(FileUploadEvent event) {
 		log.debug("Enter handleFileUpload");
 		try {
@@ -160,8 +180,22 @@ public class DjController {
 			
 			FileUtils.getInstance().copyFile(fileName, inputStream);
 
+			//update list
+			List<String> directory = songs.getTarget();
+			boolean isAlready = false;
+			for(String file : directory){
+				if(file.equals(fileName)) isAlready = true;
+			}
+			FacesMessage msg;
+			if( !isAlready ) {
+				directory.add(fileName);
+				msg = new FacesMessage(FacesMessage.SEVERITY_INFO,"Uploaded!", fileName);
+			} else {
+				msg = new FacesMessage(FacesMessage.SEVERITY_WARN,"Already Exist!", fileName);
+			}
+			songs.setTarget(directory);
+			
 			//show message dialog to uploader
-			FacesMessage msg = new FacesMessage("Success! ", fileName + " is uploaded.");
 			FacesContext.getCurrentInstance().addMessage(null, msg);
 
 		} catch (IOException e) {
@@ -188,5 +222,5 @@ public class DjController {
 	public void setStopping(boolean stopping) {
 		this.stopping = stopping;
 	}
-	
+		
 }

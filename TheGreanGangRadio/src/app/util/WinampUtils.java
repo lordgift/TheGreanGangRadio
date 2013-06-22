@@ -70,7 +70,7 @@ public class WinampUtils {
         	
         	//using command-line to avoid UTF-8 problem of WinampController.appendToPlayList 
         	StringBuilder command = new StringBuilder(); 
-        	command.append("cmd /C");
+        	command.append("cmd /C ");
         	command.append("\"");
         	command.append("\"C:/Program Files (x86)/winamp/winamp.exe\"");
         	command.append(" /add ");
@@ -98,10 +98,9 @@ public class WinampUtils {
 	public static String getFileNamePlaying() {
 		log.debug("Enter getFileNamePlaying");
 		String fileName = null;
-		try {
-			
-			String fullPathName = WinampController.getFileNamePlaying();
-			fileName = fullPathName.substring(fullPathName.lastIndexOf('\\')+1);
+		try {			
+			String fullPathName = WinampController.getFileNamePlaying();			
+			fileName = "".equals(fullPathName) ? "Add music to playlist first" : fullPathName.substring(fullPathName.lastIndexOf('\\')+1);
 			
 		} catch (InvalidHandle e) {
 			log.error("Error in getFileNamePlaying", e);
@@ -132,6 +131,18 @@ public class WinampUtils {
 		return winampPlaylistLength > webPlaylistLength ? SYNCHRONIZE_MODE_WINAMP : SYNCHRONIZE_MODE_WEB;
 
 	}
-		
-
+	
+	/**
+	 * clear all music in winamp playlist
+	 */
+	public static void clearWinampPlayList() {
+		log.debug("Enter clearWinampPlayList");
+		try {
+			clearPlayList();
+		} catch (InvalidHandle e) {
+			log.error("Error in clearWinampPlayList", e);
+		} finally {
+			log.debug("Quit clearWinampPlayList");
+		}
+	}
 }

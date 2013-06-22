@@ -59,7 +59,7 @@ public class FileUtils {
 		for (File file : directoryFile.listFiles()) {
 			musicNames.add(file.getName());
 		}
-		log.debug(musicNames);		
+//		log.debug(musicNames);		
 		
 		log.debug("Quit getMusicListFromDirectory");
 		return musicNames;

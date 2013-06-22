@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import app.util.LogUtils;
 import app.util.WinampUtils;
 
-@ManagedBean(name = "pageSelector")
+@ManagedBean
 @RequestScoped
 public class PageSelector {
 
