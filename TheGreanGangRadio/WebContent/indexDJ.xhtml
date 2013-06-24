@@ -30,13 +30,15 @@
 					</td>
 					<td align="center" rowspan="2">
 						<p:pickList id="pickList" value="#{djController.songs}" var="song" itemLabel="#{song}" itemValue="#{song}"							 
-							showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" style="width:500px;" >
-							
+							showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" style="width:500px;" 
+							widgetVar="pickList">
+						
 							<f:facet name="sourceCaption">WinampPlaylist</f:facet>
 							<f:facet name="targetCaption">Directory</f:facet>  
 														 
 							<p:ajax event="transfer" listener="#{djController.onTransfer}" update="messages"/>  
-						</p:pickList> 
+						</p:pickList>
+						<p:socket onMessage="handleRefreshPickList" channel="/refreshPickList" />
 					</td>
 				</tr>
 				<tr>
@@ -49,7 +51,6 @@
 									</td>
 									<td>
 										<h:outputText id="playingMusic" value="#{djController.playingMusic}" styleClass="playingMusic" style="padding-left:5px"/>
-										<p:socket onMessage="handleMessage" channel="/notifications" />
 										<BR/>
 										<!--
 											for class with icon(from jQuery UI) 
@@ -71,7 +72,7 @@
 				</tr>
 				<tr>
 					<td></td>
-					<td align="center">					
+					<td align="center">
 						<p:inplace id="uploader" editor="true" label="upload more file to Server" style="color:gray">
 					    	<p:fileUpload fileUploadListener="#{djController.handleFileUpload}"
 		            			mode="advanced" 
@@ -80,7 +81,8 @@
 		            			allowTypes="/(\.|\/)(mp3|flac)$/" />
 	            		</p:inplace>
 	            		&nbsp;
-	            		<p:commandButton action="#{djController.refreshFileList}" update="pickList" icon="ui-icon-refresh" style="width:25px;height:25px;vertical-align:inherit;" />
+	            		<p:commandButton title="reload from main directory" styleClass="refreshDirectory" action="#{djController.refreshDirectory}" update="pickList" icon="ui-icon-refresh" style="width:25px;height:25px;vertical-align:inherit;" />
+	            		<p:commandButton styleClass="refreshPickList" update="pickList" style="visibility:hidden" />	            		
 					</td>
 				</tr>
 				<tr><td>&nbsp;</td></tr>
@@ -116,8 +118,11 @@
 }
 </style>
 	<script type="text/javascript">
-		function handleMessage(facesmessage) {
-			$(".playingMusic").html(facesmessage);
+		function handleRefreshPickList(status) {
+			if("1" == status) {
+				$(".refreshPickList").click();
+// 				Primefaces.ab({source:'',update:''});	
+			}
 		}
 	</script>
 </html>

@@ -9,6 +9,9 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -18,6 +21,7 @@ import org.primefaces.model.DualListModel;
 import org.primefaces.push.PushContext;
 import org.primefaces.push.PushContextFactory;
 
+import app.util.Constants;
 import app.util.FileUtils;
 import app.util.ThreadMonitorWinamp;
 import app.util.WinampUtils;
@@ -27,8 +31,15 @@ import com.qotsa.jni.controller.WinampController;
 
 @ManagedBean
 @SessionScoped
-public class DjController {
+public class DjController implements ServletContextListener{
 	private static final Logger log = Logger.getLogger(DjController.class);
+
+	HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	ServletContext context = request.getSession().getServletContext();
+	PushContext pushContext = PushContextFactory.getDefault().getPushContext();
+	
+	private static final String IMAGESOURCE_BABY_DANCE_JPG = "../img/baby-dance.jpg";
+	private static final String IMAGESOURCE_BABY_DANCE_GIF = "../img/baby-dance.gif";
 	
 	private String playingImage;
 	private String playingMusic;
@@ -42,8 +53,6 @@ public class DjController {
 	private DualListModel<String> songs;
 
 	public DjController() {
-		//start winamp
-		WinampUtils.playerControl(WinampUtils.PLAYER_ACTION_RUN);
 		
 		threadMonitorWinamp = new ThreadMonitorWinamp();
 		threadMonitorWinamp.start();
@@ -56,20 +65,18 @@ public class DjController {
 		
 		songs = new DualListModel<String>(sourceSongs, targetSongs);
 
-		promptTextHost = "Please connect your music player to : ";
+		context.setAttribute(Constants.ATTRIBUTE_DUAL_LIST_MODEL_SONGS, (DualListModel<String>) songs);
+		
+		promptTextHost = "Share this to users : ";
 	}
 
 	public DualListModel<String> getSongs() {
+		songs = (DualListModel<String>) context.getAttribute(Constants.ATTRIBUTE_DUAL_LIST_MODEL_SONGS);		
 		return songs;
 	}
 	
 	public void setSongs(DualListModel<String> songs) {
 		this.songs = songs;
-	}
-	
-	public void refreshFileList() {		
-		List<String> targetSongs = FileUtils.getInstance().getMusicListFromDirectory();
-		songs.setTarget(targetSongs);
 	}
 	
 	/**
@@ -92,19 +99,25 @@ public class DjController {
     		//add=false is transfer destination to source ( can change to event.isRemove() )
     		log.debug("adding music(s) to Winamp Playlist(transferring destination to source)");
         	
-            StringBuilder builder = new StringBuilder();  
-            for(Object item : event.getItems()) {  
+            StringBuilder builder = new StringBuilder();            
+            for(Object item : event.getItems()) {
             	String fileName = (String) item;
                 builder.append(fileName).append("<BR/>");
                 WinampUtils.appendFileToPlaylist(fileName);
-            }  
+            }
+
+            //set to ServletContext for using the same list for all users
+    		context.setAttribute(Constants.ATTRIBUTE_DUAL_LIST_MODEL_SONGS, (DualListModel<String>) songs);
+    		
+    		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);
                  
             FacesMessage msg = new FacesMessage();  
             msg.setSeverity(FacesMessage.SEVERITY_INFO);  
             msg.setSummary("Music added to playlist");  
             msg.setDetail(builder.toString());  
             
-            FacesContext.getCurrentInstance().addMessage(null, msg);    	
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            
     	}
     	
         log.debug("Quit onTransfer");
@@ -115,10 +128,10 @@ public class DjController {
 	}
 
 	public String getHostAddress() {
-		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();  
-		String serverIP = request.getLocalAddr();
+		String serverIP = request.getRemoteAddr();
+		hostAddress = serverIP;
 		
-		return (!"".equals(serverIP) && serverIP != null) ? serverIP : "&lt;cannot get server's IP&gt;";
+		return hostAddress;
 	}
 	public void playOrPause() {
 		if(playing) {
@@ -129,16 +142,17 @@ public class DjController {
 	}
 
 	public String getPlayingImage() {
-		
 		try {
 			if(WinampController.getStatus() == WinampController.PLAYING) {
-				playingImage = "../img/baby-dance.gif";
+				playingImage = IMAGESOURCE_BABY_DANCE_GIF;
 			} else {
-				playingImage = "../img/baby-dance.jpg";
+				playingImage = IMAGESOURCE_BABY_DANCE_JPG;
 			}
+			
+			//push to client(user)
+			pushContext.push(Constants.CHANNEL_PLAYING_IMAGE, playingImage);
 		} catch (InvalidHandle e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Error in getPlayingImage", e);
 		}
 		return playingImage;
 	}
@@ -148,12 +162,7 @@ public class DjController {
 	}
 	
 	public String getPlayingMusic() {
-		
-		playingMusic = threadMonitorWinamp.getPlayingMusic();
-		
-		PushContext pushContext = PushContextFactory.getDefault().getPushContext();
-		pushContext.push("/notifications", playingMusic);
-		
+		playingMusic = WinampUtils.getFileNamePlaying();
 		return playingMusic;
 	}
 
@@ -197,7 +206,9 @@ public class DjController {
 			
 			//show message dialog to uploader
 			FacesContext.getCurrentInstance().addMessage(null, msg);
-
+			
+			pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);
+			
 		} catch (IOException e) {
 			log.error("Error in handleFileUpload", e);
 		} finally {
@@ -222,5 +233,25 @@ public class DjController {
 	public void setStopping(boolean stopping) {
 		this.stopping = stopping;
 	}
+	
+	public void refreshDirectory() {
+		List<String> musics = FileUtils.getInstance().getMusicListFromDirectory();
+		songs.setTarget(musics);
+		
+		context.setAttribute(Constants.ATTRIBUTE_DUAL_LIST_MODEL_SONGS, songs);
+		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);
+	}
+
+	@Override
+	public void contextDestroyed(ServletContextEvent arg0) {
+		threadMonitorWinamp.interrupt();
+	}
+
+	@Override
+	public void contextInitialized(ServletContextEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
 		
 }

@@ -1,8 +1,22 @@
 package app.util;
 
-import static com.qotsa.jni.controller.WinampController.*;
+import static com.qotsa.jni.controller.WinampController.clearPlayList;
+import static com.qotsa.jni.controller.WinampController.getPlayListLength;
+import static com.qotsa.jni.controller.WinampController.nextTrack;
+import static com.qotsa.jni.controller.WinampController.pause;
+import static com.qotsa.jni.controller.WinampController.play;
+import static com.qotsa.jni.controller.WinampController.previousTrack;
+import static com.qotsa.jni.controller.WinampController.resume;
+import static com.qotsa.jni.controller.WinampController.run;
+import static com.qotsa.jni.controller.WinampController.stop;
 
 import java.io.IOException;
+
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.Mixer;
+import javax.sound.sampled.Port;
 
 import org.apache.log4j.Logger;
 
@@ -101,7 +115,7 @@ public class WinampUtils {
 		try {			
 			String fullPathName = WinampController.getFileNamePlaying();			
 			fileName = "".equals(fullPathName) ? "Add music to playlist first" : fullPathName.substring(fullPathName.lastIndexOf('\\')+1);
-			
+//			log.debug(fileName + " is playing.");
 		} catch (InvalidHandle e) {
 			log.error("Error in getFileNamePlaying", e);
 		} finally {
@@ -145,4 +159,5 @@ public class WinampUtils {
 			log.debug("Quit clearWinampPlayList");
 		}
 	}
+	
 }

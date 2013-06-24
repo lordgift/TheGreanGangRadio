@@ -21,20 +21,25 @@ public class PageSelector {
 	private static final String PAGE_DJ = "/indexDJ.xhtml";
 	
 	private String page;
-
-	public String getPage() {
+	
+	
+	public PageSelector() {
 		HttpServletRequest httpServletRequest = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();  
 		String remoteIP = httpServletRequest.getRemoteAddr();		
 		
 		log.debug("Entering IP="+remoteIP);
 		
 		if(IP_LOCALHOST.equals(remoteIP)) {
+			//start winamp
+			WinampUtils.playerControl(WinampUtils.PLAYER_ACTION_RUN);
 			page = PAGE_DJ;
 		} else {
 			page = PAGE_USERS;
 		}
-		
-		log.debug("forwarding to "+page);
+	}
+
+	public String getPage() {
+		log.debug("forwarding to " + page);
 		return page;
 	}
 }
