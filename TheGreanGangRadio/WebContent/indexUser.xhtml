@@ -14,7 +14,7 @@
 			<table width="100%" align="center" >
 				<tr>
 					<td align="center" colspan="2">
-						<img src="../img/aom.jpg" id="logo" 
+						<img src="../img/TheGreanGangRadioText.png" id="logo" 
 							style="border-radius:25px" onmouseover="this.src='../img/DSC_8085500331.JPG'" 
 							onmouseout="this.src='../img/DSC_8084500331.JPG';" 
 							/>
@@ -30,15 +30,14 @@
 					</td>
 					<td align="center" rowspan="2">
 						<p:pickList id="pickList" value="#{userController.songs}" var="song" itemLabel="#{song}" itemValue="#{song}"							 
-							showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" style="width:500px;" 
-							widgetVar="pickList">
+							showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" style="width:500px;"
+							removeLabel="add to queue" widgetVar="pickList">
 						
 							<f:facet name="sourceCaption">WinampPlaylist</f:facet>
 							<f:facet name="targetCaption">Directory</f:facet>  
 														 
 							<p:ajax event="transfer" listener="#{userController.onTransfer}" update="messages"/>  
 						</p:pickList>
-						<p:socket onMessage="handleRefreshPickList" channel="/refreshPickList" />
 					</td>
 				</tr>
 				<tr>
@@ -48,11 +47,9 @@
 								<tr>
 									<td>
 										<h:graphicImage id="playingImage" styleClass="playingImage" value="#{userController.playingImage}" width="80" height="106"></h:graphicImage>
-										<p:socket onMessage="handlePlayingImage" channel="/playingImage" />
 									</td>
 									<td>
 										<h:outputText id="playingMusic" value="#{userController.playingMusic}" styleClass="playingMusic" style="padding-left:5px"/>
-										<p:socket onMessage="handlePlayingMusic" channel="/playingMusic" />
 									</td>
 								</tr>
 							</table>
@@ -77,8 +74,10 @@
 				<tr><td>&nbsp;</td></tr>
 			</table>
 			
-    		<p:growl id="messages" showDetail="true" escape="false"/>    		
-    			            			
+    		<p:growl id="messages" showDetail="true" escape="false"/>
+			<p:socket onMessage="handleRefreshPickList" channel="/refreshPickList" />
+			<p:socket onMessage="handlePlayingImage" channel="/playingImage" />
+			<p:socket onMessage="handlePlayingMusic" channel="/playingMusic" />   			
 	</h:form>
 </h:body>
 <style type="text/css">
@@ -105,8 +104,21 @@
 	top: 10px;
 	right: 15px;
 }
+.ui-picklist-button-add { 
+	visibility: hidden; 
+}
+.ui-picklist-button-add-all {
+	visibility: hidden;
+}
+.ui-picklist-button-remove-all {
+	visibility: hidden;
+}
 </style>
 	<script type="text/javascript">
+// 		$(document).ready(function(){
+// 			$(":button[title*='Add']").css("display","none");
+// 			$(":button[title='Remove All']").css("display","none");
+// 		});	
 		function handlePlayingMusic(musicName) {
 			$(".playingMusic").html(musicName);
 		}

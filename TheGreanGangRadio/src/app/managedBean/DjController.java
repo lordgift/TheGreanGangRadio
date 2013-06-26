@@ -2,6 +2,8 @@ package app.managedBean;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,9 +130,13 @@ public class DjController implements ServletContextListener{
 	}
 
 	public String getHostAddress() {
-		String serverIP = request.getRemoteAddr();
-		hostAddress = serverIP;
-		
+		try {
+			String serverIP = InetAddress.getLocalHost().getHostAddress();
+			hostAddress = serverIP+":7810/TheGreanGangRadio/faces/index.xhtml";
+			
+		} catch (UnknownHostException e) {
+			log.error("Error in getHostAddress",e);
+		}
 		return hostAddress;
 	}
 	public void playOrPause() {

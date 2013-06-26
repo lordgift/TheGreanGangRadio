@@ -14,7 +14,7 @@
 			<table width="100%" align="center" >
 				<tr>
 					<td align="center" colspan="2">
-						<img src="../img/aom.jpg" id="logo" 
+						<img src="../img/TheGreanGangRadioText.png" id="logo" 
 							style="border-radius:25px" onmouseover="this.src='../img/DSC_8085500331.JPG'" 
 							onmouseout="this.src='../img/DSC_8084500331.JPG';" 
 							/>
@@ -30,15 +30,14 @@
 					</td>
 					<td align="center" rowspan="2">
 						<p:pickList id="pickList" value="#{djController.songs}" var="song" itemLabel="#{song}" itemValue="#{song}"							 
-							showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" style="width:500px;" 
-							widgetVar="pickList">
+							showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" style="width:500px;"
+							removeLabel="add to queue" widgetVar="pickList">
 						
 							<f:facet name="sourceCaption">WinampPlaylist</f:facet>
 							<f:facet name="targetCaption">Directory</f:facet>  
 														 
 							<p:ajax event="transfer" listener="#{djController.onTransfer}" update="messages"/>  
-						</p:pickList>
-						<p:socket onMessage="handleRefreshPickList" channel="/refreshPickList" />
+						</p:pickList>						
 					</td>
 				</tr>
 				<tr>
@@ -89,7 +88,7 @@
 			</table>
 			
     		<p:growl id="messages" showDetail="true" escape="false"/>    		
-    			            			
+    		<p:socket onMessage="handleRefreshPickList" channel="/refreshPickList" />
 	</h:form>
 </h:body>
 <style type="text/css">
@@ -116,8 +115,21 @@
 	top: 10px;
 	right: 15px;
 }
+.ui-picklist-button-add { 
+	visibility: hidden; 
+}
+.ui-picklist-button-add-all {
+	visibility: hidden;
+}
+.ui-picklist-button-remove-all {
+	visibility: hidden;
+}
 </style>
 	<script type="text/javascript">
+// 		$(document).ready(function(){
+// 			$(":button[title*='Add']").css("display","none");
+// 			$(":button[title='Remove All']").css("display","none");
+// 		});	
 		function handleRefreshPickList(status) {
 			if("1" == status) {
 				$(".refreshPickList").click();

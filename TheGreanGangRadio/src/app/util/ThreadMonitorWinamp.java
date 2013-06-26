@@ -12,8 +12,7 @@ public class ThreadMonitorWinamp extends Thread {
 
 	@Override
 	public void run() {
-		boolean run = true;
-		while (run) {
+		while (true) {
 			try {
 				playingMusic = WinampUtils.getFileNamePlaying();
 				PushContext pushContext = PushContextFactory.getDefault().getPushContext();
