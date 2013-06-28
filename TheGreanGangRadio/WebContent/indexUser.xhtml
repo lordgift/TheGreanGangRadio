@@ -8,6 +8,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	>
 <h:head>
+	<title>The Grean Gang Radio</title>
+	<link rel="icon" type="image/vnd.microsoft.icon" href="#{request.contextPath}/img/headphone_red.ico"/>
 </h:head>	
 <h:body style="background-image:url('../img/Simple-Design-for-Abstract-Wallpaper.jpg');background-attachment:fixed">
 	<h:form>
@@ -49,7 +51,7 @@
 										<h:graphicImage id="playingImage" styleClass="playingImage" value="#{userController.playingImage}" width="80" height="106"></h:graphicImage>
 									</td>
 									<td>
-										<h:outputText id="playingMusic" value="#{userController.playingMusic}" styleClass="playingMusic" style="padding-left:5px"/>
+										<h:outputText id="playingMusic" value="#{userController.playingMusic}" styleClass="playingMusic" style="padding-left:5px" />
 									</td>
 								</tr>
 							</table>
@@ -77,7 +79,7 @@
     		<p:growl id="messages" showDetail="true" escape="false"/>
 			<p:socket onMessage="handleRefreshPickList" channel="/refreshPickList" />
 			<p:socket onMessage="handlePlayingImage" channel="/playingImage" />
-			<p:socket onMessage="handlePlayingMusic" channel="/playingMusic" />   			
+			<p:socket onMessage="handleChangingMusic" channel="/changingMusic" />   			
 	</h:form>
 </h:body>
 <style type="text/css">
@@ -113,13 +115,12 @@
 .ui-picklist-button-remove-all {
 	visibility: hidden;
 }
+.ui-picklist-source {
+	color: gray;
+}
 </style>
 	<script type="text/javascript">
-// 		$(document).ready(function(){
-// 			$(":button[title*='Add']").css("display","none");
-// 			$(":button[title='Remove All']").css("display","none");
-// 		});	
-		function handlePlayingMusic(musicName) {
+		function handleChangingMusic(musicName) {			
 			$(".playingMusic").html(musicName);
 		}
 		function handlePlayingImage(imageSource) {

@@ -10,10 +10,12 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -59,6 +61,18 @@ public class DjController implements ServletContextListener{
 		threadMonitorWinamp = new ThreadMonitorWinamp();
 		threadMonitorWinamp.start();
 		
+		String remoteIP = request.getRemoteAddr();
+		if( !Constants.IP_LOCALHOST.equals(remoteIP) ) {
+			FacesContext fc = FacesContext.getCurrentInstance();			
+			ExternalContext ec = fc.getExternalContext();
+			try {
+				ec.redirect(Constants.PAGE_LANDING);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		WinampUtils.clearWinampPlayList();
 		
 		//preparing DualListModel
@@ -96,6 +110,13 @@ public class DjController implements ServletContextListener{
     	if(event.isAdd()) {
     		//add=true is transfer source to destination
     		log.debug("removing Winamp Playlist(transferring source to destination)");
+//    		
+//    		List<String> sourceSongs = songs.getSource();
+//    		
+//    		sourceSongs.remove(playingMusic);
+//    		
+//    		context.setAttribute(Constants.ATTRIBUTE_DUAL_LIST_MODEL_SONGS, songs);
+    		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);		
     		
     	} else {
     		//add=false is transfer destination to source ( can change to event.isRemove() )
@@ -248,6 +269,15 @@ public class DjController implements ServletContextListener{
 		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);
 	}
 
+	public void setPlayListRemoved() {
+		List<String> sourceSongs = songs.getSource();
+		
+		sourceSongs.remove(playingMusic);
+		
+		context.setAttribute(Constants.ATTRIBUTE_DUAL_LIST_MODEL_SONGS, songs);
+		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);
+	}
+	
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
 		threadMonitorWinamp.interrupt();

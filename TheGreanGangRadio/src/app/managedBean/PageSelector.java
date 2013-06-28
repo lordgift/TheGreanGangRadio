@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
+import app.util.Constants;
 import app.util.LogUtils;
 import app.util.WinampUtils;
 
@@ -15,10 +16,6 @@ import app.util.WinampUtils;
 public class PageSelector {
 
 	private static final Logger log = LogUtils.getLogger(PageSelector.class);
-	
-	private static final String IP_LOCALHOST = "127.0.0.1";
-	private static final String PAGE_USERS = "/indexUser.xhtml";
-	private static final String PAGE_DJ = "/indexDJ.xhtml";
 	
 	private String page;
 	
@@ -29,12 +26,12 @@ public class PageSelector {
 		
 		log.debug("Entering IP="+remoteIP);
 		
-		if(IP_LOCALHOST.equals(remoteIP)) {
+		if(Constants.IP_LOCALHOST.equals(remoteIP)) {
 			//start winamp
 			WinampUtils.playerControl(WinampUtils.PLAYER_ACTION_RUN);
-			page = PAGE_DJ;
+			page = Constants.PAGE_DJ;
 		} else {
-			page = PAGE_USERS;
+			page = Constants.PAGE_USERS;
 		}
 	}
 

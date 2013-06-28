@@ -9,20 +9,26 @@ public class ThreadMonitorWinamp extends Thread {
 	private Logger log = LogUtils.getLogger(ThreadMonitorWinamp.class);
 	
 	private String playingMusic;
+	private String playedMusic;
 
 	@Override
 	public void run() {
 		while (true) {
 			try {
 				playingMusic = WinampUtils.getFileNamePlaying();
-				PushContext pushContext = PushContextFactory.getDefault().getPushContext();
-				pushContext.push(Constants.CHANNEL_PLAYING_MUSIC, playingMusic);
+
+				if (!playingMusic.equals(playedMusic)) {
+					PushContext pushContext = PushContextFactory.getDefault().getPushContext();
+					pushContext.push(Constants.CHANNEL_CHANGING_MUSIC, playingMusic);
+					log.debug("pushing to client");
+				}
+				playedMusic = playingMusic;
 				
 				sleep(3000);
 			} catch (InterruptedException e) {
 				log.error("Error in run",e);
 				break;
-			} 
+			}
 		}
 	}
 	
