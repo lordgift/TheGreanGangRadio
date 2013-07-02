@@ -11,14 +11,14 @@
 	<title>The Grean Gang Radio</title>
 	<link rel="icon" type="image/vnd.microsoft.icon" href="#{request.contextPath}/img/headphone_red.ico"/>
 </h:head>	
-<h:body style="background-image:url('./img/Simple-Design-for-Abstract-Wallpaper.jpg');background-attachment:fixed">
+<h:body style="background-image:url('#{request.contextPath}/img/Simple-Design-for-Abstract-Wallpaper.jpg');background-attachment:fixed">
 	<h:form>
 			<table width="100%" align="center" >
 				<tr>
 					<td align="center" colspan="2">
-						<img src="./img/TheGreanGangRadioText.png" id="logo" 
-							style="border-radius:25px" onmouseover="this.src='./img/DSC_8085500331.JPG'" 
-							onmouseout="this.src='./img/DSC_8084500331.JPG';" 
+						<img src="#{request.contextPath}/img/TheGreanGangRadioText.png" id="logo" 
+							style="border-radius:25px" onmouseover="this.src='#{request.contextPath}/img/DSC_8085500331.JPG'" 
+							onmouseout="this.src='#{request.contextPath}/img/DSC_8084500331.JPG';" 
 							/>
 					</td>
 				</tr>
@@ -27,7 +27,7 @@
 					<td align="left">
 						<p:panel>
 							<h:outputText value="#{djController.promptTextHost}"/>
-							<h:outputText value="#{djController.hostAddress}"/>
+							<h:outputText value="#{djController.hostAddress}" style="border-radius:10px;background-color:#C9FF25;font-size:18px;font-weight:bold;color:black;"/>
 						</p:panel>
 					</td>
 					<td align="center" rowspan="2">
@@ -48,7 +48,7 @@
 							<table>
 								<tr>
 									<td>
-										<h:graphicImage id="playingImage" value="#{djController.playingImage}" width="80" height="106"></h:graphicImage>
+										<h:graphicImage id="playingImage" value="#{djController.playingImage}" width="80" height="106"/>
 									</td>
 									<td>
 										<h:outputText id="playingMusic" value="#{djController.playingMusic}" styleClass="playingMusic" style="padding-left:5px"/>

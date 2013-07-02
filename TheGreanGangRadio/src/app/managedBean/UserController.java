@@ -113,7 +113,7 @@ public class UserController {
 
 	public String getHostAddress() {
 		String serverIP = request.getLocalAddr();
-		hostAddress = serverIP+":8000";
+		hostAddress = "http://"+serverIP+":8000/";
 		
 		return hostAddress;
 	}

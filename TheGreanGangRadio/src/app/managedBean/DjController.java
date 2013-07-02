@@ -150,7 +150,7 @@ public class DjController implements ServletContextListener{
 	public String getHostAddress() {
 		try {
 			String serverIP = InetAddress.getLocalHost().getHostAddress();
-			hostAddress = serverIP+":7810/TheGreanGangRadio/faces/index.xhtml";
+			hostAddress = "http://"+serverIP+":7810/TheGreanGangRadio/";
 			
 		} catch (UnknownHostException e) {
 			log.error("Error in getHostAddress",e);
@@ -174,7 +174,7 @@ public class DjController implements ServletContextListener{
 			}
 			
 			//push to client(user)
-			pushContext.push(Constants.CHANNEL_PLAYING_IMAGE, playingImage);
+			pushContext.push(Constants.CHANNEL_PLAYING_IMAGE, "/TheGreanGangRadio"+playingImage);
 		} catch (InvalidHandle e) {
 			log.error("Error in getPlayingImage", e);
 		}

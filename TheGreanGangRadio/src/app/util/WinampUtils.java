@@ -110,7 +110,7 @@ public class WinampUtils {
 	 * @return only name of playing file
 	 */
 	public static String getFileNamePlaying() {
-		log.debug("Enter getFileNamePlaying");
+//		log.debug("Enter getFileNamePlaying");
 		String fileName = null;
 		try {			
 			String fullPathName = WinampController.getFileNamePlaying();			
@@ -119,7 +119,7 @@ public class WinampUtils {
 		} catch (InvalidHandle e) {
 			log.error("Error in getFileNamePlaying", e);
 		} finally {
-			log.debug("Quit getFileNamePlaying");
+//			log.debug("Quit getFileNamePlaying");
 		}
 		return fileName;
 	}
