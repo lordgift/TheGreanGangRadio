@@ -13,4 +13,7 @@ public interface Constants {
 	public static final String PAGE_LANDING = "./index.xhtml";
 	public static final String PAGE_USERS = "/indexUser.xhtml";
 	public static final String PAGE_DJ = "/indexDJ.xhtml";
+	
+	public static final String IMAGESOURCE_BABY_DANCE_JPG = "./img/baby-dance.jpg";
+	public static final String IMAGESOURCE_BABY_DANCE_GIF = "./img/baby-dance.gif";
 }

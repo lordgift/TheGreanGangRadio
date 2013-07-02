@@ -11,14 +11,14 @@
 	<title>The Grean Gang Radio</title>
 	<link rel="icon" type="image/vnd.microsoft.icon" href="#{request.contextPath}/img/headphone_red.ico"/>
 </h:head>	
-<h:body style="background-image:url('../img/Simple-Design-for-Abstract-Wallpaper.jpg');background-attachment:fixed">
+<h:body style="background-image:url('./img/Simple-Design-for-Abstract-Wallpaper.jpg');background-attachment:fixed">
 	<h:form>
 			<table width="100%" align="center" >
 				<tr>
 					<td align="center" colspan="2">
-						<img src="../img/TheGreanGangRadioText.png" id="logo" 
-							style="border-radius:25px" onmouseover="this.src='../img/DSC_8085500331.JPG'" 
-							onmouseout="this.src='../img/DSC_8084500331.JPG';" 
+						<img src="./img/TheGreanGangRadioText.png" id="logo" 
+							style="border-radius:25px" onmouseover="this.src='./img/DSC_8085500331.JPG'" 
+							onmouseout="this.src='./img/DSC_8084500331.JPG';" 
 							/>
 					</td>
 				</tr>
@@ -79,7 +79,7 @@
 		            			mode="advanced" 
 		            			multiple="true"
 		            			update="messages,pickList"            
-		            			allowTypes="/(\.|\/)(mp3|flac)$/" />
+		            			allowTypes="/(\.|\/)(mp3|flac|wav)$/" />
 	            		</p:inplace>
 	            		&nbsp;
 	            		<p:commandButton title="reload from main directory" styleClass="refreshDirectory" action="#{djController.refreshDirectory}" update="pickList" icon="ui-icon-refresh" style="width:25px;height:25px;vertical-align:inherit;" />

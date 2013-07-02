@@ -35,8 +35,6 @@ public class UserController {
 	ServletContext context = request.getSession().getServletContext();
 	PushContext pushContext = PushContextFactory.getDefault().getPushContext();
 	
-	private static final String IMAGESOURCE_BABY_DANCE_JPG = "../img/baby-dance.jpg";
-	private static final String IMAGESOURCE_BABY_DANCE_GIF = "../img/baby-dance.gif";
 	private String playingImage;
 	private String playingMusic;
 	private String promptTextHost;
@@ -166,9 +164,9 @@ public class UserController {
 	public String getPlayingImage() {
 		try {
 			if(WinampController.getStatus() == WinampController.PLAYING) {
-				playingImage = IMAGESOURCE_BABY_DANCE_GIF;
+				playingImage = Constants.IMAGESOURCE_BABY_DANCE_GIF;
 			} else {
-				playingImage = IMAGESOURCE_BABY_DANCE_JPG;
+				playingImage = Constants.IMAGESOURCE_BABY_DANCE_JPG;
 			}
 			
 		} catch (InvalidHandle e) {
