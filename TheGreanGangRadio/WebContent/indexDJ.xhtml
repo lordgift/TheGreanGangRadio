@@ -17,9 +17,7 @@
 				<tr>
 					<td align="center" colspan="2">
 						<img src="#{request.contextPath}/img/TheGreanGangRadioText.png" id="logo" 
-							style="border-radius:25px" onmouseover="this.src='#{request.contextPath}/img/DSC_8085500331.JPG'" 
-							onmouseout="this.src='#{request.contextPath}/img/DSC_8084500331.JPG';" 
-							/>
+							style="border-radius:25px" />
 					</td>
 				</tr>
 				<tr><td>&nbsp;</td></tr>
@@ -27,7 +25,10 @@
 					<td align="left">
 						<p:panel>
 							<h:outputText value="#{djController.promptTextHost}"/>
-							<h:outputText value="#{djController.hostAddress}" style="border-radius:10px;background-color:#C9FF25;font-size:18px;font-weight:bold;color:black;"/>
+							<h:inputText value="#{djController.hostAddress}" 
+								onclick="this.select();" size="38"								
+								style="border:0;border-radius:10px;background-color:#C9FF25;font-size:18px;font-weight:bold;color:black;text-align:center;"
+								readonly="true" />
 						</p:panel>
 					</td>
 					<td align="center" rowspan="2">
@@ -96,7 +97,6 @@
 	</h:form>
 </h:body>
 <style type="text/css">
-
 /* panel footer */
 .ui-panel-footer {
 	font-size: 12px;
@@ -111,6 +111,7 @@
 	overflow: auto;
 	height: 300px;
 	width: 300px;
+	font-size: smaller;	
 }
 
 /* pickList filter icon */
@@ -119,6 +120,8 @@
 	top: 10px;
 	right: 15px;
 }
+
+/* remove pickList button */
 .ui-picklist-button-add { 
 	visibility: hidden !important; 
 }
@@ -128,6 +131,8 @@
 .ui-picklist-button-remove-all {
 	visibility: hidden !important;
 }
+
+/* colour pickList source */
 .ui-picklist-source {
 	color: gray;
 }

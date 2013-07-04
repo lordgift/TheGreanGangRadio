@@ -79,6 +79,7 @@ public class UserController {
     		//add=true is transfer source to destination
     		log.debug("removing Winamp Playlist(transferring source to destination)");
     		
+    		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);
     	} else {
     		//add=false is transfer destination to source ( can change to event.isRemove() )
     		log.debug("adding music(s) to Winamp Playlist(transferring destination to source)");
