@@ -1,4 +1,4 @@
-package app.managedBean;
+package app.managedBean.test;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
