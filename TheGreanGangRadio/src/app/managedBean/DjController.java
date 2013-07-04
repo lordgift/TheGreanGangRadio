@@ -65,8 +65,7 @@ public class DjController implements ServletContextListener{
 			try {
 				ec.redirect(Constants.PAGE_LANDING);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error("Error " , e);				
 			}
 		}
 		
@@ -269,7 +268,8 @@ public class DjController implements ServletContextListener{
 	public void setPlayListRemoved() {
 		List<String> sourceSongs = songs.getSource();
 		
-		sourceSongs.remove(playingMusic);
+//		sourceSongs.remove(playingMusic); when song ended playingMusic not update(cause' bean attribute)
+		sourceSongs.remove(WinampUtils.getFileNamePlaying()); 
 		
 		context.setAttribute(Constants.ATTRIBUTE_DUAL_LIST_MODEL_SONGS, songs);
 		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);

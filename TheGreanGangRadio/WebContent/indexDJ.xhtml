@@ -134,7 +134,8 @@
 
 </style>
 	<script type="text/javascript">
-		function handleChangingMusic(musicName) {			
+		function handleChangingMusic(musicName) {		
+			$(".playingMusic").html(musicName);
 			$(".setPlayListRemoved").click();
 		}	
 		function handleRefreshPickList(status) {

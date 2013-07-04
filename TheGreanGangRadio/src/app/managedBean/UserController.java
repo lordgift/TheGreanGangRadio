@@ -180,6 +180,7 @@ public class UserController {
 	}
 	
 	public String getPlayingMusic() {
+		playingMusic = WinampUtils.getFileNamePlaying();
 		return playingMusic;
 	}
 
