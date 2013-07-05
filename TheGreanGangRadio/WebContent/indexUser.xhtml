@@ -13,6 +13,7 @@
 </h:head>	
 <h:body style="background-image:url('#{request.contextPath}/img/Simple-Design-for-Abstract-Wallpaper.jpg');background-attachment:fixed">
 	<h:form>
+			<h:inputHidden value="#{userController.clientAddress}" id="clientAddress" />
 			<table width="100%" align="center" >
 				<tr>
 					<td align="center" colspan="2">
@@ -79,6 +80,7 @@
 			
     		<p:growl id="messages" showDetail="true" escape="false"/>
 			<p:socket onMessage="handleRefreshPickList" channel="/refreshPickList" />
+			<p:socket onMessage="handleRefreshPickListWithIpChecking" channel="/refreshPickListWithIpChecking" />
 			<p:socket onMessage="handlePlayingImage" channel="/playingImage" />
 			<p:socket onMessage="handleChangingMusic" channel="/changingMusic" />   			
 	</h:form>
@@ -137,6 +139,12 @@
 				$(".refreshPickList").click();
 // 				Primefaces.ab({source:'',update:''});	
 			}
-		}		
+		}	
+		function handleRefreshPickListWithIpChecking(pushedAddress) {
+			var address = $("[name*='clientAddress']").val();
+			if(address != pushedAddress) {
+				$(".refreshPickList").click();
+			}
+		}
 	</script>
 </html>

@@ -46,12 +46,14 @@ public class DjController implements ServletContextListener{
 	private String playingMusic;
 	private String promptTextHost;
 	private String hostAddress;
+	private String clientAddress;
 	private boolean playing;
 	private boolean stopping;
+	
 	private ThreadMonitorWinamp threadMonitorWinamp;
 
 	// Modifier this class (DualListModel) ;
-	private DualListModel<String> songs;
+	private DualListModel<String> songs;	
 
 	public DjController() {
 		
@@ -112,7 +114,7 @@ public class DjController implements ServletContextListener{
 //    		sourceSongs.remove(playingMusic);
 //    		
 //    		context.setAttribute(Constants.ATTRIBUTE_DUAL_LIST_MODEL_SONGS, songs);
-    		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);		
+    		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST_WITH_IP_CHECKING, clientAddress);		
     		
     	} else {
     		//add=false is transfer destination to source ( can change to event.isRemove() )
@@ -128,7 +130,7 @@ public class DjController implements ServletContextListener{
             //set to ServletContext for using the same list for all users
     		context.setAttribute(Constants.ATTRIBUTE_DUAL_LIST_MODEL_SONGS, (DualListModel<String>) songs);
     		
-    		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);
+    		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST_WITH_IP_CHECKING, clientAddress);
                  
             FacesMessage msg = new FacesMessage();  
             msg.setSeverity(FacesMessage.SEVERITY_INFO);  
@@ -273,6 +275,15 @@ public class DjController implements ServletContextListener{
 		
 		context.setAttribute(Constants.ATTRIBUTE_DUAL_LIST_MODEL_SONGS, songs);
 		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);
+	}
+	
+	public String getClientAddress() {
+		clientAddress = request.getRemoteAddr();		
+		return clientAddress;
+	}
+
+	public void setClientAddress(String clientAddress) {
+		this.clientAddress = clientAddress;
 	}
 	
 	@Override

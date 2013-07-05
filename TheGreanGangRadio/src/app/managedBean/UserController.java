@@ -39,6 +39,7 @@ public class UserController {
 	private String playingMusic;
 	private String promptTextHost;
 	private String hostAddress;
+	private String clientAddress;
 
 	// Modifier this class (DualListModel) ;
 	private DualListModel<String> songs;
@@ -79,7 +80,7 @@ public class UserController {
     		//add=true is transfer source to destination
     		log.debug("removing Winamp Playlist(transferring source to destination)");
     		
-    		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);
+    		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST_WITH_IP_CHECKING, clientAddress);
     	} else {
     		//add=false is transfer destination to source ( can change to event.isRemove() )
     		log.debug("adding music(s) to Winamp Playlist(transferring destination to source)");
@@ -94,7 +95,7 @@ public class UserController {
             //set to ServletContext for using the same list for all users
     		context.setAttribute(Constants.ATTRIBUTE_DUAL_LIST_MODEL_SONGS, (DualListModel<String>) songs);
             
-    		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);
+    		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST_WITH_IP_CHECKING, clientAddress);
     		
             FacesMessage msg = new FacesMessage();  
             msg.setSeverity(FacesMessage.SEVERITY_INFO);  
@@ -187,5 +188,14 @@ public class UserController {
 
 	public void setPlayingMusic(String playingMusic) {
 		this.playingMusic = playingMusic;
+	}
+	
+	public String getClientAddress() {
+		clientAddress = request.getRemoteAddr();		
+		return clientAddress;
+	}
+
+	public void setClientAddress(String clientAddress) {
+		this.clientAddress = clientAddress;
 	}
 }
