@@ -60,16 +60,6 @@ public class DjController implements ServletContextListener{
 		threadMonitorWinamp = new ThreadMonitorWinamp();
 		threadMonitorWinamp.start();
 		
-		String remoteIP = request.getRemoteAddr();
-		if( !Constants.IP_LOCALHOST.equals(remoteIP) ) {
-			FacesContext fc = FacesContext.getCurrentInstance();			
-			ExternalContext ec = fc.getExternalContext();
-			try {
-				ec.redirect(Constants.PAGE_LANDING);
-			} catch (IOException e) {
-				log.error("Error " , e);				
-			}
-		}
 		
 //		WinampUtils.clearWinampPlayList();
 		
@@ -286,6 +276,8 @@ public class DjController implements ServletContextListener{
 		this.clientAddress = clientAddress;
 	}
 	
+	
+	
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
 		threadMonitorWinamp.interrupt();
@@ -293,8 +285,7 @@ public class DjController implements ServletContextListener{
 
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	
 	}
 
 		
