@@ -33,6 +33,7 @@
 <!-- 						</p:panel> -->
 					</td>
 					<td align="center" rowspan="2">
+						<div id="picklist-source-cover" onclick="focusSourceFilter();"></div>
 						<p:pickList id="pickList" value="#{userController.songs}" var="song" itemLabel="#{song}" itemValue="#{song}"							 
 							showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" style="width:500px;"
 							removeLabel="add to queue" widgetVar="pickList">
@@ -129,6 +130,17 @@
 }
 </style>
 	<script type="text/javascript">
+		$(window).load(function () {
+			/*cover source picklist for prevent anything with source*/
+			var topOffset = $(".ui-picklist-source").offset().top;
+			var leftOffset = $(".ui-picklist-source").offset().left;
+			$("#picklist-source-cover").css({ "width":322, "height":322, "top":topOffset, "left":leftOffset, "position":"absolute", "z-index":999});
+			
+		});
+		function focusSourceFilter() {
+			$("[name*='pickList_source_filter']").focus();
+		}
+		
 		function handleChangingMusic(musicName) {			
 			$(".playingMusic").html(musicName);
 		}
