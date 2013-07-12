@@ -67,6 +67,7 @@ public class FileUtils {
 	
 	/**
 	 * copy file from {@link InputStream} , which uploading file to destination output
+	 * <BR /> and reduce two of more spaces to only one for new name
 	 * @param fileName 
 	 * @param in
 	 */
@@ -74,8 +75,11 @@ public class FileUtils {
 		log.debug("Enter copyFile");
 		try {
 
+			//for avoid problem with two or more spaces, this will replace to single
+			String newFileName = fileName.replaceAll("( )+", " ");
+			
 			// write the inputStream to a FileOutputStream
-			OutputStream out = new FileOutputStream(new File(ABSOLUTEPATH_THE_GREAN_GANG_RADIO + fileName));
+			OutputStream out = new FileOutputStream(new File(ABSOLUTEPATH_THE_GREAN_GANG_RADIO + newFileName));
 
 			int read = 0;
 			byte[] bytes = new byte[1024];
