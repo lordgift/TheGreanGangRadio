@@ -80,20 +80,30 @@ public class UserController {
     		//add=true is transfer source to destination
     		log.debug("removing Winamp Playlist(transferring source to destination)");
     		
-    		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST_WITH_IP_CHECKING, clientAddress);
+    		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);
     	} else {
     		//add=false is transfer destination to source ( can change to event.isRemove() )
     		log.debug("adding music(s) to Winamp Playlist(transferring destination to source)");
         	
+    		DualListModel<String> listTemp = (DualListModel<String>) context.getAttribute(Constants.SERVLETCONTEXT_DUAL_LIST_MODEL_SONGS);
             StringBuilder builder = new StringBuilder();
             for(Object item : event.getItems()) {
             	String fileName = (String) item;
                 builder.append(fileName).append("<BR/>");
                 WinampUtils.appendFileToPlaylist(fileName);
+                
+                /* for queue playlist correctly */
+                listTemp.getSource().add(fileName);
+                listTemp.setSource(listTemp.getSource());
+                listTemp.getTarget().remove(fileName);
+                listTemp.setTarget(listTemp.getTarget());
             }  
               
+            
+            
+            
             //set to ServletContext for using the same list for all users
-    		context.setAttribute(Constants.SERVLETCONTEXT_DUAL_LIST_MODEL_SONGS, (DualListModel<String>) songs);
+    		context.setAttribute(Constants.SERVLETCONTEXT_DUAL_LIST_MODEL_SONGS, (DualListModel<String>) listTemp);
             
     		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST_WITH_IP_CHECKING, clientAddress);
     		
