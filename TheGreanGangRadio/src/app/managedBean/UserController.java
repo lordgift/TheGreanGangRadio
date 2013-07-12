@@ -56,7 +56,7 @@ public class UserController {
 	}
 
 	public DualListModel<String> getSongs() {
-		songs = (DualListModel<String>) context.getAttribute(Constants.ATTRIBUTE_DUAL_LIST_MODEL_SONGS);
+		songs = (DualListModel<String>) context.getAttribute(Constants.SERVLETCONTEXT_DUAL_LIST_MODEL_SONGS);
 		return songs;
 	}
 	
@@ -93,7 +93,7 @@ public class UserController {
             }  
               
             //set to ServletContext for using the same list for all users
-    		context.setAttribute(Constants.ATTRIBUTE_DUAL_LIST_MODEL_SONGS, (DualListModel<String>) songs);
+    		context.setAttribute(Constants.SERVLETCONTEXT_DUAL_LIST_MODEL_SONGS, (DualListModel<String>) songs);
             
     		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST_WITH_IP_CHECKING, clientAddress);
     		
@@ -114,9 +114,8 @@ public class UserController {
 	}
 
 	public String getHostAddress() {
-		String serverIP = request.getLocalAddr();
+		String serverIP = (String) context.getAttribute(Constants.SERVLETCONTEXT_SERVER_IP);
 		hostAddress = "http://"+serverIP+":8000/";
-		
 		return hostAddress;
 	}
 	

@@ -68,14 +68,22 @@ public class DjController implements ServletContextListener{
 		List<String> targetSongs = FileUtils.getInstance().getMusicListFromDirectory();
 		
 		songs = new DualListModel<String>(sourceSongs, targetSongs);
-
-		context.setAttribute(Constants.ATTRIBUTE_DUAL_LIST_MODEL_SONGS, (DualListModel<String>) songs);
+		context.setAttribute(Constants.SERVLETCONTEXT_DUAL_LIST_MODEL_SONGS, (DualListModel<String>) songs);
+		
+		try {
+			String serverIP = InetAddress.getLocalHost().getHostAddress();
+			hostAddress = "http://"+serverIP+":7810/TheGreanGangRadio/";
+			context.setAttribute(Constants.SERVLETCONTEXT_SERVER_IP, (String) serverIP);
+		} catch (UnknownHostException e) {
+			log.error("Error in getHostAddress",e);
+		}
+		
 		
 		promptTextHost = "Share this to users : ";
 	}
 
 	public DualListModel<String> getSongs() {
-		songs = (DualListModel<String>) context.getAttribute(Constants.ATTRIBUTE_DUAL_LIST_MODEL_SONGS);		
+		songs = (DualListModel<String>) context.getAttribute(Constants.SERVLETCONTEXT_DUAL_LIST_MODEL_SONGS);		
 		return songs;
 	}
 	
@@ -118,7 +126,7 @@ public class DjController implements ServletContextListener{
             }
 
             //set to ServletContext for using the same list for all users
-    		context.setAttribute(Constants.ATTRIBUTE_DUAL_LIST_MODEL_SONGS, (DualListModel<String>) songs);
+    		context.setAttribute(Constants.SERVLETCONTEXT_DUAL_LIST_MODEL_SONGS, (DualListModel<String>) songs);
     		
     		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST_WITH_IP_CHECKING, clientAddress);
                  
@@ -139,13 +147,6 @@ public class DjController implements ServletContextListener{
 	}
 
 	public String getHostAddress() {
-		try {
-			String serverIP = InetAddress.getLocalHost().getHostAddress();
-			hostAddress = "http://"+serverIP+":7810/TheGreanGangRadio/";
-			
-		} catch (UnknownHostException e) {
-			log.error("Error in getHostAddress",e);
-		}
 		return hostAddress;
 	}
 	public void playOrPause() {
@@ -253,7 +254,7 @@ public class DjController implements ServletContextListener{
 		List<String> musics = FileUtils.getInstance().getMusicListFromDirectory();
 		songs.setTarget(musics);
 		
-		context.setAttribute(Constants.ATTRIBUTE_DUAL_LIST_MODEL_SONGS, songs);
+		context.setAttribute(Constants.SERVLETCONTEXT_DUAL_LIST_MODEL_SONGS, songs);
 		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);
 	}
 
@@ -263,7 +264,7 @@ public class DjController implements ServletContextListener{
 //		sourceSongs.remove(playingMusic); when song ended playingMusic not update(cause' bean attribute)
 		sourceSongs.remove(WinampUtils.getFileNamePlaying()); 
 		
-		context.setAttribute(Constants.ATTRIBUTE_DUAL_LIST_MODEL_SONGS, songs);
+		context.setAttribute(Constants.SERVLETCONTEXT_DUAL_LIST_MODEL_SONGS, songs);
 		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);
 	}
 	

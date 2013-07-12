@@ -24,13 +24,13 @@
 				<tr><td>&nbsp;</td></tr>
 				<tr>
 					<td align="left">
-						<p:panel>
-							<h:outputText value="#{userController.promptTextHost}"/>
-								<h:inputText value="#{userController.hostAddress}" 
-								onclick="this.select();" size="22" 							
-								style="border:0;border-radius:10px;background-color:#C9FF25;font-size:18px;font-weight:bold;color:black;text-align:center;"
-								readonly="true" />
-						</p:panel>
+<!-- 						<p:panel> -->
+<!-- 							<h:outputText value="#{userController.promptTextHost}"/> -->
+<!-- 								<h:inputText value="#{userController.hostAddress}"  -->
+<!-- 								onclick="this.select();" size="22" 							 -->
+<!-- 								style="border:0;border-radius:10px;background-color:#C9FF25;font-size:18px;font-weight:bold;color:black;text-align:center;" -->
+<!-- 								readonly="true" /> -->
+<!-- 						</p:panel> -->
 					</td>
 					<td align="center" rowspan="2">
 						<p:pickList id="pickList" value="#{userController.songs}" var="song" itemLabel="#{song}" itemValue="#{song}"							 
@@ -54,6 +54,7 @@
 									</td>
 									<td>
 										<h:outputText id="playingMusic" value="#{userController.playingMusic}" styleClass="playingMusic" style="padding-left:5px" />
+										<audio src="#{userController.hostAddress};" controls="controls" autoplay="autoplay"/>
 									</td>
 								</tr>
 							</table>
