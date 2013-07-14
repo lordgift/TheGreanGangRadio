@@ -79,7 +79,7 @@ public class DjController implements ServletContextListener{
 		}
 		
 		
-		promptTextHost = "Share this to users : ";
+		promptTextHost = "For users : ";
 	}
 
 	public DualListModel<String> getSongs() {
@@ -289,12 +289,18 @@ public class DjController implements ServletContextListener{
 	
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
+		try {
+			WinampController.exit();
+		} catch (InvalidHandle e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		threadMonitorWinamp.interrupt();
 	}
 
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
-	
+		
 	}
 
 		

@@ -52,7 +52,7 @@ public class UserController {
 		
 		songs = new DualListModel<String>(sourceSongs, targetSongs);
 
-		promptTextHost = "Connect your music player to : ";
+		promptTextHost = "For external player : ";
 	}
 
 	public DualListModel<String> getSongs() {

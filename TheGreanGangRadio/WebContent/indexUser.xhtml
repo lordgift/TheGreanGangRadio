@@ -7,128 +7,129 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	>
-<h:head>
-	<title>The Grean Gang Radio</title>
-	<link rel="icon" type="image/vnd.microsoft.icon" href="#{request.contextPath}/img/headphone_red.ico"/>
-</h:head>	
-<h:body style="background-image:url('#{request.contextPath}/img/Simple-Design-for-Abstract-Wallpaper.jpg');background-attachment:fixed">
-	<h:form>
-			<h:inputHidden value="#{userController.clientAddress}" id="clientAddress" />
-			<table width="100%" align="center" >
-				<tr>
-					<td align="center" colspan="2">
-						<img src="#{request.contextPath}/img/TheGreanGangRadioText.png" id="logo" 
-							style="border-radius:25px" />
-					</td>
-				</tr>
-				<tr><td>&nbsp;</td></tr>
-				<tr>
-					<td align="left">
-<!-- 						<p:panel> -->
-<!-- 							<h:outputText value="#{userController.promptTextHost}"/> -->
-<!-- 								<h:inputText value="#{userController.hostAddress}"  -->
-<!-- 								onclick="this.select();" size="22" 							 -->
-<!-- 								style="border:0;border-radius:10px;background-color:#C9FF25;font-size:18px;font-weight:bold;color:black;text-align:center;" -->
-<!-- 								readonly="true" /> -->
-<!-- 						</p:panel> -->
-					</td>
-					<td align="center" rowspan="2">
-						<div id="picklist-source-cover" onclick="focusSourceFilter();"></div>
-						<p:pickList id="pickList" value="#{userController.songs}" var="song" itemLabel="#{song}" itemValue="#{song}"							 
-							showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" style="width:500px;"
-							removeLabel="add to queue" widgetVar="pickList">
-						
-							<f:facet name="sourceCaption">Next..</f:facet>
-							<f:facet name="targetCaption">All Music</f:facet>  
-														 
-							<p:ajax event="transfer" listener="#{userController.onTransfer}" update="messages"/>  
-						</p:pickList>
-					</td>
-				</tr>
-				<tr>
-					<td width="45%" valign="top">
-						<p:panel header="Controller" footer="Powered by JSF, Primeface, JavaWinampAPI">
-							<table>
-								<tr>
-									<td>
-										<h:graphicImage id="playingImage" styleClass="playingImage" value="#{userController.playingImage}" width="80" height="106"/>
-									</td>
-									<td>
-										<h:outputText id="playingMusic" value="#{userController.playingMusic}" styleClass="playingMusic" style="padding-left:5px" />
-										<audio src="#{userController.hostAddress};" controls="controls" autoplay="autoplay"/>
-									</td>
-								</tr>
-							</table>
-						</p:panel>						
-					</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td align="center">
-						<p:inplace id="uploader" editor="true" label="upload more file to Server" style="color:gray">
-					    	<p:fileUpload fileUploadListener="#{userController.handleFileUpload}"
-		            			mode="advanced" 
-		            			multiple="true"
-		            			update="messages,pickList"            
-		            			allowTypes="/(\.|\/)(mp3|flac|wav)$/" />
-	            		</p:inplace>
-	            		&nbsp;
-	            		<p:commandButton title="reload from main directory" styleClass="refreshDirectory" action="#{djController.refreshDirectory}" update="pickList" icon="ui-icon-refresh" style="visibility:hidden;width:25px;height:25px;vertical-align:inherit;" />
-	            		<p:commandButton styleClass="refreshPickList" update="pickList" style="visibility:hidden" />
-					</td>
-				</tr>
-				<tr><td>&nbsp;</td></tr>
-			</table>
-			
-    		<p:growl id="messages" showDetail="true" escape="false"/>
-			<p:socket onMessage="handleRefreshPickList" channel="/refreshPickList" />
-			<p:socket onMessage="handleRefreshPickListWithIpChecking" channel="/refreshPickListWithIpChecking" />
-			<p:socket onMessage="handlePlayingImage" channel="/playingImage" />
-			<p:socket onMessage="handleChangingMusic" channel="/changingMusic" />   			
-	</h:form>
-</h:body>
-<style type="text/css">
-
-/* panel footer */
-.ui-panel-footer {
-	font-size: 12px;
-	height:10px;
-}
-
-/* pickList */
-.ui-picklist .ui-picklist-list {
-	list-style-type: none;
-	margin: 0;
-	padding: 10px;
-	overflow: auto;
-	height: 300px;
-	width: 300px;
-	font-size: smaller;
-}
-
-/* pickList filter icon */
-.ui-picklist .ui-picklist-filter-container .ui-icon {
-	position: absolute;
-	top: 10px;
-	right: 15px;
-}
-
-/* remove pickList button */
-.ui-picklist-button-add { 
-	visibility: hidden; 
-}
-.ui-picklist-button-add-all {
-	visibility: hidden;
-}
-.ui-picklist-button-remove-all {
-	visibility: hidden;
-}
-
-/* colour pickList source */
-.ui-picklist-source {
-	color: gray;
-}
-</style>
+	<h:head>
+		<title>The Grean Gang Radio</title>
+		<link rel="icon" type="image/vnd.microsoft.icon" href="#{request.contextPath}/img/headphone_red.ico"/>
+	</h:head>	
+	<h:body style="background-image:url('#{request.contextPath}/img/Simple-Design-for-Abstract-Wallpaper.jpg');background-attachment:fixed">
+		<h:form>
+				<h:inputHidden value="#{userController.clientAddress}" id="clientAddress" />
+				<table width="100%" align="center" >
+					<tr>
+						<td align="center" colspan="2">
+							<img src="#{request.contextPath}/img/TheGreanGangRadioText.png" id="logo" 
+								style="border-radius:25px" />
+						</td>
+					</tr>
+					<tr><td>&nbsp;</td></tr>
+					<tr>
+						<td align="left">
+							<p:panel>
+								<h:outputText value="#{userController.promptTextHost}"/>
+									<h:inputText value="#{userController.hostAddress}" 
+									onclick="this.select();" size="22" 							
+									style="border:0;border-radius:10px;background-color:#C9FF25;font-size:18px;font-weight:bold;color:black;text-align:center;"
+									readonly="true" />
+							</p:panel>
+						</td>
+						<td align="center" rowspan="2">
+							<div id="picklist-source-cover" onclick="focusSourceFilter();"></div>
+							<p:pickList id="pickList" value="#{userController.songs}" var="song" itemLabel="#{song}" itemValue="#{song}"							 
+								showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" style="width:500px;"
+								removeLabel="add to queue" widgetVar="pickList">
+							
+								<f:facet name="sourceCaption">Next..</f:facet>
+								<f:facet name="targetCaption">All Music</f:facet>  
+															 
+								<p:ajax event="transfer" listener="#{userController.onTransfer}" update="messages"/>  
+							</p:pickList>
+						</td>
+					</tr>
+					<tr>
+						<td width="45%" valign="top">
+							<p:panel header="Controller" footer="Powered by JSF, Primeface, JavaWinampAPI">
+								<table>
+									<tr>
+										<td>
+											<h:graphicImage id="playingImage" styleClass="playingImage" value="#{userController.playingImage}" width="80" height="106"/>
+										</td>
+										<td>
+											<h:outputText id="playingMusic" value="#{userController.playingMusic}" styleClass="playingMusic" style="padding-left:5px" />
+											<BR/>
+											<audio src="#{userController.hostAddress};" controls="controls" autoplay="autoplay"/>
+										</td>
+									</tr>
+								</table>
+							</p:panel>						
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td align="center">
+							<p:inplace id="uploader" editor="true" label="upload more file to Server" style="color:gray">
+						    	<p:fileUpload fileUploadListener="#{userController.handleFileUpload}"
+			            			mode="advanced" 
+			            			multiple="true"
+			            			update="messages,pickList"            
+			            			allowTypes="/(\.|\/)(mp3|flac|wav)$/" />
+		            		</p:inplace>
+		            		&nbsp;
+		            		<p:commandButton title="reload from main directory" styleClass="refreshDirectory" action="#{djController.refreshDirectory}" update="pickList" icon="ui-icon-refresh" style="visibility:hidden;width:25px;height:25px;vertical-align:inherit;" />
+		            		<p:commandButton styleClass="refreshPickList" update="pickList" style="visibility:hidden" />
+						</td>
+					</tr>
+					<tr><td>&nbsp;</td></tr>
+				</table>
+				
+	    		<p:growl id="messages" showDetail="true" escape="false"/>
+				<p:socket onMessage="handleRefreshPickList" channel="/refreshPickList" />
+				<p:socket onMessage="handleRefreshPickListWithIpChecking" channel="/refreshPickListWithIpChecking" />
+				<p:socket onMessage="handlePlayingImage" channel="/playingImage" />
+				<p:socket onMessage="handleChangingMusic" channel="/changingMusic" />   			
+		</h:form>
+	</h:body>
+	<style type="text/css">
+	
+	/* panel footer */
+	.ui-panel-footer {
+		font-size: 12px;
+		height:10px;
+	}
+	
+	/* pickList */
+	.ui-picklist .ui-picklist-list {
+		list-style-type: none;
+		margin: 0;
+		padding: 10px;
+		overflow: auto;
+		height: 300px;
+		width: 300px;
+		font-size: smaller;
+	}
+	
+	/* pickList filter icon */
+	.ui-picklist .ui-picklist-filter-container .ui-icon {
+		position: absolute;
+		top: 10px;
+		right: 15px;
+	}
+	
+	/* remove pickList button */
+	.ui-picklist-button-add { 
+		visibility: hidden; 
+	}
+	.ui-picklist-button-add-all {
+		visibility: hidden;
+	}
+	.ui-picklist-button-remove-all {
+		visibility: hidden;
+	}
+	
+	/* colour pickList source */
+	.ui-picklist-source {
+		color: gray;
+	}
+	</style>
 	<script type="text/javascript">
 		$(window).load(function () {
 			/* cover picklist-source for prevent anything */
