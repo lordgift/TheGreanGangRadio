@@ -82,7 +82,7 @@
 			            			mode="advanced" 
 			            			multiple="true"
 			            			update="messages,pickList"            
-			            			allowTypes="/(\.|\/)(mp3|flac|wav)$/" />
+			            			allowTypes="/(\.|\/)(mp3|flac|wav|m4a)$/" />
 		            		</p:inplace>
 		            		&nbsp;
 		            		<p:commandButton title="reload from main directory" styleClass="refreshDirectory" action="#{djController.refreshDirectory}" update="pickList" icon="ui-icon-refresh" style="width:25px;height:25px;vertical-align:inherit;" />
@@ -144,10 +144,11 @@
 	<script type="text/javascript">
 		$(window).load(function () {
 			/* cover picklist-source for prevent anything */
+			var width = $(".ui-picklist-source").width()+10;//+10 for make sure can't over the song list
+			var height = $(".ui-picklist-source").height();
 			var topOffset = $(".ui-picklist-source").offset().top;
 			var leftOffset = $(".ui-picklist-source").offset().left;
-			$("#picklist-source-cover").css({ "width":322, "height":322, "top":topOffset, "left":leftOffset, "position":"absolute", "z-index":999});
-			
+			$("#picklist-source-cover").css({ "width":width, "height":height, "top":topOffset, "left":leftOffset, "position":"absolute", "z-index":999});
 		});
 		function focusSourceFilter() {
 			$("[name*='pickList_source_filter']").focus();
