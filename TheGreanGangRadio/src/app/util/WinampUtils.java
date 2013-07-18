@@ -1,7 +1,6 @@
 package app.util;
 
 import static com.qotsa.jni.controller.WinampController.clearPlayList;
-import static com.qotsa.jni.controller.WinampController.getPlayListLength;
 import static com.qotsa.jni.controller.WinampController.nextTrack;
 import static com.qotsa.jni.controller.WinampController.pause;
 import static com.qotsa.jni.controller.WinampController.play;
@@ -11,12 +10,6 @@ import static com.qotsa.jni.controller.WinampController.run;
 import static com.qotsa.jni.controller.WinampController.stop;
 
 import java.io.IOException;
-
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.Mixer;
-import javax.sound.sampled.Port;
 
 import org.apache.log4j.Logger;
 
@@ -34,9 +27,6 @@ public class WinampUtils {
 	public static final String PLAYER_ACTION_NEXT = "next";
 	public static final String PLAYER_ACTION_PREVIOUS = "previous";
 	
-	public static final String SYNCHRONIZE_MODE_WINAMP = "1";
-	public static final String SYNCHRONIZE_MODE_WEB = "2";
-
 	/**
 	 * do anything follow from command
 	 * 
@@ -95,7 +85,7 @@ public class WinampUtils {
         	Process p = Runtime.getRuntime().exec(command.toString());
 //        	p.waitFor();
 		} catch (IOException e) {
-			log.error("Error in onTransfer",e);
+			log.error("Error in appendFileToPlaylist",e);
 		} finally {
 			log.debug("Quit appendFileToPlaylist");
 		}
@@ -131,21 +121,6 @@ public class WinampUtils {
 
 	}
 
-	/**
-	 * check web's playlist length & winamp's playlist length for the way to
-	 * sync.
-	 * 
-	 * @return {@link #SYNCHRONIZE_MODE_WINAMP} or {@link #SYNCHRONIZE_MODE_WEB}
-	 * @throws InvalidHandle
-	 */
-	public static String synchronizeChecking() throws InvalidHandle {
-		int winampPlaylistLength = getPlayListLength();
-		int webPlaylistLength = 0; // TODO
-
-		return winampPlaylistLength > webPlaylistLength ? SYNCHRONIZE_MODE_WINAMP : SYNCHRONIZE_MODE_WEB;
-
-	}
-	
 	/**
 	 * clear all music in winamp playlist
 	 */
