@@ -1,34 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.jboss.ide.eclipse.as.core.server.runtime.runtimeTarget/JBoss 7.1 Runtime">
-		<attributes>
-			<attribute name="owner.project.facets" value="jst.web;jst.jsf"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="lib" path="lib/log4j/log4j-1.2.17.jar">
+	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.jboss.ide.eclipse.as.core.server.runtime.runtimeTarget/JBoss 7.1.1 The Grean Gang Radio">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/TheGreanGangRadio/lib/log4j/log4j-1.2.17.zip!/apache-log4j-1.2.17/site/apidocs"/>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+			<attribute name="owner.project.facets" value="jst.jsf;jst.web"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/winamp develop kit/JavaWinampAPI.jar">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.6.0_35x86">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/TheGreanGangRadio/lib/winamp develop kit/JavaWinampAPI_v1_1.zip!/javadoc"/>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/log4j/log4jproperties.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/primeface/primefaces-4.0-20130605.174828-3.jar" sourcepath="lib/primeface/primefaces-4.0-20130605.174828-3-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/TheGreanGangRadio/lib/primeface/primefaces-3.5.zip!/apidocs"/>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/atmosphere/atmosphere-runtime-1.1.0.RC3.jar">
@@ -46,11 +28,31 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/log4j/log4j-1.2.17.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/TheGreanGangRadio/lib/log4j/log4j-1.2.17.zip!/apache-log4j-1.2.17/site/apidocs"/>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/log4j/log4jproperties.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/primeface/primefaces-4.0-20130605.174828-3.jar" sourcepath="lib/primeface/primefaces-4.0-20130605.174828-3-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/winamp develop kit/JavaWinampAPI.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/primeface/theme/ui-darkness-1.0.10.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
