@@ -73,7 +73,14 @@
 					</tr>
 					<tr>
 						<td width="45%" valign="top">
-							<p:panel header="Controller" footer="Powered by JSF, Primeface, JavaWinampAPI">
+							<p:panel header="Controller">
+    							<f:facet name="footer">
+									<span class="styleLink">Developed by : The Grean Gang's Members <BR/></span>
+									<span class="styleLink">Powered by : 
+										<a href="http://sourceforge.net/projects/javawinampapi/">JavaServerFaces(JSF)</a>,&nbsp;
+										<a href="http://www.primefaces.org">Primeface</a>,&nbsp;
+										<a href="http://www.oracle.com/technetwork/java/javaee/javaserverfaces-139869.html">JavaWinampAPI</a></span>
+								</f:facet>							
 								<f:facet name="actions">  
             						<h:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" onclick="shoutcastToggle()" >  
                 						<h:outputText styleClass="ui-icon ui-icon-help" />  
@@ -128,12 +135,18 @@
 		</h:form>
 	</h:body>
 	<style type="text/css">
-	/* panel footer */
-	.ui-panel-footer {
-		font-size: 12px;
-		height:10px;
-	}
-	
+		/* panel footer */
+		.ui-panel-footer {
+			text-align: center !important; 
+			font-size: 12px;
+		}
+			
+		.styleLink {color:#888;}
+		.styleLink a {color:#888;}
+	 	.styleLink a:link {text-decoration: none;} 
+	 	.styleLink a:visited {text-decoration: none;} 
+	 	.styleLink a:active {text-decoration: none;} 
+		.styleLink a:hover {text-decoration: underline; color:white;}
 	</style>
 	<script type="text/javascript">
 		$(window).load(function() {
