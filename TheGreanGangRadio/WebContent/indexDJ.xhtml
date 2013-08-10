@@ -77,9 +77,9 @@
     							<f:facet name="footer">
 									<span class="styleLink">Developed by : The Grean Gang's Members <BR/></span>
 									<span class="styleLink">Powered by : 
-										<a href="http://sourceforge.net/projects/javawinampapi/">JavaServerFaces(JSF)</a>,&nbsp;
-										<a href="http://www.primefaces.org">Primeface</a>,&nbsp;
-										<a href="http://www.oracle.com/technetwork/java/javaee/javaserverfaces-139869.html">JavaWinampAPI</a></span>
+										<a href="http://sourceforge.net/projects/javawinampapi/" target="_BLANK">JavaServerFaces(JSF)</a>,&nbsp;
+										<a href="http://www.primefaces.org" target="_BLANK">Primeface</a>,&nbsp;
+										<a href="http://www.oracle.com/technetwork/java/javaee/javaserverfaces-139869.html" target="_BLANK">JavaWinampAPI</a></span>
 								</f:facet>							
 								<f:facet name="actions">  
             						<h:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" onclick="shoutcastToggle()" >  
@@ -87,7 +87,7 @@
             						</h:commandLink>
         						</f:facet> 
     							<div id="shoutcastShade" align="center">
-									<iframe src="http://localhost:8000/" style="display:none;" />
+									<iframe src="#{djController.streamingUrl}" style="display:none;" />
 								</div>							
 								<table>
 									<tr>

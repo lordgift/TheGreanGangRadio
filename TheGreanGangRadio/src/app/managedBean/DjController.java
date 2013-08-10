@@ -18,8 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.event.TransferEvent;
-import org.primefaces.model.DualListModel;
 import org.primefaces.model.SelectableDataModel;
 import org.primefaces.push.PushContext;
 import org.primefaces.push.PushContextFactory;
@@ -47,6 +45,7 @@ public class DjController implements ServletContextListener, SelectableDataModel
 	private String playingMusic;
 	private String promptTextHost;
 	private String shareUrl;
+	private String streamingUrl;
 	private String remoteAddress;
 	private String remoteHostName;
 	private boolean playBooleanButton;
@@ -68,7 +67,8 @@ public class DjController implements ServletContextListener, SelectableDataModel
 
 		try {
 			String hostAddress = InetAddress.getLocalHost().getHostAddress();
-			shareUrl = "http://" + hostAddress + ":7810/TheGreanGangRadio/";
+			shareUrl = Constants.PROTOCOL_HTTP + hostAddress + Constants.PORT_JBOSS + Constants.CONTEXT_ROOT;
+			streamingUrl = Constants.PROTOCOL_HTTP + hostAddress + Constants.PORT_SHOUTCAST;
 			context.setAttribute(Constants.SERVLETCONTEXT_HOST_ADDRESS, (String) hostAddress);
 		} catch (UnknownHostException e) {
 			log.error("Error in getHostAddress", e);
@@ -266,7 +266,7 @@ public class DjController implements ServletContextListener, SelectableDataModel
 			}
 
 			// push to client(user)
-			pushContext.push(Constants.CHANNEL_PLAYING_IMAGE, "/TheGreanGangRadio" + playingImage);
+			pushContext.push(Constants.CHANNEL_PLAYING_IMAGE, Constants.CONTEXT_ROOT + playingImage);
 		} catch (InvalidHandle e) {
 			log.error("Error in getPlayingImage", e);
 		}
@@ -304,6 +304,10 @@ public class DjController implements ServletContextListener, SelectableDataModel
 	
 	public String getShareUrl() {
 		return shareUrl;
+	}
+	
+	public String getStreamingUrl() {
+		return streamingUrl;
 	}
 	
 	public String getPromptTextHost() {

@@ -14,19 +14,17 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.event.TransferEvent;
-import org.primefaces.model.DualListModel;
 import org.primefaces.push.PushContext;
 import org.primefaces.push.PushContextFactory;
-
-import com.qotsa.exception.InvalidHandle;
-import com.qotsa.jni.controller.WinampController;
 
 import app.pojo.Music;
 import app.util.Constants;
 import app.util.FileUtils;
 import app.util.NetworkUtils;
 import app.util.WinampUtils;
+
+import com.qotsa.exception.InvalidHandle;
+import com.qotsa.jni.controller.WinampController;
 
 @ManagedBean
 @SessionScoped
@@ -52,7 +50,7 @@ public class UserController {
 	public UserController() {
 		
 		String hostAddress = (String) context.getAttribute(Constants.SERVLETCONTEXT_HOST_ADDRESS);
-		streamingUrl = "http://"+hostAddress+":8000/";
+		streamingUrl = Constants.PROTOCOL_HTTP + hostAddress + Constants.PORT_SHOUTCAST;
 
 		remoteAddress = request.getRemoteAddr();
 		remoteHostName = NetworkUtils.getInstance().getHostNameByCommandLine(remoteAddress);
@@ -214,7 +212,7 @@ public class UserController {
 			}
 
 			// push to client(user)
-			pushContext.push(Constants.CHANNEL_PLAYING_IMAGE, "/TheGreanGangRadio" + playingImage);
+			pushContext.push(Constants.CHANNEL_PLAYING_IMAGE, Constants.CONTEXT_ROOT + playingImage);
 		} catch (InvalidHandle e) {
 			log.error("Error in getPlayingImage", e);
 		}

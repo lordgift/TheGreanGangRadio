@@ -21,6 +21,11 @@ public interface Constants {
 	/* hard code string*/
 	public static final String IP_LOCALHOST = "127.0.0.1";
 	
+	public static final String PROTOCOL_HTTP = "http://";
+	public static final String PORT_SHOUTCAST = ":8000";
+	public static final String PORT_JBOSS = ":7810";
+	public static final String CONTEXT_ROOT = "/TheGreanGangRadio";
+	
 	public static final String PAGE_LANDING = "./index.xhtml";
 	public static final String PAGE_USERS = "/indexUser.xhtml";
 	public static final String PAGE_DJ = "/indexDJ.xhtml";
