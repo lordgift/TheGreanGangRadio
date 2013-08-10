@@ -13,7 +13,7 @@
 	</h:head>	
 	<h:body style="background-image:url('#{request.contextPath}/img/Simple-Design-for-Abstract-Wallpaper.jpg');background-attachment:fixed">
 		<h:form>
-				<h:inputHidden value="#{djController.clientAddress}" id="clientAddress" />
+				<h:inputHidden value="#{djController.remoteAddress}" id="remoteAddress" />
 				<table width="100%" align="center" >
 					<tr>
 						<td align="center" colspan="2">
@@ -26,23 +26,49 @@
 						<td align="left">
 							<p:panel>
 								<h:outputText value="#{djController.promptTextHost}"/>
-								<h:inputText value="#{djController.hostAddress}" 
+								<h:inputText value="#{djController.shareUrl}" 
 									onclick="this.select();" size="38"								
 									style="border:0;border-radius:10px;background-color:#C9FF25;font-size:18px;font-weight:bold;color:black;text-align:center;"
 									readonly="true" />
 							</p:panel>
 						</td>
-						<td align="center" rowspan="2">
-							<div id="picklist-source-cover" onclick="focusSourceFilter();"></div>
-							<p:pickList id="pickList" value="#{djController.songs}" var="song" itemLabel="#{song}" itemValue="#{song}"							 
-								showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" style="width:500px;"
-								removeLabel="add to queue" widgetVar="pickList">
-							
-								<f:facet name="sourceCaption">Next..</f:facet>
-								<f:facet name="targetCaption">All Music</f:facet>  
+						<td align="left" rowspan="2">
+							<p:tabView  effectDuration="normal" id="tabAll">
+								<p:tab titleStyle="font-size:small;">
+									<f:facet name="title">
+										<p:graphicImage value="/img/tab-soundcard-flat.svg" width="30px" height="30px" style="vertical-align:bottom;"/>
+										Upcoming..
+									</f:facet>
+									
+								    <p:dataTable widgetVar="playlist" id="playlist" var="playlist" value="#{djController.playlist}" 
+								    	rowKey="#{playlist}" resizableColumns="true" 
+								    	scrollable="true" scrollHeight="300" filteredValue="#{djController.filtered}">
+	       									<p:column filterBy="musicName" filterMatchMode="contains" filterStyleClass="musicNameFilter" filterStyle="width:50%;text-align:center">
+	           									#{playlist.musicName}
+       										</p:column>
+	       									<p:column filterBy="requestBy" filterMatchMode="contains" filterStyleClass="requestFilter" filterStyle="width:50%;text-align:center">  
+	           									#{playlist.requestBy}
+	       									</p:column>
+							        </p:dataTable>
+								</p:tab>
 								
-								<p:ajax event="transfer" listener="#{djController.onTransfer}" update="messages"/>  
-							</p:pickList>
+								<p:tab titleStyle="font-size:small;">
+									<f:facet name="title">
+										<p:graphicImage value="/img/tab-folder-flat.svg" width="30px" height="30px" style="vertical-align:bottom;"/>
+										Directory
+									</f:facet>		
+									
+								    <p:dataTable widgetVar="allMusic" id="allMusic" var="allMusic" value="#{djController.allMusic}" 
+								    	selection="#{djController.selected}" selectionMode="single" rowKey="#{allMusic}" 
+								    	scrollable="true" scrollHeight="300" filteredValue="#{djController.filtered}">
+                    
+                  							<p:column filterBy="musicName" filterMatchMode="contains" filterStyleClass="musicNameFilter" filterStyle="width:50%;text-align:center">
+	           									<p:commandButton icon="ui-icon-plusthick" actionListener="#{djController.onRowSelect(allMusic)}" style="width:30px;height:30px;" oncomplete="setPlaceholder();" update="@widgetVar(messages),@widgetVar(playlist),@widgetVar(allMusic)"/>
+	           									#{allMusic.musicName}
+       										</p:column>
+							        </p:dataTable>
+								</p:tab>
+							</p:tabView>  
 						</td>
 					</tr>
 					<tr>
@@ -54,7 +80,7 @@
             						</h:commandLink>  
         						</f:facet> 
     							<div id="shoutcastShade" align="center">
-									<iframe src="http://#{userController.clientAddress}:8000/" style="display:none;" />
+									<iframe src="http://localhost:8000/" style="display:none;" />
 								</div>							
 								<table>
 									<tr>
@@ -68,11 +94,11 @@
 												for class with icon(from jQuery UI) 
 												http://jquery-ui.googlecode.com/svn/tags/1.6rc5/tests/static/icons.html
 											-->
-					                     	<p:selectBooleanButton id="playing" value="#{djController.playing}" onLabel="pause" offLabel="play" onIcon="ui-icon-pause" offIcon="ui-icon-play">  
-					            				<p:ajax listener="#{djController.playOrPause}" update="playingMusic,playingImage,stopping"/>  
+					                     	<p:selectBooleanButton id="playBooleanButton" value="#{djController.playBooleanButton}" onLabel="pause" offLabel="play" onIcon="ui-icon-pause" offIcon="ui-icon-play">  
+					            				<p:ajax listener="#{djController.playOrPause}" update="playingMusic,playingImage,stopBooleanButton"/>  
 					        				</p:selectBooleanButton>
-					        				<p:selectBooleanButton id="stopping" value="#{djController.stopping}" onLabel="stop" offLabel="stop" onIcon="ui-icon-stop" offIcon="ui-icon-stop">  
-					            				<p:ajax listener="#{djController.playerControl('stop')}" update="playingMusic,playingImage,playing"/>  
+					        				<p:selectBooleanButton id="stopBooleanButton" value="#{djController.stopBooleanButton}" onLabel="stop" offLabel="stop" onIcon="ui-icon-stop" offIcon="ui-icon-stop">  
+					            				<p:ajax listener="#{djController.playerControl('stop')}" update="playingMusic,playingImage,playBooleanButton"/>  
 					        				</p:selectBooleanButton>
 											<p:commandButton value="previous" icon="ui-icon-seek-first" action="#{djController.playerControl('previous')}" update="playingMusic" />
 											<p:commandButton value="next" icon="ui-icon-seek-end" action="#{djController.playerControl('next')}" update="playingMusic" />										
@@ -89,22 +115,24 @@
 						    	<p:fileUpload fileUploadListener="#{djController.handleFileUpload}"
 			            			mode="advanced" 
 			            			multiple="true"
-			            			update="messages,pickList"            
+			            			update="messages"
 			            			allowTypes="/(\.|\/)(mp3|flac|wav|m4a)$/" />
 		            		</p:inplace>
 		            		&nbsp;
-		            		<p:commandButton title="reload from main directory" styleClass="refreshDirectory" action="#{djController.refreshDirectory}" update="pickList" icon="ui-icon-refresh" style="width:25px;height:25px;vertical-align:inherit;" />
-		            		<p:commandButton styleClass="refreshPickList" update="pickList" style="visibility:hidden" />
-		            		<p:commandButton styleClass="setPlayListRemoved" action="#{djController.setPlayListRemoved}" update="pickList" style="visibility:hidden" />
 						</td>
 					</tr>
 					<tr><td>&nbsp;</td></tr>
 				</table>
 				
-	    		<p:growl id="messages" showDetail="true" escape="false"/>    		
-	    		<p:socket onMessage="handleRefreshPickList" channel="/refreshPickList" />
-	    		<p:socket onMessage="handleRefreshPickListWithIpChecking" channel="/refreshPickListWithIpChecking" />
+				<p:commandButton styleClass="refreshAllMusic" style="visibility:hidden;" update="@widgetVar(allMusic)" oncomplete="setPlaceholder()"/>
+				<p:commandButton styleClass="refreshPlaylist" style="visibility:hidden;" update="@widgetVar(playlist)" oncomplete="setPlaceholder()"/>
+				<p:commandButton styleClass="removePlayingMusic" style="visibility:hidden;" action="#{djController.removePlayingMusic}" />
+				
+				<p:growl id="messages" showDetail="true" escape="false" widgetVar="messages"/>    
 	    		<p:socket onMessage="handleChangingMusic" channel="/changingMusic" />   
+	    		<p:socket onMessage="handleRefreshPlaylistTable" channel="/refreshPlaylistTable" />
+	    		<p:socket onMessage="handleRefreshAllmusicTable" channel="/refreshAllmusicTable" />
+	    		<p:socket onMessage="handlePlayingImage" channel="/playingImage" />
 		</h:form>
 	</h:body>
 	<style type="text/css">
@@ -114,98 +142,69 @@
 		height:10px;
 	}
 	
-	/* pickList */
-	.ui-picklist .ui-picklist-list {
-		list-style-type: none;
-		margin: 0;
-		padding: 10px;
-		overflow: auto;
-		height: 300px;
-		width: 300px;
-		font-size: smaller;	
-	}
-	
-	/* pickList filter icon */
-	.ui-picklist .ui-picklist-filter-container .ui-icon {
-		position: absolute;
-		top: 10px;
-		right: 15px;
-	}
-	
-	/* remove pickList button */
-	.ui-picklist-button-add { 
-		visibility: hidden !important; 
-	}
-	.ui-picklist-button-add-all {
-		visibility: hidden !important;
-	}
-	.ui-picklist-button-remove-all {
-		visibility: hidden !important;
-	}
-	
-	/* colour pickList source */
-	.ui-picklist-source {
-		color: gray;
-	}
-	
 	</style>
 	<script type="text/javascript">
-		$(window).load(function () {
-			/* cover picklist-source for prevent anything */
-			var width = $(".ui-picklist-source").width()+10;//+10 for make sure can't over the song list
-			var height = $(".ui-picklist-source").height();
-			var topOffset = $(".ui-picklist-source").offset().top;
-			var leftOffset = $(".ui-picklist-source").offset().left;
-			$("#picklist-source-cover").css({ "width":width, "height":height, "top":topOffset, "left":leftOffset, "position":"absolute", "z-index":999});
+		$(window).load(function() {
+			setPlaceholder();
 		});
-		function focusSourceFilter() {
-			$("[name*='pickList_source_filter']").focus();
+		function setPlaceholder() {
+			/* add attribute 'placeholder' for filter box (reduce place for header and textbox) */
+			$(".musicNameFilter").attr("placeholder", "Music Name");
+			$(".requestFilter").attr("placeholder", "Requested By");
 		}
-		
-		function handleChangingMusic(musicName) {		
+// 		function handleMSG(facesmessage) {
+// 			facesmessage.severity = 'info';
+// 			PF('growl').show([ facesmessage ]);
+// 		}
+
+		function handleRefreshPlaylistTable(status) {
+			if (status == "1") {
+				$(".refreshPlaylist").click();
+			}
+		}
+		function handleRefreshAllmusicTable(status) {
+			if (status == "1") {
+				$(".refreshAllMusic").click();
+			}
+		}
+
+		function handleChangingMusic(musicName) {
 			$(".playingMusic").html(musicName);
-			$(".setPlayListRemoved").click();
-		}	
-		function handleRefreshPickList(status) {
-			if("1" == status) {
-				$(".refreshPickList").click();
-// 				Primefaces.ab({source:'',update:''});	
-			}
+			$(".removePlayingMusic").click();
 		}
-		function handleRefreshPickListWithIpChecking(pushedAddress) {
-			var address = $("[name*='clientAddress']").val();
-			if(address != pushedAddress) {
-				$(".refreshPickList").click();
-			}
-		}	
 		
-		function shoutcastToggle(){
-			
+		function handlePlayingImage(imageSource) {
+			$(".playingImage").attr("src", imageSource);
+		}
+		
+		function shoutcastToggle() {
+
 			$("iframe").attr("src", $("iframe").attr("src"));
 			$("iframe").css({
-				"display":"none", //jQuery.fadeIn will set this to show later
-				"width":"80%",
-				"height":"80%",
-				"margin-top":"50px",
+				"display" : "none", //jQuery.fadeIn will set this to show later
+				"width" : "80%",
+				"height" : "80%",
+				"margin-top" : "50px",
+				"border-radius" : "10px"
 			});
-			
+
 			$("#shoutcastShade").css({
-				"display":"none", //jQuery.fadeIn will set this to show later
-			    "position":"fixed",
-			    "left":"0px",
-			    "top":"0px",
-			    "width":"100%",
-			    "height":"100%",
-			    "background-image": "url('#{request.contextPath}/img/overlay.png')",
-			    "background-repeat":"repeat",
-			    "z-index":"10"
+				"display" : "none", //jQuery.fadeIn will set this to show later
+				"position" : "fixed",
+				"left" : "0px",
+				"top" : "0px",
+				"width" : "100%",
+				"height" : "100%",
+				"background-image" : "url('#{request.contextPath}/img/overlay.png')",
+				"background-repeat" : "repeat",
+				"z-index" : "10"
 			});
 			$("#shoutcastShade").fadeIn("slow");
 			$("iframe").fadeIn("slow");
 
-			$("#shoutcastShade").click(function(){
+			$("#shoutcastShade").click(function() {
 				$("#shoutcastShade").fadeOut("slow");
-			});						
-		}		
+			});
+		}
 	</script>
 </html>

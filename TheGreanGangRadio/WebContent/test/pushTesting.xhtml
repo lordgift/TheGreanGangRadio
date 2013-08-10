@@ -5,17 +5,20 @@
 <h:head>
 </h:head>
 <h:body>
-	<p:growl widgetVar="growl" showDetail="true" />
+	
 	<h:form>
 		<p:commandButton action="#{pushBean.send}" value="Send" />
+		<p:commandButton action="#{pushBean.getMsg}" value="getMsg" update="@widgetVar(msg)" />
 	</h:form>
 	<p:socket onMessage="handleMessage" channel="/notifications" />
+	
+	<p:growl widgetVar="growl" showDetail="true" />
+	<p:growl id="messages" widgetVar="msg" showDetail="true"></p:growl>
 
 	<script type="text/javascript">
 		function handleMessage(facesmessage) {
 			    facesmessage.severity = 'info';
-
-			    growl.show([facesmessage]);
+			    PF('growl').show([facesmessage]);
 		}
 	</script>
 </h:body>

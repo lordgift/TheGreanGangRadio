@@ -10,6 +10,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import app.pojo.Music;
+
 public class FileUtils {	
 	private static final Logger log = LogUtils.getLogger(FileUtils.class);
 	
@@ -47,19 +49,20 @@ public class FileUtils {
 	 * 
 	 * @return list of music name
 	 */
-	public List<String> getMusicListFromDirectory() {
+	public List<Music> getMusicListFromDirectory() {
 		log.debug("Enter getMusicListFromDirectory");
 		
-		List<String> musicNames = new ArrayList<String>();
+		List<Music> musics = new ArrayList<Music>();
 		
 		File directoryFile = new File(ABSOLUTEPATH_THE_GREAN_GANG_RADIO);		
 		for (File file : directoryFile.listFiles()) {
-			musicNames.add(file.getName());
+			Music music = new Music(file.getName(),null);
+			musics.add(music);
 		}
 //		log.debug(musicNames);		
 		
 		log.debug("Quit getMusicListFromDirectory");
-		return musicNames;
+		return musics;
 	}
 	
 	/**
@@ -89,11 +92,30 @@ public class FileUtils {
 			out.flush();
 			out.close();
 
-			log.debug("created : " + fileName);
+			log.debug("uploading : " + fileName);
 		} catch (IOException e) {			
 			log.error("Error in copyFile", e);
 		} finally {
 			log.debug("Quit copyFile");
 		}
 	}
+	
+	public <T> List<T> checkDuplicateListElement(List<T> list, T element) {
+		List<T> removingList = new ArrayList<T>();
+		
+		int count = 0;
+		if (element instanceof Music) {
+			List<Music> musicList = (List<Music>) list;
+			for (Music music : musicList) {
+				if (music.getMusicName().equals(((Music) element).getMusicName()) && ++count>1) {
+					removingList.add((T) music);					
+				}
+			}
+		}
+		
+		list.removeAll(removingList);
+		return list;		
+	}
+	
+	
 }

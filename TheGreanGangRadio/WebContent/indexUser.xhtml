@@ -13,7 +13,7 @@
 	</h:head>	
 	<h:body style="background-image:url('#{request.contextPath}/img/Simple-Design-for-Abstract-Wallpaper.jpg');background-attachment:fixed">
 		<h:form>
-				<h:inputHidden value="#{userController.clientAddress}" id="clientAddress" />
+				<h:inputHidden value="#{userController.remoteAddress}" id="remoteAddress" />
 				<table width="100%" align="center" >
 					<tr>
 						<td align="center" colspan="2">
@@ -26,23 +26,49 @@
 						<td align="left">
 							<p:panel>
 								<h:outputText value="#{userController.promptTextHost}"/>
-									<h:inputText value="#{userController.hostAddress}" 
+									<h:inputText value="#{userController.streamingUrl}" 
 									onclick="this.select();" size="22" 							
 									style="border:0;border-radius:10px;background-color:#C9FF25;font-size:18px;font-weight:bold;color:black;text-align:center;"
 									readonly="true" />
 							</p:panel>
 						</td>
 						<td align="center" rowspan="2">
-							<div id="picklist-source-cover" onclick="focusSourceFilter();"></div>
-							<p:pickList id="pickList" value="#{userController.songs}" var="song" itemLabel="#{song}" itemValue="#{song}"							 
-								showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" style="width:500px;"
-								removeLabel="add to queue" widgetVar="pickList">
-							
-								<f:facet name="sourceCaption">Next..</f:facet>
-								<f:facet name="targetCaption">All Music</f:facet>  
-															 
-								<p:ajax event="transfer" listener="#{userController.onTransfer}" update="messages"/>  
-							</p:pickList>
+							<p:tabView  effectDuration="normal" id="tabAll">
+								<p:tab titleStyle="font-size:small;">
+									<f:facet name="title">
+										<p:graphicImage value="/img/tab-soundcard-flat.svg" width="30px" height="30px" style="vertical-align:bottom;"/>
+										Upcoming..
+									</f:facet>
+									
+								    <p:dataTable widgetVar="playlist" id="playlist" var="playlist" value="#{userController.playlist}" 
+								    	rowKey="#{playlist}" resizableColumns="true" 
+								    	scrollable="true" scrollHeight="300" filteredValue="#{userController.filtered}">
+	       									<p:column filterBy="musicName" filterMatchMode="contains" filterStyleClass="musicNameFilter" filterStyle="width:50%;text-align:center">
+	           									#{playlist.musicName}
+       										</p:column>
+	       									<p:column filterBy="requestBy" filterMatchMode="contains" filterStyleClass="requestFilter" filterStyle="width:50%;text-align:center">  
+	           									#{playlist.requestBy}
+	       									</p:column>
+							        </p:dataTable>
+								</p:tab>
+								
+								<p:tab titleStyle="font-size:small;">
+									<f:facet name="title">
+										<p:graphicImage value="/img/tab-folder-flat.svg" width="30px" height="30px" style="vertical-align:bottom;"/>
+										Directory
+									</f:facet>		
+									
+								    <p:dataTable widgetVar="allMusic" id="allMusic" var="allMusic" value="#{userController.allMusic}" 
+								    	selection="#{userController.selected}" selectionMode="single" rowKey="#{allMusic}" 
+								    	scrollable="true" scrollHeight="300" filteredValue="#{userController.filtered}">
+                    
+                  							<p:column filterBy="musicName" filterMatchMode="contains" filterStyleClass="musicNameFilter" filterStyle="width:50%;text-align:center">
+	           									<p:commandButton icon="ui-icon-plusthick" actionListener="#{userController.onRowSelect(allMusic)}" style="width:30px;height:30px;" oncomplete="setPlaceholder();" update="@widgetVar(messages),@widgetVar(playlist),@widgetVar(allMusic)"/>
+	           									#{allMusic.musicName}
+       										</p:column>
+							        </p:dataTable>
+								</p:tab>
+							</p:tabView>  
 						</td>
 					</tr>
 					<tr>
@@ -54,7 +80,7 @@
             						</h:commandLink>  
         						</f:facet> 
 								<div id="shoutcastShade" align="center">
-									<iframe src="http://#{userController.clientAddress}:8000/" style="display:none;" />
+									<iframe src="#{userController.streamingUrl}" style="display:none;" />
 								</div>
 								<table>
 									<tr>
@@ -64,7 +90,9 @@
 										<td>
 											<h:outputText id="playingMusic" value="#{userController.playingMusic}" styleClass="playingMusic" style="padding-left:5px" />
 											<BR/>
-											<audio src="#{userController.hostAddress};" controls="controls" autoplay="autoplay"/>
+											<audio src="#{userController.streamingUrl};" controls="controls" autoplay="autoplay">
+												Your Browser Not Support HTML5 Audio tag
+											</audio>
 										</td>
 									</tr>
 								</table>
@@ -79,125 +107,96 @@
 						    	<p:fileUpload fileUploadListener="#{userController.handleFileUpload}"
 			            			mode="advanced" 
 			            			multiple="true"
-			            			update="messages,pickList"            
+			            			update="messages"
 			            			allowTypes="/(\.|\/)(mp3|flac|wav|m4a)$/" />
 		            		</p:inplace>
 		            		&nbsp;
-		            		<p:commandButton title="reload from main directory" styleClass="refreshDirectory" action="#{djController.refreshDirectory}" update="pickList" icon="ui-icon-refresh" style="visibility:hidden;width:25px;height:25px;vertical-align:inherit;" />
-		            		<p:commandButton styleClass="refreshPickList" update="pickList" style="visibility:hidden" />
 						</td>
 					</tr>
 					<tr><td>&nbsp;</td></tr>
 				</table>
 				
-	    		<p:growl id="messages" showDetail="true" escape="false"/>
-				<p:socket onMessage="handleRefreshPickList" channel="/refreshPickList" />
-				<p:socket onMessage="handleRefreshPickListWithIpChecking" channel="/refreshPickListWithIpChecking" />
-				<p:socket onMessage="handlePlayingImage" channel="/playingImage" />
-				<p:socket onMessage="handleChangingMusic" channel="/changingMusic" />   			
+				<p:commandButton styleClass="refreshAllMusic" style="visibility:hidden;" update="@widgetVar(allMusic)" oncomplete="setPlaceholder()"/>
+				<p:commandButton styleClass="refreshPlaylist" style="visibility:hidden;" update="@widgetVar(playlist)" oncomplete="setPlaceholder()"/>
+				<p:commandButton styleClass="removePlayingMusic" style="visibility:hidden;" action="#{userController.removePlayingMusic}" />
+				
+				<p:growl id="messages" showDetail="true" escape="false" widgetVar="messages"/>    
+	    		<p:socket onMessage="handleChangingMusic" channel="/changingMusic" />   
+	    		<p:socket onMessage="handleRefreshPlaylistTable" channel="/refreshPlaylistTable" />
+	    		<p:socket onMessage="handleRefreshAllmusicTable" channel="/refreshAllmusicTable" />
+	    		<p:socket onMessage="handlePlayingImage" channel="/playingImage" />	
 		</h:form>
 	</h:body>
 	<style type="text/css">
-	
 	/* panel footer */
 	.ui-panel-footer {
 		font-size: 12px;
 		height:10px;
 	}
 	
-	/* pickList */
-	.ui-picklist .ui-picklist-list {
-		list-style-type: none;
-		margin: 0;
-		padding: 10px;
-		overflow: auto;
-		height: 300px;
-		width: 300px;
-		font-size: smaller;
-	}
-	
-	/* pickList filter icon */
-	.ui-picklist .ui-picklist-filter-container .ui-icon {
-		position: absolute;
-		top: 10px;
-		right: 15px;
-	}
-	
-	/* remove pickList button */
-	.ui-picklist-button-add { 
-		visibility: hidden; 
-	}
-	.ui-picklist-button-add-all {
-		visibility: hidden;
-	}
-	.ui-picklist-button-remove-all {
-		visibility: hidden;
-	}
-	
-	/* colour pickList source */
-	.ui-picklist-source {
-		color: gray;
-	}
 	</style>
 	<script type="text/javascript">
-		$(window).load(function () {
-			/* cover picklist-source for prevent anything */
-			var width = $(".ui-picklist-source").width()+10;//+10 for make sure can't over the song list
-			var height = $(".ui-picklist-source").height();
-			var topOffset = $(".ui-picklist-source").offset().top;
-			var leftOffset = $(".ui-picklist-source").offset().left;
-			$("#picklist-source-cover").css({ "width":width, "height":height, "top":topOffset, "left":leftOffset, "position":"absolute", "z-index":999});
+		$(window).load(function() {
+			setPlaceholder();
 		});
-		function focusSourceFilter() {
-			$("[name*='pickList_source_filter']").focus();
+		function setPlaceholder() {
+			/* add attribute 'placeholder' for filter box (reduce place for header and textbox) */
+			$(".musicNameFilter").attr("placeholder", "Music Name");
+			$(".requestFilter").attr("placeholder", "Requested By");
+		}
+// 		function handleMSG(facesmessage) {
+// 			facesmessage.severity = 'info';
+// 			PF('growl').show([ facesmessage ]);
+// 		}
+	
+		function handleRefreshPlaylistTable(status) {
+			if (status == "1") {
+				$(".refreshPlaylist").click();
+			}
+		}
+		function handleRefreshAllmusicTable(status) {
+			if (status == "1") {
+				$(".refreshAllMusic").click();				
+			}
+		}
+	
+		function handleChangingMusic(musicName) {
+			$(".playingMusic").html(musicName);
+			$(".removePlayingMusic").click();
 		}
 		
-		function handleChangingMusic(musicName) {			
-			$(".playingMusic").html(musicName);
-		}
 		function handlePlayingImage(imageSource) {
 			$(".playingImage").attr("src", imageSource);
 		}
-		function handleRefreshPickList(status) {
-			if("1" == status) {
-				$(".refreshPickList").click();
-// 				Primefaces.ab({source:'',update:''});	
-			}
-		}	
-		function handleRefreshPickListWithIpChecking(pushedAddress) {
-			var address = $("[name*='clientAddress']").val();
-			if(address != pushedAddress) {
-				$(".refreshPickList").click();
-			}
-		}
 		
-		function shoutcastToggle(){
-			
+		function shoutcastToggle() {
+	
 			$("iframe").attr("src", $("iframe").attr("src"));
 			$("iframe").css({
-				"display":"none", //jQuery.fadeIn will set this to show later
-				"width":"80%",
-				"height":"80%",
-				"margin-top":"50px",
+				"display" : "none", //jQuery.fadeIn will set this to show later
+				"width" : "80%",
+				"height" : "80%",
+				"margin-top" : "50px",
+				"border-radius" : "10px"
 			});
-			
+	
 			$("#shoutcastShade").css({
-				"display":"none", //jQuery.fadeIn will set this to show later
-			    "position":"fixed",
-			    "left":"0px",
-			    "top":"0px",
-			    "width":"100%",
-			    "height":"100%",
-			    "background-image": "url('#{request.contextPath}/img/overlay.png')",
-			    "background-repeat":"repeat",
-			    "z-index":"10"
+				"display" : "none", //jQuery.fadeIn will set this to show later
+				"position" : "fixed",
+				"left" : "0px",
+				"top" : "0px",
+				"width" : "100%",
+				"height" : "100%",
+				"background-image" : "url('#{request.contextPath}/img/overlay.png')",
+				"background-repeat" : "repeat",
+				"z-index" : "10"
 			});
 			$("#shoutcastShade").fadeIn("slow");
 			$("iframe").fadeIn("slow");
-
-			$("#shoutcastShade").click(function(){
+	
+			$("#shoutcastShade").click(function() {
 				$("#shoutcastShade").fadeOut("slow");
-			});						
+			});
 		}
 	</script>
 </html>

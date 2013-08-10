@@ -24,7 +24,7 @@ public class PageSelector {
 	
 	public PageSelector() {
 	
-		NetworkDetail networkDetail = NetworkUtils.managingSessionNetworkDetail();
+		NetworkDetail networkDetail = NetworkUtils.getInstance().managingSessionNetworkDetail();
 		String remoteIP = networkDetail.getIpAddress();
 		
 		if(Constants.IP_LOCALHOST.equals(remoteIP)) {

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient>
+<stop offset="0"/>
+<stop offset="1" stop-color="#fff"/>
+</linearGradient>
+</defs>
+<path d="m13.67703,51.45016h25.67902v5.94672h-25.67902z" fill="#7f7f7f" fill-rule="evenodd" stroke="#333" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.875" transform="translate(0,-6.35261)"/>
+<path d="m10.01808,21.44626h44.62006a2.28777,2.28777 0 0,1 2.28777,2.28777v25.15806a2.28777,2.28777 0 0,1 -2.28777,2.28777h-44.62006a2.28777,2.28777 0 0,1 -2.28777-2.28777v-25.15806a2.28777,2.28777 0 0,1 2.28777-2.28777" fill="#b3b3b3" fill-rule="evenodd" stroke="#333" stroke-linejoin="round" stroke-width="3.125" transform="translate(0,-6.35261)"/>
+<path d="m5.52978,16.58076h2.50892a2.12436,2.12436 0 0,1 2.12436,2.12436v35.75651a2.12436,2.12436 0 0,1 -2.12436,2.12436h-2.50892a2.12436,2.12436 0 0,1 -2.12436-2.12436v-35.75651a2.12436,2.12436 0 0,1 2.12436-2.12436" fill="#7f7f7f" fill-rule="evenodd" stroke="#333" stroke-linejoin="round" stroke-width="3.125" transform="translate(0,-6.35261)"/>
+<path d="m18.81283,51.17986v6.21703" fill="none" stroke="#333" stroke-width="1.99159" transform="translate(0,-6.35261)"/>
+<path d="m23.94864,51.72047v5.40611" fill="none" stroke="#333" stroke-width="1.99159" transform="translate(0,-6.35261)"/>
+<path d="m28.81414,51.72047v5.40611" fill="none" stroke="#333" stroke-width="1.99159" transform="translate(0,-6.35261)"/>
+<path d="m33.94994,51.72047v4.8655" fill="none" stroke="#333" stroke-width="1.99159" transform="translate(0,-6.35261)"/>
+<g transform="matrix(.900000,.000000,.000000,.900000,4.522843,2.882177)">
+<path d="m34.35505,43.33144a10.43376,7.25273 0 1,0 -20.86751,0 10.43376,7.25273 0 1,0 20.86751,0z" fill="#333" fill-rule="evenodd" stroke="#333" stroke-width="5" transform="matrix(.485652,2.902693e-2,-.170223,.477213,23.62102,15.26112)"/>
+<path d="m33.08668,36.46865 4.94938-16.35325" fill="none" stroke="#333" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4326"/>
+<path d="m37.78085,19.249c-.79479.48903-.91127,2.15611-1.33319,3.12278 8.53112,1.73081 5.43253,14.53332 6.62986,11.00463 1.37113-13.93331-4.50188-14.61644-5.29667-14.12741z" fill="#333" fill-rule="evenodd" stroke="#333" stroke-linejoin="round" stroke-width=".58962"/>
+</g>
+</svg>

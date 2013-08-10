@@ -20,11 +20,14 @@ import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
+import org.primefaces.model.SelectableDataModel;
 import org.primefaces.push.PushContext;
 import org.primefaces.push.PushContextFactory;
 
+import app.pojo.Music;
 import app.util.Constants;
 import app.util.FileUtils;
+import app.util.NetworkUtils;
 import app.util.ThreadMonitorWinamp;
 import app.util.WinampUtils;
 
@@ -33,146 +36,226 @@ import com.qotsa.jni.controller.WinampController;
 
 @ManagedBean
 @SessionScoped
-public class DjController implements ServletContextListener{
+public class DjController implements ServletContextListener, SelectableDataModel<String> {
 	private static final Logger log = Logger.getLogger(DjController.class);
 
 	HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 	ServletContext context = request.getSession().getServletContext();
-	PushContext pushContext = PushContextFactory.getDefault().getPushContext();	
-	
+	PushContext pushContext = PushContextFactory.getDefault().getPushContext();
+
 	private String playingImage;
 	private String playingMusic;
 	private String promptTextHost;
-	private String hostAddress;
-	private String clientAddress;
-	private boolean playing;
-	private boolean stopping;
-	
+	private String shareUrl;
+	private String remoteAddress;
+	private boolean playBooleanButton;
+	private boolean stopBooleanButton;
+	private List<Music> playlist;
+	private List<Music> allMusic;
+	private Music selected;
+	private List<Music> filtered;
+
 	private ThreadMonitorWinamp threadMonitorWinamp;
 
-	// Modifier this class (DualListModel) ;
-	private DualListModel<String> songs;	
-
 	public DjController() {
-		
+
 		threadMonitorWinamp = new ThreadMonitorWinamp();
 		threadMonitorWinamp.start();
-		
-		
-//		WinampUtils.clearWinampPlayList();
-		
-		//preparing DualListModel
-		List<String> sourceSongs = new ArrayList<String>();
-		List<String> targetSongs = FileUtils.getInstance().getMusicListFromDirectory();
-		
-		songs = new DualListModel<String>(sourceSongs, targetSongs);
-		context.setAttribute(Constants.SERVLETCONTEXT_DUAL_LIST_MODEL_SONGS, (DualListModel<String>) songs);
-		
+
+		// WinampUtils.clearWinampPlayList();
+
 		try {
-			String serverIP = InetAddress.getLocalHost().getHostAddress();
-			hostAddress = "http://"+serverIP+":7810/TheGreanGangRadio/";
-			context.setAttribute(Constants.SERVLETCONTEXT_SERVER_IP, (String) serverIP);
+			String hostAddress = InetAddress.getLocalHost().getHostAddress();
+			shareUrl = "http://" + hostAddress + ":7810/TheGreanGangRadio/";
+			context.setAttribute(Constants.SERVLETCONTEXT_HOST_ADDRESS, (String) hostAddress);
 		} catch (UnknownHostException e) {
-			log.error("Error in getHostAddress",e);
+			log.error("Error in getHostAddress", e);
 		}
-		
-		
+		remoteAddress = request.getRemoteAddr();
+
+		List<Music> list = (List<Music>) context.getAttribute(Constants.SERVLETCONTEXT_PLAYLIST);
+		if(list == null) {
+			playlist = new ArrayList<Music>();
+			context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlist);
+		}
+		allMusic = FileUtils.getInstance().getMusicListFromDirectory();
+
 		promptTextHost = "For users : ";
 	}
 
-	public DualListModel<String> getSongs() {
-		songs = (DualListModel<String>) context.getAttribute(Constants.SERVLETCONTEXT_DUAL_LIST_MODEL_SONGS);		
-		return songs;
+	/*========	Music Table	========*/
+	public List<Music> getAllMusic() {
+		return allMusic;
+	}
+
+	public void setAllMusic(List<Music> allMusic) {
+		this.allMusic = allMusic;
+	}
+
+	public Music getSelected() {
+		return selected;
+	}
+
+	public void setSelected(Music selected) {
+		this.selected = selected;
 	}
 	
-	public void setSongs(DualListModel<String> songs) {
-		this.songs = songs;
+	public List<Music> getFiltered() {
+		return filtered;
+	}
+
+	public void setFiltered(List<Music> filtered) {
+		this.filtered = filtered;
 	}
 	
+	public List<Music> getPlaylist() {
+		playlist = (List<Music>) context.getAttribute(Constants.SERVLETCONTEXT_PLAYLIST);
+		return playlist;
+	}
+
+	public void setPlaylist(List<Music> playlist) {
+		context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlist);
+		this.playlist = playlist;
+	}
+	
+	public void onRowSelect(Music music) {
+		log.debug("Enter onRowSelect");
+		
+		/* no use selected row */
+//		if(selected == null) {
+			selected = music;
+//		}
+		
+		allMusic.remove(selected);
+		WinampUtils.appendFileToPlaylist(selected.getMusicName());
+		selected.setRequestBy(NetworkUtils.getInstance().getHostNameByCommandLine(request.getRemoteAddr()));
+		playlist.add(selected);
+
+		context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlist);
+
+		log.debug(selected.getMusicName() + " by " + selected.getRequestBy());
+
+		FacesMessage msg = new FacesMessage();
+		msg.setSeverity(FacesMessage.SEVERITY_INFO);
+		msg.setSummary("Music Added by " + NetworkUtils.getInstance().managingSessionNetworkDetail().getHostName());
+		msg.setDetail(selected.getMusicName() + " by " + selected.getRequestBy());
+
+		FacesContext.getCurrentInstance().addMessage(null, msg);
+		
+		pushContext.push(Constants.CHANNEL_REFRESH_ALLMUSIC_TABLE, Constants.STRING_VALUE_1);
+		pushContext.push(Constants.CHANNEL_REFRESH_PLAYLIST_TABLE, Constants.STRING_VALUE_1);
+		
+		log.debug("Quit onRowSelect");
+	}
+	/*========	Music Table	========*/
+	/*========	Handle Upload	========*/
 	/**
-	 * when transferring item(s) in PickList<BR />
-	 * <p>
-	 * Source - Winamp Playlist <BR/>
-	 * Destination - Music Directory
-	 * </p>
+	 * handle upload, copy file to main directory, check duplicate before update
+	 * pickList <BR/>
+	 * and send message to uploader
 	 * 
-	 * @param event object of transferring
+	 * @param event
 	 */
-    public void onTransfer(TransferEvent event) {  
-    	log.debug("Enter onTransfer");
-    	
-    	if(event.isAdd()) {
-    		//add=true is transfer source to destination
-    		log.debug("removing Winamp Playlist(transferring source to destination)");
-//    		
-//    		List<String> sourceSongs = songs.getSource();
-//    		
-//    		sourceSongs.remove(playingMusic);
-//    		
-//    		context.setAttribute(Constants.ATTRIBUTE_DUAL_LIST_MODEL_SONGS, songs);
-    		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);		
-    		
-    	} else {
-    		//add=false is transfer destination to source ( can change to event.isRemove() )
-    		log.debug("adding music(s) to Winamp Playlist(transferring destination to source)");
-    		DualListModel<String> listTemp = (DualListModel<String>) context.getAttribute(Constants.SERVLETCONTEXT_DUAL_LIST_MODEL_SONGS);
-            StringBuilder builder = new StringBuilder();            
-            for(Object item : event.getItems()) {
-            	String fileName = (String) item;
-                builder.append(fileName).append("<BR/>");
-                WinampUtils.appendFileToPlaylist(fileName);
-                
-                /* for queue playlist correctly */
-                listTemp.getSource().add(fileName);
-                listTemp.setSource(listTemp.getSource());
-                listTemp.getTarget().remove(fileName);
-                listTemp.setTarget(listTemp.getTarget());
-            }
-            
-            
+	public void handleFileUpload(FileUploadEvent event) {
+		log.debug("Enter handleFileUpload");
+		try {
+			// must encoded on xhtml page before
+			String fileName = event.getFile().getFileName();
 
-            //set to ServletContext for using the same list for all users
-    		context.setAttribute(Constants.SERVLETCONTEXT_DUAL_LIST_MODEL_SONGS, (DualListModel<String>) listTemp);
-    		
-    		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST_WITH_IP_CHECKING, clientAddress);
-                 
-            FacesMessage msg = new FacesMessage();  
-            msg.setSeverity(FacesMessage.SEVERITY_INFO);  
-            msg.setSummary("Music added to playlist");  
-            msg.setDetail(builder.toString());  
-            
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            
-    	}
-    	
-        log.debug("Quit onTransfer");
-    } 	
-	
-	public String getPromptTextHost() {
-		return promptTextHost;
+			// update list
+			List<Music> musicInDirectory = FileUtils.getInstance().getMusicListFromDirectory();
+			boolean isAlready = false;
+			for (Music music : musicInDirectory) {
+				if (fileName.equals(music.getMusicName()))
+					isAlready = true;
+			}
+			FacesMessage msg;
+			if (!isAlready) {
+				InputStream inputStream = event.getFile().getInputstream();
+				FileUtils.getInstance().copyFile(fileName, inputStream);
+
+				Music music = new Music(fileName, null);
+				allMusic.add(music);
+				allMusic = FileUtils.getInstance().checkDuplicateListElement(allMusic, music);
+				msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Uploaded!", fileName);
+			} else {
+				msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "Already Exist!", fileName);
+			}
+			// show message dialog to uploader
+			FacesContext.getCurrentInstance().addMessage(null, msg);
+
+			pushContext.push(Constants.CHANNEL_REFRESH_ALLMUSIC_TABLE, Constants.STRING_VALUE_1);
+
+		} catch (IOException e) {
+			log.error("Error in handleFileUpload", e);
+		} finally {
+			log.debug("Quit handleFileUpload");
+		}
+	}
+	/*========	Handle Upload	========*/
+	/*========	Controller Panel	========*/
+	public void playerControl(String clickedButton) {
+		WinampUtils.playerControl(clickedButton);
 	}
 
-	public String getHostAddress() {
-		return hostAddress;
-	}
 	public void playOrPause() {
-		if(playing) {
+		if (playBooleanButton) {
 			WinampUtils.playerControl(WinampUtils.PLAYER_ACTION_PLAY);
 		} else {
 			WinampUtils.playerControl(WinampUtils.PLAYER_ACTION_PAUSE);
 		}
 	}
 
+	public boolean isPlayBooleanButton() {
+		if (stopBooleanButton)
+			playBooleanButton = false;
+		return playBooleanButton;
+	}
+
+	public void setPlayBooleanButton(boolean playBooleanButton) {
+		this.playBooleanButton = playBooleanButton;
+	}
+
+	public boolean isStopBooleanButton() {
+		if (playBooleanButton)
+			stopBooleanButton = false;
+		return stopBooleanButton;
+	}
+
+	public void setStopBooleanButton(boolean stopBooleanButton) {
+		this.stopBooleanButton = stopBooleanButton;
+	}
+	/*========	Controller Panel	========*/
+
+	/**
+	 * remove music from playlist when it's playing
+	 */
+	public void removePlayingMusic() {
+		Music equalsMusic = null;
+		String fileNamePlaying = null;
+		for (Music music : playlist) {
+			fileNamePlaying = WinampUtils.getFileNamePlaying();
+			if (music.getMusicName().equals(fileNamePlaying)) {
+				equalsMusic = music;
+			}
+		}
+		playlist.remove(equalsMusic);
+
+		context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlist);
+		
+		pushContext.push(Constants.CHANNEL_REFRESH_PLAYLIST_TABLE, Constants.STRING_VALUE_1);
+	}
+	
 	public String getPlayingImage() {
 		try {
-			if(WinampController.getStatus() == WinampController.PLAYING) {
+			if (WinampController.getStatus() == WinampController.PLAYING) {
 				playingImage = Constants.IMAGESOURCE_BABY_DANCE_GIF;
 			} else {
 				playingImage = Constants.IMAGESOURCE_BABY_DANCE_JPG;
 			}
-			
-			//push to client(user)
-			pushContext.push(Constants.CHANNEL_PLAYING_IMAGE, "/TheGreanGangRadio"+playingImage);
+
+			// push to client(user)
+			pushContext.push(Constants.CHANNEL_PLAYING_IMAGE, "/TheGreanGangRadio" + playingImage);
 		} catch (InvalidHandle e) {
 			log.error("Error in getPlayingImage", e);
 		}
@@ -182,7 +265,7 @@ public class DjController implements ServletContextListener{
 	public void setPlayingImage(String playingImage) {
 		this.playingImage = playingImage;
 	}
-	
+
 	public String getPlayingMusic() {
 		playingMusic = WinampUtils.getFileNamePlaying();
 		return playingMusic;
@@ -190,101 +273,32 @@ public class DjController implements ServletContextListener{
 
 	public void setPlayingMusic(String playingMusic) {
 		this.playingMusic = playingMusic;
-	}	
-	
-	public void playerControl(String clickedButton) {
-		WinampUtils.playerControl(clickedButton);
 	}
 	
-	/**
-	 * handle upload, copy file to main directory, check duplicate before update pickList 
-	 * <BR/>and send message to uploader
-	 * 
-	 * @param event
-	 */
-    public void handleFileUpload(FileUploadEvent event) {
-		log.debug("Enter handleFileUpload");
-		try {
-			// must encoded on xhtml page before
-			String fileName = event.getFile().getFileName();
-			InputStream inputStream = event.getFile().getInputstream();
-			
-			FileUtils.getInstance().copyFile(fileName, inputStream);
-
-			//update list
-			List<String> directory = songs.getTarget();
-			boolean isAlready = false;
-			for(String file : directory){
-				if(file.equals(fileName)) isAlready = true;
-			}
-			FacesMessage msg;
-			if( !isAlready ) {
-				directory.add(fileName);
-				msg = new FacesMessage(FacesMessage.SEVERITY_INFO,"Uploaded!", fileName);
-			} else {
-				msg = new FacesMessage(FacesMessage.SEVERITY_WARN,"Already Exist!", fileName);
-			}
-			songs.setTarget(directory);
-			
-			//show message dialog to uploader
-			FacesContext.getCurrentInstance().addMessage(null, msg);
-			
-			pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);
-			
-		} catch (IOException e) {
-			log.error("Error in handleFileUpload", e);
-		} finally {
-			log.debug("Quit handleFileUpload");
-		}
-	}
-    
-	public boolean isPlaying() {
-		if(stopping) playing = false;
-		return playing;
+	public String getRemoteAddress() {		
+		return remoteAddress;
 	}
 
-	public void setPlaying(boolean playing) {
-		this.playing = playing;
+	public void setRemoteAddress(String remoteAddress) {
+		this.remoteAddress = remoteAddress;
 	}
 
-	public boolean isStopping() {
-		if(playing) stopping = false;
-		return stopping;
+//	public void refreshDirectory() {
+//		List<String> musics = FileUtils.getInstance().getMusicListFromDirectory();
+//		songs.setTarget(musics);
+//
+//		context.setAttribute(Constants.SERVLETCONTEXT_DUAL_LIST_MODEL_SONGS, songs);
+//		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);
+//	}
+	
+	public String getShareUrl() {
+		return shareUrl;
+	}
+	
+	public String getPromptTextHost() {
+		return promptTextHost;
 	}
 
-	public void setStopping(boolean stopping) {
-		this.stopping = stopping;
-	}
-	
-	public void refreshDirectory() {
-		List<String> musics = FileUtils.getInstance().getMusicListFromDirectory();
-		songs.setTarget(musics);
-		
-		context.setAttribute(Constants.SERVLETCONTEXT_DUAL_LIST_MODEL_SONGS, songs);
-		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);
-	}
-
-	public void setPlayListRemoved() {
-		List<String> sourceSongs = songs.getSource();
-		
-//		sourceSongs.remove(playingMusic); when song ended playingMusic not update(cause' bean attribute)
-		sourceSongs.remove(WinampUtils.getFileNamePlaying()); 
-		
-		context.setAttribute(Constants.SERVLETCONTEXT_DUAL_LIST_MODEL_SONGS, songs);
-		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);
-	}
-	
-	public String getClientAddress() {
-		clientAddress = request.getRemoteAddr();		
-		return clientAddress;
-	}
-
-	public void setClientAddress(String clientAddress) {
-		this.clientAddress = clientAddress;
-	}
-	
-	
-	
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
 		try {
@@ -298,8 +312,20 @@ public class DjController implements ServletContextListener{
 
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
-		
+
 	}
 
-		
+	@Override
+	public String getRowKey(String object) {
+		log.debug("getRowKey = " + object);
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getRowData(String rowKey) {
+		log.debug("getRowData = " + rowKey);
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
