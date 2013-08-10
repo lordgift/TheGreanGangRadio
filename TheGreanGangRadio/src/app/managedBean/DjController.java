@@ -48,12 +48,14 @@ public class DjController implements ServletContextListener, SelectableDataModel
 	private String promptTextHost;
 	private String shareUrl;
 	private String remoteAddress;
+	private String remoteHostName;
 	private boolean playBooleanButton;
 	private boolean stopBooleanButton;
 	private List<Music> playlist;
 	private List<Music> allMusic;
 	private Music selected;
-	private List<Music> filtered;
+	private List<Music> filteredPlaylist;
+	private List<Music> filteredAllMusic;	
 
 	private ThreadMonitorWinamp threadMonitorWinamp;
 
@@ -72,6 +74,7 @@ public class DjController implements ServletContextListener, SelectableDataModel
 			log.error("Error in getHostAddress", e);
 		}
 		remoteAddress = request.getRemoteAddr();
+		remoteHostName = NetworkUtils.getInstance().getHostNameByCommandLine(remoteAddress);
 
 		List<Music> list = (List<Music>) context.getAttribute(Constants.SERVLETCONTEXT_PLAYLIST);
 		if(list == null) {
@@ -100,12 +103,20 @@ public class DjController implements ServletContextListener, SelectableDataModel
 		this.selected = selected;
 	}
 	
-	public List<Music> getFiltered() {
-		return filtered;
+	public List<Music> getFilteredPlaylist() {
+		return filteredPlaylist;
 	}
 
-	public void setFiltered(List<Music> filtered) {
-		this.filtered = filtered;
+	public void setFilteredPlaylist(List<Music> filteredPlaylist) {
+		this.filteredPlaylist = filteredPlaylist;
+	}
+
+	public List<Music> getFilteredAllMusic() {
+		return filteredAllMusic;
+	}
+
+	public void setFilteredAllMusic(List<Music> filteredAllMusic) {
+		this.filteredAllMusic = filteredAllMusic;
 	}
 	
 	public List<Music> getPlaylist() {
@@ -128,9 +139,9 @@ public class DjController implements ServletContextListener, SelectableDataModel
 		
 		allMusic.remove(selected);
 		WinampUtils.appendFileToPlaylist(selected.getMusicName());
-		selected.setRequestBy(NetworkUtils.getInstance().getHostNameByCommandLine(request.getRemoteAddr()));
+		
+		selected.setRequestBy(remoteHostName);
 		playlist.add(selected);
-
 		context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlist);
 
 		log.debug(selected.getMusicName() + " by " + selected.getRequestBy());

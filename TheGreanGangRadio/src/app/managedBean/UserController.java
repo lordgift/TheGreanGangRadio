@@ -42,10 +42,12 @@ public class UserController {
 	private String promptTextHost;
 	private String streamingUrl;
 	private String remoteAddress;
+	private String remoteHostName;
 	private List<Music> playlist;
 	private List<Music> allMusic;
 	private Music selected;
-	private List<Music> filtered;
+	private List<Music> filteredPlaylist;
+	private List<Music> filteredAllMusic;	
 
 	public UserController() {
 		
@@ -53,6 +55,7 @@ public class UserController {
 		streamingUrl = "http://"+hostAddress+":8000/";
 
 		remoteAddress = request.getRemoteAddr();
+		remoteHostName = NetworkUtils.getInstance().getHostNameByCommandLine(remoteAddress);
 		
 		List<Music> list = (List<Music>) context.getAttribute(Constants.SERVLETCONTEXT_PLAYLIST);
 		if(list == null) {
@@ -81,12 +84,20 @@ public class UserController {
 		this.selected = selected;
 	}
 	
-	public List<Music> getFiltered() {
-		return filtered;
+	public List<Music> getFilteredPlaylist() {
+		return filteredPlaylist;
 	}
 
-	public void setFiltered(List<Music> filtered) {
-		this.filtered = filtered;
+	public void setFilteredPlaylist(List<Music> filteredPlaylist) {
+		this.filteredPlaylist = filteredPlaylist;
+	}
+
+	public List<Music> getFilteredAllMusic() {
+		return filteredAllMusic;
+	}
+
+	public void setFilteredAllMusic(List<Music> filteredAllMusic) {
+		this.filteredAllMusic = filteredAllMusic;
 	}
 	
 	public List<Music> getPlaylist() {
@@ -109,7 +120,7 @@ public class UserController {
 		
 		allMusic.remove(selected);
 		WinampUtils.appendFileToPlaylist(selected.getMusicName());
-		selected.setRequestBy(NetworkUtils.getInstance().getHostNameByCommandLine(request.getRemoteAddr()));
+		selected.setRequestBy(remoteHostName);
 		playlist.add(selected);
 
 		context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlist);

@@ -42,7 +42,7 @@
 									
 								    <p:dataTable widgetVar="playlist" id="playlist" var="playlist" value="#{userController.playlist}" 
 								    	rowKey="#{playlist}" resizableColumns="true" 
-								    	scrollable="true" scrollHeight="300" filteredValue="#{userController.filtered}">
+								    	scrollable="true" scrollHeight="300" filteredValue="#{userController.filteredPlaylist}">
 	       									<p:column filterBy="musicName" filterMatchMode="contains" filterStyleClass="musicNameFilter" filterStyle="width:50%;text-align:center">
 	           									#{playlist.musicName}
        										</p:column>
@@ -60,7 +60,7 @@
 									
 								    <p:dataTable widgetVar="allMusic" id="allMusic" var="allMusic" value="#{userController.allMusic}" 
 								    	selection="#{userController.selected}" selectionMode="single" rowKey="#{allMusic}" 
-								    	scrollable="true" scrollHeight="300" filteredValue="#{userController.filtered}">
+								    	scrollable="true" scrollHeight="300" filteredValue="#{userController.filteredAllMusic}">
                     
                   							<p:column filterBy="musicName" filterMatchMode="contains" filterStyleClass="musicNameFilter" filterStyle="width:50%;text-align:center">
 	           									<p:commandButton icon="ui-icon-plusthick" actionListener="#{userController.onRowSelect(allMusic)}" style="width:30px;height:30px;" oncomplete="setPlaceholder();" update="@widgetVar(messages),@widgetVar(playlist),@widgetVar(allMusic)"/>

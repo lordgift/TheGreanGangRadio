@@ -10,11 +10,10 @@ public interface Constants {
 	public static final String CHANNEL_REFRESH_ALLMUSIC_TABLE = "/refreshAllmusicTable";
 	public static final String CHANNEL_REFRESH_PLAYLIST_TABLE = "/refreshPlaylistTable";
 	
-
 	/* servletContext attribute */
-//	public static final String SERVLETCONTEXT_DUAL_LIST_MODEL_SONGS = "songs";	
 	public static final String SERVLETCONTEXT_HOST_ADDRESS = "hostAddress";
 	public static final String SERVLETCONTEXT_PLAYLIST = "playlistApplication";
+	public static final String SERVLETCONTEXT_ALLMUSIC = "allMusicApplication";
 	
 	/* session attribute */
 	public static final String SESSION_REMOTE_NETWORK_DETAIL = "networkDetail";
