@@ -120,5 +120,45 @@ public class NetworkUtils {
 		log.debug("Quit managingSessionNetworkDetail");
 		return networkDetail;
 	}
+	
+	/**
+	 * change PC's name to get alias name by using HARDCODE 
+	 * @param hostName
+	 * @return alias, otherwise hostName
+	 */
+	public static String getAliasOfHostName(String hostName) {
+		log.debug("Enter getAliasOfHostName");
+		
+		//initial for out of cases
+		String alias = hostName;
+		
+		if("jarupath-j".equalsIgnoreCase(hostName)) {
+			alias = "Lord Gift";
+			
+		} else if("prapassorn-pc".equalsIgnoreCase(hostName)) {
+			alias = "Ploy Ukmp";
+			
+		} else if("pitchapong-b".equalsIgnoreCase(hostName)) {
+			alias = "งัว";
+			
+		} else if("sirinthip-p".equalsIgnoreCase(hostName)) {
+			alias = "หม่ามี๊";
+			
+		} else if("nattapong-t".equalsIgnoreCase(hostName)) {
+			alias = "Akermiji";
+			
+		} else if("fikree-s".equalsIgnoreCase(hostName)) {
+			alias = "ฟิกล็อคเดท";
+			
+		} else if("jatupon-r".equalsIgnoreCase(hostName)) {
+			alias = "Samoky";
+			
+		}
+		//TODO add more alias here
+		
+		
+		log.debug("Quit getAliasOfHostName");
+		return alias;
+	}
 
 }

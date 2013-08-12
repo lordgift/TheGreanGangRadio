@@ -142,7 +142,7 @@ public class DjController implements ServletContextListener, SelectableDataModel
 		allMusic.remove(selected);
 		WinampUtils.appendFileToPlaylist(selected.getMusicName());
 		
-		selected.setRequestBy(remoteHostName);
+		selected.setRequestBy(NetworkUtils.getAliasOfHostName(remoteHostName));
 		playlist.add(selected);
 		context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlist);
 
@@ -310,7 +310,7 @@ public class DjController implements ServletContextListener, SelectableDataModel
 	}
 	
 	public String getRemoteHostName() {
-		return remoteHostName;
+		return NetworkUtils.getAliasOfHostName(remoteHostName);
 	}
 	
 	public String getShareUrl() {
