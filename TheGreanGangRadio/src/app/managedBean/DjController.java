@@ -84,7 +84,7 @@ public class DjController implements ServletContextListener, SelectableDataModel
 		}
 		allMusic = FileUtils.getInstance().getMusicListFromDirectory();
 
-		promptWelcome = "Welcome,   ";
+		promptWelcome = "Welcome, ";
 		promptTextHost = "For users : ";
 	}
 
@@ -139,6 +139,8 @@ public class DjController implements ServletContextListener, SelectableDataModel
 			selected = music;
 //		}
 		
+		if(filteredAllMusic != null)
+			filteredAllMusic.remove(selected);
 		allMusic.remove(selected);
 		WinampUtils.appendFileToPlaylist(selected.getMusicName());
 		

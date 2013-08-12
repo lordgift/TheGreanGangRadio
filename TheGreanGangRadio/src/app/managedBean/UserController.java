@@ -63,7 +63,7 @@ public class UserController {
 		}
 		allMusic = FileUtils.getInstance().getMusicListFromDirectory();
 		
-		promptWelcome = "Welcome,   ";
+		promptWelcome = "Welcome, ";
 		promptTextHost = "For external player : ";
 	}
 	
@@ -117,7 +117,8 @@ public class UserController {
 //		if(selected == null) {
 			selected = music;
 //		}
-		
+		if(filteredAllMusic != null)
+			filteredAllMusic.remove(selected);
 		allMusic.remove(selected);
 		WinampUtils.appendFileToPlaylist(selected.getMusicName());
 		selected.setRequestBy(NetworkUtils.getAliasOfHostName(remoteHostName));
