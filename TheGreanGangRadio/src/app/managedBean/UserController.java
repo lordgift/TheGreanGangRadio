@@ -37,6 +37,7 @@ public class UserController {
 	
 	private String playingImage;
 	private String playingMusic;
+	private String promptWelcome;
 	private String promptTextHost;
 	private String streamingUrl;
 	private String remoteAddress;
@@ -62,6 +63,7 @@ public class UserController {
 		}
 		allMusic = FileUtils.getInstance().getMusicListFromDirectory();
 		
+		promptWelcome = "Welcome,   ";
 		promptTextHost = "For external player : ";
 	}
 	
@@ -247,6 +249,13 @@ public class UserController {
 //		context.setAttribute(Constants.SERVLETCONTEXT_DUAL_LIST_MODEL_SONGS, songs);
 //		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);
 //	}
+	public String getPromptWelcome() {
+		return promptWelcome;
+	}
+	
+	public String getRemoteHostName() {
+		return remoteHostName;
+	}
 	
 	public String getStreamingUrl() {
 		return streamingUrl;

@@ -43,6 +43,7 @@ public class DjController implements ServletContextListener, SelectableDataModel
 
 	private String playingImage;
 	private String playingMusic;
+	private String promptWelcome;
 	private String promptTextHost;
 	private String shareUrl;
 	private String streamingUrl;
@@ -83,6 +84,7 @@ public class DjController implements ServletContextListener, SelectableDataModel
 		}
 		allMusic = FileUtils.getInstance().getMusicListFromDirectory();
 
+		promptWelcome = "Welcome,   ";
 		promptTextHost = "For users : ";
 	}
 
@@ -294,13 +296,22 @@ public class DjController implements ServletContextListener, SelectableDataModel
 		this.remoteAddress = remoteAddress;
 	}
 
-//	public void refreshDirectory() {
-//		List<String> musics = FileUtils.getInstance().getMusicListFromDirectory();
-//		songs.setTarget(musics);
-//
-//		context.setAttribute(Constants.SERVLETCONTEXT_DUAL_LIST_MODEL_SONGS, songs);
-//		pushContext.push(Constants.CHANNEL_REFRESH_PICKLIST, Constants.STRING_VALUE_1);
-//	}
+	public void reReadFromDirectory() {
+		List<Music> musics = FileUtils.getInstance().getMusicListFromDirectory();
+		allMusic.clear();
+		allMusic.addAll(musics);
+
+		context.setAttribute(Constants.SERVLETCONTEXT_ALLMUSIC, allMusic);
+		pushContext.push(Constants.CHANNEL_REFRESH_ALLMUSIC_TABLE, Constants.STRING_VALUE_1);
+	}
+	
+	public String getPromptWelcome() {
+		return promptWelcome;
+	}
+	
+	public String getRemoteHostName() {
+		return remoteHostName;
+	}
 	
 	public String getShareUrl() {
 		return shareUrl;

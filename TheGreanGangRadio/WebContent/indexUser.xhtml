@@ -25,6 +25,10 @@
 					<tr>
 						<td align="left">
 							<p:panel>
+								<div style="height:30px">
+									<h:outputText value="#{djController.promptWelcome}"/>
+									<h:outputText value="&ldquo;#{djController.remoteHostName}&rdquo;" />
+								</div>							
 								<h:outputText value="#{userController.promptTextHost}"/>
 									<h:inputText value="#{userController.streamingUrl}" 
 									onclick="this.select();" size="22" 							
