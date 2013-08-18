@@ -29,10 +29,10 @@
 									<h:outputText value="#{djController.promptWelcome}"/>
 									<h:outputText value="&ldquo;#{djController.remoteHostName}&rdquo;" />
 								</div>							
-								<h:outputText value="#{userController.promptTextHost}"/>
+								<h:outputText value="#{userController.promptTextHost}" style="font-size:16px;"/>
 									<h:inputText value="#{userController.streamingUrl}" 
 									onclick="this.select();" size="22" 							
-									style="border:0;border-radius:10px;background-color:#C9FF25;font-size:18px;font-weight:bold;color:black;text-align:center;"
+									style="border:0;border-radius:10px;background-color:#C9FF25;font-size:16px;font-weight:bold;color:black;text-align:center;"
 									readonly="true" />
 							</p:panel>
 						</td>
@@ -81,9 +81,9 @@
     							<f:facet name="footer">
 									<span class="styleLink">Developed by : The Grean Gang's Members <BR/></span>
 									<span class="styleLink">Powered by : 
-										<a href="http://sourceforge.net/projects/javawinampapi/" target="_BLANK">JavaServerFaces(JSF)</a>,&nbsp;
+										<a href="http://www.oracle.com/technetwork/java/javaee/javaserverfaces-139869.html" target="_BLANK">JavaServerFaces(JSF)</a>,&nbsp;
 										<a href="http://www.primefaces.org" target="_BLANK">Primeface</a>,&nbsp;
-										<a href="http://www.oracle.com/technetwork/java/javaee/javaserverfaces-139869.html" target="_BLANK">JavaWinampAPI</a></span>
+										<a href="http://sourceforge.net/projects/javawinampapi/" target="_BLANK">JavaWinampAPI</a></span>
 								</f:facet>							
 								<f:facet name="actions">  
             						<h:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" onclick="shoutcastToggle()" >  
