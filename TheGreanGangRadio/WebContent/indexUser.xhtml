@@ -37,6 +37,7 @@
 							</p:panel>
 						</td>
 						<td align="center" rowspan="2">
+							<h:inputText styleClass="suggestPanel" onclick="this.select();" style="width:100%;font-size:16px;border:0;border-radius:10px;text-align:center;background-color:#888"/>
 							<p:tabView  effectDuration="normal" id="tabAll" style="text-align:left;">
 								<p:tab titleStyle="font-size:small;">
 									<f:facet name="title">
@@ -160,11 +161,41 @@
 	<script type="text/javascript">
 		$(window).load(function() {
 			setPlaceholder();
+			hideSuggest();
 		});
 		function setPlaceholder() {
 			/* add attribute 'placeholder' for filter box (reduce place for header and textbox) */
 			$(".musicNameFilter").attr("placeholder", "Music Name");
 			$(".requestFilter").attr("placeholder", "Requested By");
+		}
+		function showSuggest(){
+			//all available music index
+			var maxIndex = $("[data-ri]").length-1;
+			
+			//random index
+			var index = Math.floor((Math.random()*maxIndex));
+			
+			//get html by index
+			var randomRowHtml = $("[data-ri="+index+"] > td").html();		
+			
+			//substring to get music name (+7 for 'button>')
+			var suggestMusic = randomRowHtml.substr(randomRowHtml.lastIndexOf("button") + 7).trim();
+			
+			$(".suggestPanel").val(unescape(suggestMusic));
+			
+			$(".suggestPanel")
+				.css({opacity: 0})
+				.animate({opacity: 1}, 1000);
+			
+			//for hold text on screen 6s.
+			setTimeout(hideSuggest, 6000);
+		}
+		function hideSuggest(){
+			$(".suggestPanel")
+			.css({opacity: 1})
+			.animate({opacity: 0}, 1000, function() {
+				showSuggest();
+			});
 		}
 // 		function handleMSG(facesmessage) {
 // 			facesmessage.severity = 'info';
