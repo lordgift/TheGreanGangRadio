@@ -133,7 +133,7 @@ public class NetworkUtils {
 		String alias = hostName;
 		
 		if("jarupath-j".equalsIgnoreCase(hostName)) {
-			alias = "Lord Gift";
+			alias = "LordGift";
 			
 		} else if("prapassorn-pc".equalsIgnoreCase(hostName)) {
 			alias = "Chocogemⓟ";
