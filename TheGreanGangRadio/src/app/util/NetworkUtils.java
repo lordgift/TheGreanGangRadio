@@ -136,7 +136,7 @@ public class NetworkUtils {
 			alias = "Lord Gift";
 			
 		} else if("prapassorn-pc".equalsIgnoreCase(hostName)) {
-			alias = "Ploy Ukmp";
+			alias = "Chocogemⓟ";
 			
 		} else if("pitchapong-b".equalsIgnoreCase(hostName)) {
 			alias = "งัว";
@@ -147,16 +147,15 @@ public class NetworkUtils {
 		} else if("nattapong-t".equalsIgnoreCase(hostName)) {
 			alias = "Akermiji";
 			
-		} else if("fikree-s".equalsIgnoreCase(hostName)) {
-			alias = "ฟิกล็อคเดท";
+		} else if("fikree_s".equalsIgnoreCase(hostName)) {
+			alias = "Fik";
 			
-		} else if("jatupon-r".equalsIgnoreCase(hostName)) {
+		} else if("jatuponr-pc".equalsIgnoreCase(hostName)) {
 			alias = "Samoky";
 			
+		} else if("natchaya-s".equalsIgnoreCase(hostName)) {
+			alias = "Aew Sukmanee";
 		}
-		//TODO add more alias here
-		
-		
 		log.debug("Quit getAliasOfHostName");
 		return alias;
 	}

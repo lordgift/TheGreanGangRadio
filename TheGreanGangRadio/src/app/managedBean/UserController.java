@@ -37,6 +37,7 @@ public class UserController {
 	
 	private String playingImage;
 	private String playingMusic;
+	private String playingRequester;
 	private String promptWelcome;
 	private String promptTextHost;
 	private String streamingUrl;
@@ -46,7 +47,7 @@ public class UserController {
 	private List<Music> allMusic;
 	private Music selected;
 	private List<Music> filteredPlaylist;
-	private List<Music> filteredAllMusic;	
+	private List<Music> filteredAllMusic;
 
 	public UserController() {
 		
@@ -191,19 +192,22 @@ public class UserController {
 	 * remove music from playlist when it's playing
 	 */
 	public void removePlayingMusic() {
-		Music equalsMusic = null;
-		String fileNamePlaying = null;
-		for (Music music : playlist) {
-			fileNamePlaying = WinampUtils.getFileNamePlaying();
-			if (music.getMusicName().equals(fileNamePlaying)) {
-				equalsMusic = music;
-			}
-		}
-		playlist.remove(equalsMusic);
-
-		context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlist);
+//		DJController set & push this already 
 		
-		pushContext.push(Constants.CHANNEL_REFRESH_PLAYLIST_TABLE, Constants.STRING_VALUE_1);
+//		Music equalsMusic = null;
+//		String fileNamePlaying = null;
+//		for (Music music : playlist) {
+//			fileNamePlaying = WinampUtils.getFileNamePlaying();
+//			if (music.getMusicName().equals(fileNamePlaying)) {
+//				equalsMusic = music;
+//				playingRequester = music.getRequestBy();
+//			}
+//		}
+//		playlist.remove(equalsMusic);
+
+//		context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlist);
+		
+//		pushContext.push(Constants.CHANNEL_REFRESH_PLAYLIST_TABLE, Constants.STRING_VALUE_1);
 	}
 	
 	public String getPlayingImage() {
@@ -233,6 +237,16 @@ public class UserController {
 
 	public void setPlayingMusic(String playingMusic) {
 		this.playingMusic = playingMusic;
+	}
+	
+	public String getPlayingRequester() {
+		playingRequester = (String) context.getAttribute(Constants.SERVLETCONTEXT_REQUESTER);
+		playingRequester = null == playingRequester ? "Unknown" : playingRequester;
+		return playingRequester;
+	}
+
+	public void setPlayingRequester(String playingRequester) {
+		this.playingRequester = playingRequester;
 	}
 	
 	public String getRemoteAddress() {		

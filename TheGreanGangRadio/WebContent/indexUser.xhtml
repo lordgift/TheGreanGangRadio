@@ -41,7 +41,7 @@
 								<p:tab titleStyle="font-size:small;">
 									<f:facet name="title">
 										<p:graphicImage value="/img/tab-soundcard-flat.svg" width="30px" height="30px" style="vertical-align:bottom;"/>
-										Upcoming..
+										Playlist
 									</f:facet>
 									
 								    <p:dataTable widgetVar="playlist" id="playlist" var="playlist" value="#{userController.playlist}" 
@@ -59,7 +59,7 @@
 								<p:tab titleStyle="font-size:small;">
 									<f:facet name="title">
 										<p:graphicImage value="/img/tab-folder-flat.svg" width="30px" height="30px" style="vertical-align:bottom;"/>
-										Directory
+										All Music
 									</f:facet>		
 									
 								    <p:dataTable widgetVar="allMusic" id="allMusic" var="allMusic" value="#{userController.allMusic}" 
@@ -101,6 +101,9 @@
 										<td>
 											<h:outputText id="playingMusic" value="#{userController.playingMusic}" styleClass="playingMusic" style="padding-left:5px" />
 											<BR/>
+											<div style="font-size:12px;color:gray;padding-left:5px;height:30px;">											
+												Requested by <h:outputText id="playingRequester" value="#{userController.playingRequester}" styleClass="playingRequester"/>
+											</div>
 											<audio src="#{userController.streamingUrl}/;" controls="controls" autoplay="autoplay">
 												Your Browser Not Support HTML5 Audio tag
 											</audio>
@@ -119,7 +122,8 @@
 			            			mode="advanced" 
 			            			multiple="true"
 			            			update="messages"
-			            			allowTypes="/(\.|\/)(mp3|flac|wav|m4a)$/" />
+			            			allowTypes="/(\.|\/)(mp3|flac|wav)$/"
+			            			label="Choose (.mp3/.flac/.wav)" />
 		            		</p:inplace>
 		            		&nbsp;
 						</td>
@@ -130,6 +134,7 @@
 				<p:commandButton styleClass="refreshAllMusic" style="visibility:hidden;" update="@widgetVar(allMusic)" oncomplete="setPlaceholder()"/>
 				<p:commandButton styleClass="refreshPlaylist" style="visibility:hidden;" update="@widgetVar(playlist)" oncomplete="setPlaceholder()"/>
 				<p:commandButton styleClass="removePlayingMusic" style="visibility:hidden;" action="#{userController.removePlayingMusic}" />
+				<p:commandButton styleClass="reloadPlayingRequester" style="visibility:hidden;" update="playingRequester" />
 				
 				<p:growl id="messages" showDetail="true" escape="false" widgetVar="messages"/>    
 	    		<p:socket onMessage="handleChangingMusic" channel="/changingMusic" />   
@@ -179,7 +184,8 @@
 	
 		function handleChangingMusic(musicName) {
 			$(".playingMusic").html(musicName);
-			$(".removePlayingMusic").click();
+			$(".reloadPlayingRequester").click();
+// 			$(".removePlayingMusic").click();
 		}
 		
 		function handlePlayingImage(imageSource) {

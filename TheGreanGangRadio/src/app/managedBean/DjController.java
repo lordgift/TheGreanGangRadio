@@ -43,6 +43,7 @@ public class DjController implements ServletContextListener, SelectableDataModel
 
 	private String playingImage;
 	private String playingMusic;
+	private String playingRequester;
 	private String promptWelcome;
 	private String promptTextHost;
 	private String shareUrl;
@@ -248,14 +249,18 @@ public class DjController implements ServletContextListener, SelectableDataModel
 	public void removePlayingMusic() {
 		Music equalsMusic = null;
 		String fileNamePlaying = null;
+		String requester = null;
 		for (Music music : playlist) {
 			fileNamePlaying = WinampUtils.getFileNamePlaying();
 			if (music.getMusicName().equals(fileNamePlaying)) {
 				equalsMusic = music;
+				requester = music.getRequestBy();
 			}
 		}
 		playlist.remove(equalsMusic);
-
+		
+		/* set requester & playlist to servlet context [set here for same output]*/
+		context.setAttribute(Constants.SERVLETCONTEXT_REQUESTER, requester);
 		context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlist);
 		
 		pushContext.push(Constants.CHANNEL_REFRESH_PLAYLIST_TABLE, Constants.STRING_VALUE_1);
@@ -290,6 +295,16 @@ public class DjController implements ServletContextListener, SelectableDataModel
 		this.playingMusic = playingMusic;
 	}
 	
+	public String getPlayingRequester() {
+		playingRequester = (String) context.getAttribute(Constants.SERVLETCONTEXT_REQUESTER);
+		playingRequester = null == playingRequester ? "Unknown" : playingRequester;
+		return playingRequester;
+	}
+
+	public void setPlayingRequester(String playingRequester) {
+		this.playingRequester = playingRequester;
+	}
+
 	public String getRemoteAddress() {		
 		return remoteAddress;
 	}
