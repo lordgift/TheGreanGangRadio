@@ -188,10 +188,10 @@ public class UserController {
 	}
 	/*========	Handle Upload	========*/
 	
-	/**
-	 * remove music from playlist when it's playing
-	 */
-	public void removePlayingMusic() {
+//	/**
+//	 * remove music from playlist when it's playing
+//	 */
+//	public void removePlayingMusic() {
 //		DJController set & push this already 
 		
 //		Music equalsMusic = null;
@@ -208,7 +208,7 @@ public class UserController {
 //		context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlist);
 		
 //		pushContext.push(Constants.CHANNEL_REFRESH_PLAYLIST_TABLE, Constants.STRING_VALUE_1);
-	}
+//	}
 	
 	public String getPlayingImage() {
 		try {
@@ -240,8 +240,6 @@ public class UserController {
 	}
 	
 	public String getPlayingRequester() {
-		playingRequester = (String) context.getAttribute(Constants.SERVLETCONTEXT_REQUESTER);
-		playingRequester = null == playingRequester ? "Unknown" : playingRequester;
 		return playingRequester;
 	}
 

@@ -38,7 +38,7 @@ public class PageSelector {
 	
 
 	public String getPage() {
-		log.debug("forwarding to " + page);
+//		log.debug("forwarding to " + page);
 		return page;
 	}
 }

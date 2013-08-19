@@ -68,7 +68,7 @@
 								    	scrollable="true" scrollHeight="300" filteredValue="#{djController.filteredAllMusic}">
                     
                   							<p:column filterBy="musicName" filterMatchMode="contains" filterStyleClass="musicNameFilter" filterStyle="width:50%;text-align:center">
-	           									<p:commandButton icon="ui-icon-plusthick" actionListener="#{djController.onRowSelect(allMusic)}" style="width:30px;height:30px;" oncomplete="setPlaceholder();" update="@widgetVar(messages),@widgetVar(playlist),@widgetVar(allMusic)"/>
+	           									<p:commandButton icon="ui-icon-plusthick" actionListener="#{djController.onRowSelect(allMusic)}" style="width:30px;height:30px;" oncomplete="setPlaceholder();" update="@widgetVar(messages)"/>
 	           									#{allMusic.musicName}
        										</p:column>
 							        </p:dataTable>
@@ -145,7 +145,6 @@
 				<p:commandButton styleClass="refreshAllMusic" style="visibility:hidden;" update="@widgetVar(allMusic)" oncomplete="setPlaceholder()"/>
 				<p:commandButton styleClass="refreshPlaylist" style="visibility:hidden;" update="@widgetVar(playlist)" oncomplete="setPlaceholder()"/>
 				<p:commandButton styleClass="removePlayingMusic" style="visibility:hidden;" action="#{djController.removePlayingMusic}" />
-				<p:commandButton styleClass="reloadPlayingRequester" style="visibility:hidden;" update="playingRequester" />
 				
 				<p:growl id="messages" showDetail="true" escape="false" widgetVar="messages"/>    
 	    		<p:socket onMessage="handleChangingMusic" channel="/changingMusic" />   
@@ -180,24 +179,27 @@
 		}
 		
 		function showSuggest(){
-			//all available music index
-			var maxIndex = $("[data-ri]").length-1;
-			
-			//random index
-			var index = Math.floor((Math.random()*maxIndex));
-			
-			//get html by index
-			var randomRowHtml = $("[data-ri="+index+"] > td").html();		
-			
-			//substring to get music name (+7 for 'button>')
-			var suggestMusic = randomRowHtml.substr(randomRowHtml.lastIndexOf("button") + 7).trim();
-			
-			$(".suggestPanel").val(unescape(suggestMusic));
-			
-			$(".suggestPanel")
-				.css({opacity: 0})
-				.animate({opacity: 1}, 1000);
-			
+			try {
+				//all available music index
+				var maxIndex = $("[data-ri]").length-1;
+				
+				//random index
+				var index = Math.floor((Math.random()*maxIndex));
+				
+				//get html by index
+				var randomRowHtml = $("[data-ri="+index+"] > td").html();		
+				
+				//substring to get music name (+7 for 'button>')
+				var suggestMusic = randomRowHtml.substr(randomRowHtml.lastIndexOf("button") + 7).trim();
+				
+				$(".suggestPanel").val(unescape(suggestMusic));
+				
+				$(".suggestPanel")
+					.css({opacity: 0})
+					.animate({opacity: 1}, 1000);
+			} catch(err) {
+				console.log("Error : " + err);
+			}
 			//for hold text on screen 6s.
 			setTimeout(hideSuggest, 6000);
 		}
@@ -225,9 +227,9 @@
 			}
 		}
 
-		function handleChangingMusic(musicName) {
-			$(".playingMusic").html(musicName);
-			$(".reloadPlayingRequester").click();
+		function handleChangingMusic(musicObj) {
+			$(".playingMusic").html(musicObj.musicName);
+			$(".playingRequester").html(musicObj.requestBy);		
 			$(".removePlayingMusic").click();
 		}
 		

@@ -142,7 +142,7 @@ public class NetworkUtils {
 			alias = "งัว";
 			
 		} else if("sirinthip-p".equalsIgnoreCase(hostName)) {
-			alias = "หม่ามี๊";
+			alias = "หม่ามี้";
 			
 		} else if("nattapong-t".equalsIgnoreCase(hostName)) {
 			alias = "Akermiji";
@@ -155,6 +155,9 @@ public class NetworkUtils {
 			
 		} else if("natchaya-s".equalsIgnoreCase(hostName)) {
 			alias = "Aew Sukmanee";
+			
+		} else if("VALAN-B".equalsIgnoreCase(hostName)) {
+			alias = "โมจิ";
 		}
 		log.debug("Quit getAliasOfHostName");
 		return alias;

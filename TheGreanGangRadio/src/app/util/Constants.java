@@ -14,7 +14,6 @@ public interface Constants {
 	public static final String SERVLETCONTEXT_HOST_ADDRESS = "hostAddress";
 	public static final String SERVLETCONTEXT_PLAYLIST = "playlistApplication";
 	public static final String SERVLETCONTEXT_ALLMUSIC = "allMusicApplication";
-	public static final String SERVLETCONTEXT_REQUESTER = "requester";
 	
 	/* session attribute */
 	public static final String SESSION_REMOTE_NETWORK_DETAIL = "networkDetail";
