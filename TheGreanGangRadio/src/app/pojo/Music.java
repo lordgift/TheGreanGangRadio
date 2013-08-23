@@ -2,11 +2,11 @@ package app.pojo;
 
 public class Music {
 	private String musicName;
-	private String requestBy;
+	private String requester;
 
 	public Music(String musicName, String requestBy) {
 		this.musicName = musicName;
-		this.requestBy = requestBy;
+		this.requester = requestBy;
 	}
 	public String getMusicName() {
 		return musicName;
@@ -16,11 +16,11 @@ public class Music {
 		this.musicName = musicName;
 	}
 
-	public String getRequestBy() {
-		return requestBy;
+	public String getRequester() {
+		return requester;
 	}
 
-	public void setRequestBy(String requestBy) {
-		this.requestBy = requestBy;
+	public void setRequester(String requester) {
+		this.requester = requester;
 	}
 }

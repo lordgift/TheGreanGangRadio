@@ -59,7 +59,7 @@ public class WinampUtils {
 		} catch (Exception e) {
 			log.error("Error in playerControl", e);
 		} finally {
-			log.debug("Quit playerControl");
+//			log.debug("Quit playerControl");
 		}
 	}
 	

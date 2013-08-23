@@ -1,5 +1,6 @@
 package app.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.context.FacesContext;
@@ -10,6 +11,8 @@ import org.apache.log4j.Logger;
 import org.primefaces.push.PushContext;
 import org.primefaces.push.PushContextFactory;
 
+import com.sun.management.GarbageCollectorMXBean;
+
 import app.pojo.Music;
 
 public class ThreadMonitorWinamp extends Thread {
@@ -17,36 +20,54 @@ public class ThreadMonitorWinamp extends Thread {
 
 	private String playingMusic;
 	private String playedMusic;
-	private String requester = "Unknown";
-
+	private Music musicDisplay;
 	HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 	ServletContext context = request.getSession().getServletContext();
-
+	PushContext pushContext = PushContextFactory.getDefault().getPushContext();
+	
+	private static final ThreadMonitorWinamp INSTANCE = new ThreadMonitorWinamp();
+	private ThreadMonitorWinamp() {
+		/* singleton for protected multithread */
+	}
+	
+	public static ThreadMonitorWinamp getInstance() {
+		return INSTANCE != null ? INSTANCE : new ThreadMonitorWinamp() ;
+	}
+	
 	@Override
 	public void run() {
 		while (true) {
 			try {
 				playingMusic = WinampUtils.getFileNamePlaying();
 				
-				if (null != playedMusic && !playingMusic.equals(playedMusic)) {
-
-					// requester="Unknown" when not found music in playlist from servletcontext
-					List<Music> playlist = (List<Music>) context.getAttribute(Constants.SERVLETCONTEXT_PLAYLIST);
+				/* is music changed && check null of playedMusic for protect context.getAttribute is null*/
+				if (!playingMusic.equals(playedMusic) && playedMusic != null) {
+					
+					musicDisplay = new Music(playingMusic,"Unknown");
+					
+					List<Music> contextPlaylist = (List<Music>) context.getAttribute(Constants.SERVLETCONTEXT_PLAYLIST);
+					List<Music> playlist = new ArrayList<Music>(contextPlaylist);
+					
 					if (playlist != null && !playlist.isEmpty()) {
-						
+						/* find & remove Playlist */
 						for (Music music : playlist) {
-							if (music.getMusicName().equals(playingMusic)) {
-								requester = music.getRequestBy();
+							if (playingMusic.equals(music.getMusicName())) {
+								contextPlaylist.remove(music);
+								context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, contextPlaylist);
 								
-								Music musicToShow = new Music(playingMusic, requester);
-
-								PushContext pushContext = PushContextFactory.getDefault().getPushContext();
-								pushContext.push(Constants.CHANNEL_CHANGING_MUSIC, musicToShow);
+								musicDisplay.setRequester(music.getRequester());
 								
-								log.debug("pushing to client");
-							}
+								/* for remove only first duplicated music*/
+								break;
+							}							
 						}
 					}
+					pushContext.push(Constants.CHANNEL_CHANGING_MUSIC, musicDisplay);
+					log.debug("pushing to client ['"+musicDisplay.getMusicName()+"','"+musicDisplay.getRequester()+"']");
+					
+					/* force garbage collector */
+					System.gc();
+					
 //					log.debug(playedMusic);
 //					log.debug(playingMusic);
 //					log.debug(requester);
@@ -59,9 +80,5 @@ public class ThreadMonitorWinamp extends Thread {
 				break;
 			}
 		}
-	}
-
-	public String getPlayingMusic() {
-		return playingMusic;
 	}
 }

@@ -51,8 +51,8 @@
 	       									<p:column filterBy="musicName" filterMatchMode="contains" filterStyleClass="musicNameFilter" filterStyle="width:50%;text-align:center">
 	           									#{playlist.musicName}
        										</p:column>
-	       									<p:column filterBy="requestBy" filterMatchMode="contains" filterStyleClass="requestFilter" filterStyle="width:50%;text-align:center">  
-	           									#{playlist.requestBy}
+	       									<p:column filterBy="requester" filterMatchMode="contains" filterStyleClass="requestFilter" filterStyle="width:50%;text-align:center">  
+	           									#{playlist.requester}
 	       									</p:column>
 							        </p:dataTable>
 								</p:tab>
@@ -204,21 +204,18 @@
 // 			PF('growl').show([ facesmessage ]);
 // 		}
 	
-		function handleRefreshPlaylistTable(status) {
-			if (status == "1") {
-				$(".refreshPlaylist").click();
-			}
+		function handleRefreshPlaylistTable(noUse) {
+			$(".refreshPlaylist").click();
 		}
-		function handleRefreshAllmusicTable(status) {
-			if (status == "1") {
-				$(".refreshAllMusic").click();				
-			}
+		function handleRefreshAllmusicTable(noUse) {
+			$(".refreshAllMusic").click();				
 		}
 	
 		function handleChangingMusic(musicObj) {
 			$(".playingMusic").html(musicObj.musicName);
-			$(".playingRequester").html(musicObj.requestBy);		
+			$(".playingRequester").html(musicObj.requester);		
 // 			$(".removePlayingMusic").click();
+			$(".refreshPlaylist").click();
 		}
 		
 		function handlePlayingImage(imageSource) {

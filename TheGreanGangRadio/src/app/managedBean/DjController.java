@@ -43,7 +43,7 @@ public class DjController implements ServletContextListener, SelectableDataModel
 
 	private String playingImage;
 	private String playingMusic;
-	private String playingRequester;
+	private String playingRequester = "Unknown";
 	private String promptWelcome;
 	private String promptTextHost;
 	private String shareUrl;
@@ -58,12 +58,9 @@ public class DjController implements ServletContextListener, SelectableDataModel
 	private List<Music> filteredPlaylist;
 	private List<Music> filteredAllMusic;	
 
-	private ThreadMonitorWinamp threadMonitorWinamp;
 
 	public DjController() {
-
-		threadMonitorWinamp = new ThreadMonitorWinamp();
-		threadMonitorWinamp.start();
+		ThreadMonitorWinamp.getInstance().start();
 
 		// WinampUtils.clearWinampPlayList();
 
@@ -145,21 +142,21 @@ public class DjController implements ServletContextListener, SelectableDataModel
 		allMusic.remove(selected);
 		WinampUtils.appendFileToPlaylist(selected.getMusicName());
 		
-		selected.setRequestBy(NetworkUtils.getAliasOfHostName(remoteHostName));
+		selected.setRequester(NetworkUtils.getAliasOfHostName(remoteHostName));
 		playlist.add(selected);
 		context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlist);
 
-		log.debug(selected.getMusicName() + " by " + selected.getRequestBy());
+		log.debug(selected.getMusicName() + " by " + selected.getRequester());
 
 		FacesMessage msg = new FacesMessage();
 		msg.setSeverity(FacesMessage.SEVERITY_INFO);
 		msg.setSummary("Music Added by " + NetworkUtils.getInstance().managingSessionNetworkDetail().getHostName());
-		msg.setDetail(selected.getMusicName() + " by " + selected.getRequestBy());
+		msg.setDetail(selected.getMusicName() + " by " + selected.getRequester());
 
 		FacesContext.getCurrentInstance().addMessage(null, msg);
 		
-		pushContext.push(Constants.CHANNEL_REFRESH_ALLMUSIC_TABLE, Constants.STRING_VALUE_1);
-		pushContext.push(Constants.CHANNEL_REFRESH_PLAYLIST_TABLE, Constants.STRING_VALUE_1);
+		pushContext.push(Constants.CHANNEL_REFRESH_ALLMUSIC_TABLE, null);
+		pushContext.push(Constants.CHANNEL_REFRESH_PLAYLIST_TABLE, null);
 		
 		log.debug("Quit onRowSelect");
 	}
@@ -200,7 +197,7 @@ public class DjController implements ServletContextListener, SelectableDataModel
 			// show message dialog to uploader
 			FacesContext.getCurrentInstance().addMessage(null, msg);
 
-			pushContext.push(Constants.CHANNEL_REFRESH_ALLMUSIC_TABLE, Constants.STRING_VALUE_1);
+			pushContext.push(Constants.CHANNEL_REFRESH_ALLMUSIC_TABLE, null);
 
 		} catch (IOException e) {
 			log.error("Error in handleFileUpload", e);
@@ -243,28 +240,6 @@ public class DjController implements ServletContextListener, SelectableDataModel
 	}
 	/*========	Controller Panel	========*/
 
-	/**
-	 * remove music from playlist when it's playing
-	 */
-	public void removePlayingMusic() {
-		Music equalsMusic = null;
-		String fileNamePlaying = null;
-		
-		/* same music name were deleted together */
-		for (Music music : playlist) {
-			fileNamePlaying = WinampUtils.getFileNamePlaying();
-			if (music.getMusicName().equals(fileNamePlaying)) {
-				equalsMusic = music;
-			}
-		}
-		playlist.remove(equalsMusic);
-		
-		/* set playlist to servlet context [set here for same output]*/
-		context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlist);
-		
-		pushContext.push(Constants.CHANNEL_REFRESH_PLAYLIST_TABLE, Constants.STRING_VALUE_1);
-	}
-	
 	public String getPlayingImage() {
 		try {
 			if (WinampController.getStatus() == WinampController.PLAYING) {
@@ -316,7 +291,7 @@ public class DjController implements ServletContextListener, SelectableDataModel
 		allMusic.addAll(musics);
 
 		context.setAttribute(Constants.SERVLETCONTEXT_ALLMUSIC, allMusic);
-		pushContext.push(Constants.CHANNEL_REFRESH_ALLMUSIC_TABLE, Constants.STRING_VALUE_1);
+		pushContext.push(Constants.CHANNEL_REFRESH_ALLMUSIC_TABLE, null);
 	}
 	
 	public String getPromptWelcome() {
@@ -347,7 +322,7 @@ public class DjController implements ServletContextListener, SelectableDataModel
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		threadMonitorWinamp.interrupt();
+		ThreadMonitorWinamp.getInstance().interrupt();
 	}
 
 	@Override

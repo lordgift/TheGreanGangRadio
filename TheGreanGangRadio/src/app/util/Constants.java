@@ -34,6 +34,5 @@ public interface Constants {
 	public static final String IMAGESOURCE_BABY_DANCE_GIF = "/img/baby-dance.gif";
 	
 	public static final String BLANK = "";
-	public static final String STRING_VALUE_1 = "1";
 	
 }

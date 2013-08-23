@@ -98,7 +98,7 @@ public class NetworkUtils {
 	 * @return {@link NetworkDetail} pojo
 	 */
 	public NetworkDetail managingSessionNetworkDetail() {
-		log.debug("Enter managingSessionNetworkDetail");
+//		log.debug("Enter managingSessionNetworkDetail");
 
 		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		HttpSession session = request.getSession();
@@ -117,7 +117,7 @@ public class NetworkUtils {
 		}
 		log.debug("Entering >> " + networkDetail.getHostName() + " [" + networkDetail.getIpAddress() + "]");
 
-		log.debug("Quit managingSessionNetworkDetail");
+//		log.debug("Quit managingSessionNetworkDetail");
 		return networkDetail;
 	}
 	
@@ -127,7 +127,7 @@ public class NetworkUtils {
 	 * @return alias, otherwise hostName
 	 */
 	public static String getAliasOfHostName(String hostName) {
-		log.debug("Enter getAliasOfHostName");
+//		log.debug("Enter getAliasOfHostName");
 		
 		//initial for out of cases
 		String alias = hostName;
@@ -158,8 +158,16 @@ public class NetworkUtils {
 			
 		} else if("VALAN-B".equalsIgnoreCase(hostName)) {
 			alias = "โมจิ";
+			
+		} else if("CHINJA-PC".equalsIgnoreCase(hostName)) {
+			alias = "Chinja";
+			
+		} else if("piyawan-y".equalsIgnoreCase(hostName)) {
+			alias = "JipJup";
 		}
-		log.debug("Quit getAliasOfHostName");
+		log.debug("alias = " + alias);
+		
+//		log.debug("Quit getAliasOfHostName");
 		return alias;
 	}
 

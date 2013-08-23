@@ -51,8 +51,8 @@
 	       									<p:column filterBy="musicName" filterMatchMode="contains" filterStyleClass="musicNameFilter" filterStyle="width:50%;text-align:center">
 	           									#{playlist.musicName}
        										</p:column>
-	       									<p:column filterBy="requestBy" filterMatchMode="contains" filterStyleClass="requestFilter" filterStyle="width:50%;text-align:center">  
-	           									#{playlist.requestBy}
+	       									<p:column filterBy="requester" filterMatchMode="contains" filterStyleClass="requestFilter" filterStyle="width:50%;text-align:center">  
+	           									#{playlist.requester}
 	       									</p:column>
 							        </p:dataTable>
 								</p:tab>
@@ -144,7 +144,6 @@
 				
 				<p:commandButton styleClass="refreshAllMusic" style="visibility:hidden;" update="@widgetVar(allMusic)" oncomplete="setPlaceholder()"/>
 				<p:commandButton styleClass="refreshPlaylist" style="visibility:hidden;" update="@widgetVar(playlist)" oncomplete="setPlaceholder()"/>
-				<p:commandButton styleClass="removePlayingMusic" style="visibility:hidden;" action="#{djController.removePlayingMusic}" />
 				
 				<p:growl id="messages" showDetail="true" escape="false" widgetVar="messages"/>    
 	    		<p:socket onMessage="handleChangingMusic" channel="/changingMusic" />   
@@ -216,21 +215,18 @@
 // 			PF('growl').show([ facesmessage ]);
 // 		}
 
-		function handleRefreshPlaylistTable(status) {
-			if (status == "1") {
-				$(".refreshPlaylist").click();
-			}
+		function handleRefreshPlaylistTable(noUse) {
+			$(".refreshPlaylist").click();
 		}
-		function handleRefreshAllmusicTable(status) {
-			if (status == "1") {
-				$(".refreshAllMusic").click();
-			}
+		function handleRefreshAllmusicTable(noUse) {
+			$(".refreshAllMusic").click();
 		}
 
 		function handleChangingMusic(musicObj) {
 			$(".playingMusic").html(musicObj.musicName);
-			$(".playingRequester").html(musicObj.requestBy);		
-			$(".removePlayingMusic").click();
+			$(".playingRequester").html(musicObj.requester);		
+// 			$(".removePlayingMusic").click();
+			$(".refreshPlaylist").click();
 		}
 		
 		function handlePlayingImage(imageSource) {
