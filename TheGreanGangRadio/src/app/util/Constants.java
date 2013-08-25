@@ -4,9 +4,6 @@ public interface Constants {
 	/* channel for using primepush */
 	public static final String CHANNEL_CHANGING_MUSIC = "/changingMusic";
 	public static final String CHANNEL_PLAYING_IMAGE = "/playingImage";
-//	public static final String CHANNEL_REFRESH_PICKLIST = "/refreshPickList";
-//	public static final String CHANNEL_REFRESH_PICKLIST_WITH_IP_CHECKING = "/refreshPickListWithIpChecking";
-//	public static final String CHANNEL_REFRESH_ALLMUSIC_TABLE_WITH_IP_CHECKING = "/refreshAllmusicTableWithIpChecking";
 	public static final String CHANNEL_REFRESH_ALLMUSIC_TABLE = "/refreshAllmusicTable";
 	public static final String CHANNEL_REFRESH_PLAYLIST_TABLE = "/refreshPlaylistTable";
 	

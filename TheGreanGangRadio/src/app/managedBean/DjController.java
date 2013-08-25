@@ -12,8 +12,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -34,7 +32,7 @@ import com.qotsa.jni.controller.WinampController;
 
 @ManagedBean
 @SessionScoped
-public class DjController implements ServletContextListener, SelectableDataModel<String> {
+public class DjController implements SelectableDataModel<String> {
 	private static final Logger log = Logger.getLogger(DjController.class);
 
 	HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -312,22 +310,6 @@ public class DjController implements ServletContextListener, SelectableDataModel
 	
 	public String getPromptTextHost() {
 		return promptTextHost;
-	}
-
-	@Override
-	public void contextDestroyed(ServletContextEvent arg0) {
-		try {
-			WinampController.exit();
-		} catch (InvalidHandle e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		ThreadMonitorWinamp.getInstance().interrupt();
-	}
-
-	@Override
-	public void contextInitialized(ServletContextEvent arg0) {
-
 	}
 
 	@Override

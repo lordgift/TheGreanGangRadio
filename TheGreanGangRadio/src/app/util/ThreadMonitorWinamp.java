@@ -11,6 +11,8 @@ import org.apache.log4j.Logger;
 import org.primefaces.push.PushContext;
 import org.primefaces.push.PushContextFactory;
 
+import com.qotsa.exception.InvalidHandle;
+import com.qotsa.jni.controller.WinampController;
 import com.sun.management.GarbageCollectorMXBean;
 
 import app.pojo.Music;
@@ -41,7 +43,7 @@ public class ThreadMonitorWinamp extends Thread {
 				playingMusic = WinampUtils.getFileNamePlaying();
 				
 				/* is music changed && check null of playedMusic for protect context.getAttribute is null*/
-				if (!playingMusic.equals(playedMusic) && playedMusic != null) {
+				if (playedMusic != null && playingMusic != null &&!playingMusic.equals(playedMusic)) {
 					
 					musicDisplay = new Music(playingMusic,"Unknown");
 					
@@ -80,5 +82,18 @@ public class ThreadMonitorWinamp extends Thread {
 				break;
 			}
 		}
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		log.debug("FINALIZING");
+//		// 		try {
+//		WinampController.exit();
+//	} catch (InvalidHandle e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
+//	ThreadMonitorWinamp.getInstance().interrupt();
+		super.finalize();
 	}
 }
