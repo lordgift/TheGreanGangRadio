@@ -41,6 +41,7 @@ public class UserController {
 	private String promptWelcome;
 	private String promptTextHost;
 	private String streamingUrl;
+	private String githubButtonUrl = "http://ghbtns.com/github-btn.html?user=lordgift&repo=TheGreanGangRadio&type=watch&count=true";
 	private String remoteAddress;
 	private String remoteHostName;
 	private List<Music> playlist;
@@ -255,5 +256,12 @@ public class UserController {
 	public String getPromptTextHost() {
 		return promptTextHost;
 	}
-	
+
+	public String getGithubButtonUrl() {
+		return githubButtonUrl;
+	}
+
+	public void setGithubButtonUrl(String githubButtonUrl) {
+		this.githubButtonUrl = githubButtonUrl;
+	}
 }

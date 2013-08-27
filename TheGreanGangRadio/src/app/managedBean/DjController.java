@@ -32,7 +32,7 @@ import com.qotsa.jni.controller.WinampController;
 
 @ManagedBean
 @SessionScoped
-public class DjController implements SelectableDataModel<String> {
+public class DjController {
 	private static final Logger log = Logger.getLogger(DjController.class);
 
 	HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -46,6 +46,7 @@ public class DjController implements SelectableDataModel<String> {
 	private String promptTextHost;
 	private String shareUrl;
 	private String streamingUrl;
+	private String githubButtonUrl = "http://ghbtns.com/github-btn.html?user=lordgift&repo=TheGreanGangRadio&type=watch&count=true";
 	private String remoteAddress;
 	private String remoteHostName;
 	private boolean playBooleanButton;
@@ -55,7 +56,6 @@ public class DjController implements SelectableDataModel<String> {
 	private Music selected;
 	private List<Music> filteredPlaylist;
 	private List<Music> filteredAllMusic;	
-
 
 	public DjController() {
 		ThreadMonitorWinamp.getInstance().start();
@@ -284,6 +284,7 @@ public class DjController implements SelectableDataModel<String> {
 	}
 
 	public void reReadFromDirectory() {
+		log.debug("Enter reReadFromDirectory");
 		List<Music> musics = FileUtils.getInstance().getMusicListFromDirectory();
 		allMusic.clear();
 		allMusic.addAll(musics);
@@ -311,18 +312,12 @@ public class DjController implements SelectableDataModel<String> {
 	public String getPromptTextHost() {
 		return promptTextHost;
 	}
-
-	@Override
-	public String getRowKey(String object) {
-		log.debug("getRowKey = " + object);
-		// TODO Auto-generated method stub
-		return null;
+	
+	public String getGithubButtonUrl() {
+		return githubButtonUrl;
 	}
 
-	@Override
-	public String getRowData(String rowKey) {
-		log.debug("getRowData = " + rowKey);
-		// TODO Auto-generated method stub
-		return null;
+	public void setGithubButtonUrl(String githubButtonUrl) {
+		this.githubButtonUrl = githubButtonUrl;
 	}
 }

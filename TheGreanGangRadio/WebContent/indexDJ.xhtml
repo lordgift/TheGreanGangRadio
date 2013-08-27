@@ -80,19 +80,32 @@
 						<td width="45%" valign="top">
 							<p:panel header="Controller" >
     							<f:facet name="footer">
-									<span class="styleLink">Developed by : The Grean Gang's Members <BR/></span>
-									<span class="styleLink">Powered by : 
-										<a href="http://www.oracle.com/technetwork/java/javaee/javaserverfaces-139869.html" target="_BLANK">JavaServerFaces(JSF)</a>,&nbsp;
-										<a href="http://www.primefaces.org" target="_BLANK">Primeface</a>,&nbsp;
-										<a href="http://sourceforge.net/projects/javawinampapi/" target="_BLANK">JavaWinampAPI</a></span>
+    								<table width="100%" cellpadding="0" cellspacing="0">
+    									<tr>
+    										<td width="100%">
+												<span class="styleLink">Developed by : The Grean Gang's Members <BR/></span>
+											</td>
+											<td rowspan="2">
+												<iframe src="#{djController.githubButtonUrl}" style="right:0px;" allowtransparency="true" frameborder="0" scrolling="0" width="80" height="20"></iframe>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<span class="styleLink">Powered by : 
+													<a href="http://www.oracle.com/technetwork/java/javaee/javaserverfaces-139869.html" target="_BLANK">JavaServerFaces(JSF)</a>,&nbsp;
+													<a href="http://www.primefaces.org" target="_BLANK">Primeface</a>,&nbsp;
+													<a href="http://sourceforge.net/projects/javawinampapi/" target="_BLANK">JavaWinampAPI</a></span>
+											</td>									
+										</tr>
+									</table>
 								</f:facet>							
-								<f:facet name="actions">  
+								<f:facet name="actions">
             						<h:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" onclick="shoutcastToggle()" >  
                 						<h:outputText styleClass="ui-icon ui-icon-help" />  
             						</h:commandLink>
         						</f:facet> 
     							<div id="shoutcastShade" align="center">
-									<iframe src="#{djController.streamingUrl}" style="display:none;" />
+									<iframe src="#{djController.streamingUrl}" style="display:none;" id="streamingUrl"/>
 								</div>							
 								<table>
 									<tr>
@@ -235,8 +248,8 @@
 		
 		function shoutcastToggle() {
 
-			$("iframe").attr("src", $("iframe").attr("src"));
-			$("iframe").css({
+			$("#streamingUrl").attr("src", $("#streamingUrl").attr("src"));
+			$("#streamingUrl").css({
 				"display" : "none", //jQuery.fadeIn will set this to show later
 				"width" : "80%",
 				"height" : "80%",
@@ -256,7 +269,7 @@
 				"z-index" : "10"
 			});
 			$("#shoutcastShade").fadeIn("slow");
-			$("iframe").fadeIn("slow");
+			$("#streamingUrl").fadeIn("slow");
 
 			$("#shoutcastShade").click(function() {
 				$("#shoutcastShade").fadeOut("slow");

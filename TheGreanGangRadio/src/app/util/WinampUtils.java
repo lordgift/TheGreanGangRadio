@@ -34,7 +34,7 @@ public class WinampUtils {
 	 *            of the player action from form
 	 */
 	public static void playerControl(String event) {
-		log.debug("Enter playerControl : "+event);
+//		log.debug("Enter playerControl : "+event);
 		
 		try {
 			
