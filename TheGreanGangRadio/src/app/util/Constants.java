@@ -6,6 +6,7 @@ public interface Constants {
 	public static final String CHANNEL_PLAYING_IMAGE = "/playingImage";
 	public static final String CHANNEL_REFRESH_ALLMUSIC_TABLE = "/refreshAllmusicTable";
 	public static final String CHANNEL_REFRESH_PLAYLIST_TABLE = "/refreshPlaylistTable";
+	public static final String CHANNEL_SERVER_MESSAGE = "/serverMessage";
 	
 	/* servletContext attribute */
 	public static final String SERVLETCONTEXT_HOST_ADDRESS = "hostAddress";

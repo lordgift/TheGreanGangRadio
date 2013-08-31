@@ -53,9 +53,9 @@ public class DjController {
 	private boolean stopBooleanButton;
 	private List<Music> playlist;
 	private List<Music> allMusic;
-	private Music selected;
 	private List<Music> filteredPlaylist;
-	private List<Music> filteredAllMusic;	
+	private List<Music> filteredAllMusic;
+	private String serverMessage;
 
 	public DjController() {
 		ThreadMonitorWinamp.getInstance().start();
@@ -93,14 +93,6 @@ public class DjController {
 		this.allMusic = allMusic;
 	}
 
-	public Music getSelected() {
-		return selected;
-	}
-
-	public void setSelected(Music selected) {
-		this.selected = selected;
-	}
-	
 	public List<Music> getFilteredPlaylist() {
 		return filteredPlaylist;
 	}
@@ -130,26 +122,22 @@ public class DjController {
 	public void onRowSelect(Music music) {
 		log.debug("Enter onRowSelect");
 		
-		/* no use selected row */
-//		if(selected == null) {
-			selected = music;
-//		}
 		
 		if(filteredAllMusic != null)
-			filteredAllMusic.remove(selected);
-		allMusic.remove(selected);
-		WinampUtils.appendFileToPlaylist(selected.getMusicName());
+			filteredAllMusic.remove(music);
+//		allMusic.remove(music);
+		WinampUtils.appendFileToPlaylist(music.getMusicName());
 		
-		selected.setRequester(NetworkUtils.getAliasOfHostName(remoteHostName));
-		playlist.add(selected);
+		music.setRequester(NetworkUtils.getAliasOfHostName(remoteHostName));
+		playlist.add(music);
 		context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlist);
 
-		log.debug(selected.getMusicName() + " by " + selected.getRequester());
+		log.debug(music.getMusicName() + " by " + music.getRequester());
 
 		FacesMessage msg = new FacesMessage();
 		msg.setSeverity(FacesMessage.SEVERITY_INFO);
 		msg.setSummary("Music Added by " + NetworkUtils.getInstance().managingSessionNetworkDetail().getHostName());
-		msg.setDetail(selected.getMusicName() + " by " + selected.getRequester());
+		msg.setDetail(music.getMusicName() + " by " + music.getRequester());
 
 		FacesContext.getCurrentInstance().addMessage(null, msg);
 		
@@ -283,16 +271,29 @@ public class DjController {
 		this.remoteAddress = remoteAddress;
 	}
 
-	public void reReadFromDirectory() {
-		log.debug("Enter reReadFromDirectory");
+	public void reloadDirectory() {
+		log.debug("Enter reloadDirectory");
 		List<Music> musics = FileUtils.getInstance().getMusicListFromDirectory();
 		allMusic.clear();
 		allMusic.addAll(musics);
 
 		context.setAttribute(Constants.SERVLETCONTEXT_ALLMUSIC, allMusic);
-		pushContext.push(Constants.CHANNEL_REFRESH_ALLMUSIC_TABLE, null);
+//		pushContext.push(Constants.CHANNEL_REFRESH_ALLMUSIC_TABLE, null);
+		log.debug("Exit reloadDirectory");
 	}
 	
+	public void sendMessage() {
+		pushContext.push(Constants.CHANNEL_SERVER_MESSAGE, serverMessage);
+	}
+	
+	public String getServerMessage() {
+		return serverMessage;
+	}
+
+	public void setServerMessage(String serverMessage) {
+		this.serverMessage = serverMessage;
+	}
+
 	public String getPromptWelcome() {
 		return promptWelcome;
 	}

@@ -38,7 +38,7 @@
 						</td>
 						<td align="center" rowspan="2">
 							<h:inputText styleClass="suggestPanel" onclick="this.select();" style="width:100%;font-size:16px;border:0;border-radius:10px;text-align:center;background-color:#888"/>
-							<p:tabView  effectDuration="normal" id="tabAll" style="text-align:left;">
+							<p:tabView effectDuration="normal" id="tabAll" style="text-align:left;" effect="fade">
 								<p:tab titleStyle="font-size:small;">
 									<f:facet name="title">
 										<p:graphicImage value="/img/tab-soundcard-flat.png" width="30px" height="30px" style="vertical-align:bottom;border:none;"/>
@@ -46,12 +46,12 @@
 									</f:facet>
 									
 								    <p:dataTable widgetVar="playlist" id="playlist" var="playlist" value="#{userController.playlist}" 
-								    	rowKey="#{playlist}" resizableColumns="true" 
-								    	scrollable="true" scrollHeight="300" filteredValue="#{userController.filteredPlaylist}">
-	       									<p:column filterBy="musicName" filterMatchMode="contains" filterStyleClass="musicNameFilter" filterStyle="width:50%;text-align:center">
+								    	rowKey="#{playlist}" resizableColumns="true" scrollable="true" scrollHeight="300" 
+								    	filteredValue="#{userController.filteredPlaylist}">
+	       									<p:column filterBy="musicName" filterMatchMode="contains" filterStyleClass="musicNameFilter" filterStyle="width:80%;text-align:center" style="width:70%">
 	           									#{playlist.musicName}
        										</p:column>
-	       									<p:column filterBy="requester" filterMatchMode="contains" filterStyleClass="requestFilter" filterStyle="width:50%;text-align:center">  
+	       									<p:column filterBy="requester" filterMatchMode="contains" filterStyleClass="requestFilter" filterStyle="width:80%;text-align:center" style="width:30%">  
 	           									#{playlist.requester}
 	       									</p:column>
 							        </p:dataTable>
@@ -64,8 +64,8 @@
 									</f:facet>		
 									
 								    <p:dataTable widgetVar="allMusic" id="allMusic" var="allMusic" value="#{userController.allMusic}" 
-								    	selection="#{userController.selected}" selectionMode="single" rowKey="#{allMusic}" 
-								    	scrollable="true" scrollHeight="300" filteredValue="#{userController.filteredAllMusic}">
+								    	selectionMode="single" rowKey="#{allMusic}" scrollable="true" scrollHeight="300" 
+								    	filteredValue="#{userController.filteredAllMusic}">
                     
                   							<p:column filterBy="musicName" filterMatchMode="contains" filterStyleClass="musicNameFilter" filterStyle="width:50%;text-align:center">
 	           									<p:commandButton icon="ui-icon-plusthick" actionListener="#{userController.onRowSelect(allMusic)}" style="width:30px;height:30px;" oncomplete="setPlaceholder();" update="@widgetVar(messages)"/>
@@ -154,6 +154,7 @@
 	    		<p:socket onMessage="handleRefreshPlaylistTable" channel="/refreshPlaylistTable" />
 	    		<p:socket onMessage="handleRefreshAllmusicTable" channel="/refreshAllmusicTable" />
 	    		<p:socket onMessage="handlePlayingImage" channel="/playingImage" />	
+	    		<p:socket onMessage="handleServerMessage" channel="/serverMessage" />
 		</h:form>
 	</h:body>
 	<style type="text/css">
@@ -233,6 +234,10 @@
 		
 		function handlePlayingImage(imageSource) {
 			$(".playingImage").attr("src", imageSource);
+		}
+		
+		function handleServerMessage(message) {
+			alert(message);
 		}
 		
 		function shoutcastToggle() {

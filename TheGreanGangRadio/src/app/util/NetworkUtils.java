@@ -114,8 +114,9 @@ public class NetworkUtils {
 			networkDetail.setHostName(hostName);
 
 			session.setAttribute(Constants.SESSION_REMOTE_NETWORK_DETAIL, networkDetail);
-		}
-		log.debug("Entering >> " + networkDetail.getHostName() + " [" + networkDetail.getIpAddress() + "]");
+			
+			log.debug("Entering >> " + networkDetail.getHostName() + " [" + networkDetail.getIpAddress() + "]");
+		}		
 
 //		log.debug("Quit managingSessionNetworkDetail");
 		return networkDetail;
@@ -165,7 +166,7 @@ public class NetworkUtils {
 		} else if("piyawan-y".equalsIgnoreCase(hostName)) {
 			alias = "JipJup";
 		}
-		log.debug("alias = " + alias);
+//		log.debug("alias = " + alias);
 		
 //		log.debug("Quit getAliasOfHostName");
 		return alias;

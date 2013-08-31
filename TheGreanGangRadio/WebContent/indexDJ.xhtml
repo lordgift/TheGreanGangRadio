@@ -38,20 +38,19 @@
 						</td>
 						<td align="left" rowspan="2">
 							<h:inputText styleClass="suggestPanel" onclick="this.select();" style="width:100%;font-size:16px;border:0;border-radius:10px;text-align:center;background-color:#888"/>
-							<p:tabView  effectDuration="normal" id="tabAll">
+							<p:tabView effectDuration="normal" id="tabAll" style="text-align:left;" effect="fade">
 								<p:tab titleStyle="font-size:small;">
 									<f:facet name="title">
-										<p:graphicImage value="/img/tab-soundcard-flat.png" width="30px" height="30px" style="vertical-align:bottom;border:none;"/>
+										<p:graphicImage value="/img/tab-soundcard-flat.png" width="30px" height="30px" style="vertical-align:bottom;border:none;" />
 										Playlist
 									</f:facet>
-									
 								    <p:dataTable widgetVar="playlist" id="playlist" var="playlist" value="#{djController.playlist}" 
-								    	rowKey="#{playlist}" resizableColumns="true" 
-								    	scrollable="true" scrollHeight="300" filteredValue="#{djController.filteredPlaylist}">
-	       									<p:column filterBy="musicName" filterMatchMode="contains" filterStyleClass="musicNameFilter" filterStyle="width:50%;text-align:center">
+								    	rowKey="#{playlist}" resizableColumns="true" scrollable="true" scrollHeight="300" 
+								    	filteredValue="#{djController.filteredPlaylist}"> 
+	       									<p:column filterBy="musicName" filterMatchMode="contains" filterStyleClass="musicNameFilter" filterStyle="width:80%;text-align:center" style="width:70%">
 	           									#{playlist.musicName}
        										</p:column>
-	       									<p:column filterBy="requester" filterMatchMode="contains" filterStyleClass="requestFilter" filterStyle="width:50%;text-align:center">  
+	       									<p:column filterBy="requester" filterMatchMode="contains" filterStyleClass="requestFilter" filterStyle="width:80%;text-align:center" style="width:30%">  
 	           									#{playlist.requester}
 	       									</p:column>
 							        </p:dataTable>
@@ -64,8 +63,8 @@
 									</f:facet>		
 									
 								    <p:dataTable widgetVar="allMusic" id="allMusic" var="allMusic" value="#{djController.allMusic}" 
-								    	selection="#{djController.selected}" selectionMode="single" rowKey="#{allMusic}" 
-								    	scrollable="true" scrollHeight="300" filteredValue="#{djController.filteredAllMusic}">
+								    	selectionMode="single" rowKey="#{allMusic}" scrollable="true" scrollHeight="300" 
+								    	filteredValue="#{djController.filteredAllMusic}">
                     
                   							<p:column filterBy="musicName" filterMatchMode="contains" filterStyleClass="musicNameFilter" filterStyle="width:50%;text-align:center">
 	           									<p:commandButton icon="ui-icon-plusthick" actionListener="#{djController.onRowSelect(allMusic)}" style="width:30px;height:30px;" oncomplete="setPlaceholder();" update="@widgetVar(messages)"/>
@@ -135,7 +134,10 @@
 									</tr>
 								</table>
 							</p:panel>	
-						</td>
+							<BR/>
+							<p:inputText value="#{djController.serverMessage}" size="8"/>
+							<p:commandButton action="#{djController.sendMessage}" icon="ui-icon-comment" style="width:25px;height:25px;"/>
+						</td>						
 					</tr>
 					<tr>
 						<td></td>
@@ -149,12 +151,12 @@
 			            			label="Choose (.mp3/.flac/.wav)"/>
 		            		</p:inplace>		            		
 		            		&nbsp;
-		            		<p:commandButton action="#{djController.reReadFromDirectory}" icon="ui-icon-refresh" style="width:25px;height:25px;"/>
 						</td>
 					</tr>
 					<tr><td>&nbsp;</td></tr>
 				</table>
 				
+				<p:commandButton styleClass="reloadDirectory" style="visibility:hidden;" update="@widgetVar(allMusic)" action="#{djController.reloadDirectory}" />				
 				<p:commandButton styleClass="refreshAllMusic" style="visibility:hidden;" update="@widgetVar(allMusic)" oncomplete="setPlaceholder()"/>
 				<p:commandButton styleClass="refreshPlaylist" style="visibility:hidden;" update="@widgetVar(playlist)" oncomplete="setPlaceholder()"/>
 				

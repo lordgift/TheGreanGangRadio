@@ -46,7 +46,6 @@ public class UserController {
 	private String remoteHostName;
 	private List<Music> playlist;
 	private List<Music> allMusic;
-	private Music selected;
 	private List<Music> filteredPlaylist;
 	private List<Music> filteredAllMusic;
 
@@ -78,14 +77,6 @@ public class UserController {
 		this.allMusic = allMusic;
 	}
 
-	public Music getSelected() {
-		return selected;
-	}
-
-	public void setSelected(Music selected) {
-		this.selected = selected;
-	}
-	
 	public List<Music> getFilteredPlaylist() {
 		return filteredPlaylist;
 	}
@@ -115,28 +106,24 @@ public class UserController {
 	public void onRowSelect(Music music) {
 		log.debug("Enter onRowSelect");
 		
-		/* no use selected row */
-//		if(selected == null) {
-			selected = music;
-//		}
 		if(filteredAllMusic != null)
-			filteredAllMusic.remove(selected);
-		allMusic.remove(selected);
-		WinampUtils.appendFileToPlaylist(selected.getMusicName());
-		selected.setRequester(NetworkUtils.getAliasOfHostName(remoteHostName));
-		playlist.add(selected);
-
+			filteredAllMusic.remove(music);
+//		allMusic.remove(music);
+		WinampUtils.appendFileToPlaylist(music.getMusicName());
+		
+		music.setRequester(NetworkUtils.getAliasOfHostName(remoteHostName));
+		playlist.add(music);
 		context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlist);
 
-		log.debug(selected.getMusicName() + " by " + selected.getRequester());
+		log.debug(music.getMusicName() + " by " + music.getRequester());
 
 		FacesMessage msg = new FacesMessage();
 		msg.setSeverity(FacesMessage.SEVERITY_INFO);
 		msg.setSummary("Music Added by " + NetworkUtils.getInstance().managingSessionNetworkDetail().getHostName());
-		msg.setDetail(selected.getMusicName() + " by " + selected.getRequester());
+		msg.setDetail(music.getMusicName() + " by " + music.getRequester());
 
 		FacesContext.getCurrentInstance().addMessage(null, msg);
-
+		
 		pushContext.push(Constants.CHANNEL_REFRESH_ALLMUSIC_TABLE, null);
 		pushContext.push(Constants.CHANNEL_REFRESH_PLAYLIST_TABLE, null);
 		
