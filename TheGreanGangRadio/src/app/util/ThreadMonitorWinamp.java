@@ -83,17 +83,5 @@ public class ThreadMonitorWinamp extends Thread {
 			}
 		}
 	}
-	
-	@Override
-	protected void finalize() throws Throwable {
-		log.debug("FINALIZING");
-//		// 		try {
-//		WinampController.exit();
-//	} catch (InvalidHandle e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	}
-//	ThreadMonitorWinamp.getInstance().interrupt();
-		super.finalize();
-	}
+
 }

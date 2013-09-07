@@ -45,9 +45,9 @@
 										Playlist
 									</f:facet>
 									
-								    <p:dataTable widgetVar="playlist" id="playlist" var="playlist" value="#{userController.playlist}" 
+								    <p:dataTable widgetVar="playlist" id="playlist" var="playlist" value="#{applicationScope.playlistApplication}" 
 								    	rowKey="#{playlist}" resizableColumns="true" scrollable="true" scrollHeight="300" 
-								    	filteredValue="#{userController.filteredPlaylist}">
+								    	filteredValue="#{userController.filteredPlaylist}"> 
 	       									<p:column filterBy="musicName" filterMatchMode="contains" filterStyleClass="musicNameFilter" filterStyle="width:80%;text-align:center" style="width:70%">
 	           									#{playlist.musicName}
        										</p:column>
@@ -64,7 +64,7 @@
 									</f:facet>		
 									
 								    <p:dataTable widgetVar="allMusic" id="allMusic" var="allMusic" value="#{userController.allMusic}" 
-								    	selectionMode="single" rowKey="#{allMusic}" scrollable="true" scrollHeight="300" 
+								    	rowKey="#{allMusic}" scrollable="true" scrollHeight="300" 
 								    	filteredValue="#{userController.filteredAllMusic}">
                     
                   							<p:column filterBy="musicName" filterMatchMode="contains" filterStyleClass="musicNameFilter" filterStyle="width:50%;text-align:center">
@@ -118,7 +118,7 @@
 											<div style="font-size:12px;color:gray;padding-left:5px;height:30px;">											
 												Requested by <h:outputText id="playingRequester" value="#{userController.playingRequester}" styleClass="playingRequester"/>
 											</div>
-											<audio src="#{userController.streamingUrl}/;" controls="controls" autoplay="autoplay">
+											<audio src="#{userController.streamingUrl}/;" type="audio/mpeg" controls="controls" autoplay="autoplay">
 												Your Browser Not Support HTML5 Audio tag
 											</audio>
 										</td>

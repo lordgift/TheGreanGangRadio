@@ -44,7 +44,7 @@
 										<p:graphicImage value="/img/tab-soundcard-flat.png" width="30px" height="30px" style="vertical-align:bottom;border:none;" />
 										Playlist
 									</f:facet>
-								    <p:dataTable widgetVar="playlist" id="playlist" var="playlist" value="#{djController.playlist}" 
+								    <p:dataTable widgetVar="playlist" id="playlist" var="playlist" value="#{applicationScope.playlistApplication}" 
 								    	rowKey="#{playlist}" resizableColumns="true" scrollable="true" scrollHeight="300" 
 								    	filteredValue="#{djController.filteredPlaylist}"> 
 	       									<p:column filterBy="musicName" filterMatchMode="contains" filterStyleClass="musicNameFilter" filterStyle="width:80%;text-align:center" style="width:70%">
@@ -63,7 +63,7 @@
 									</f:facet>		
 									
 								    <p:dataTable widgetVar="allMusic" id="allMusic" var="allMusic" value="#{djController.allMusic}" 
-								    	selectionMode="single" rowKey="#{allMusic}" scrollable="true" scrollHeight="300" 
+								    	 rowKey="#{allMusic}" scrollable="true" scrollHeight="300" 
 								    	filteredValue="#{djController.filteredAllMusic}">
                     
                   							<p:column filterBy="musicName" filterMatchMode="contains" filterStyleClass="musicNameFilter" filterStyle="width:50%;text-align:center">
@@ -151,12 +151,12 @@
 			            			label="Choose (.mp3/.flac/.wav)"/>
 		            		</p:inplace>		            		
 		            		&nbsp;
+		            		<p:commandButton styleClass="reloadDirectory" update="@widgetVar(allMusic)" action="#{djController.reloadDirectory}" icon="ui-icon-refresh" style="width:30px;height:30px;"/>
 						</td>
 					</tr>
 					<tr><td>&nbsp;</td></tr>
 				</table>
 				
-				<p:commandButton styleClass="reloadDirectory" style="visibility:hidden;" update="@widgetVar(allMusic)" action="#{djController.reloadDirectory}" />				
 				<p:commandButton styleClass="refreshAllMusic" style="visibility:hidden;" update="@widgetVar(allMusic)" oncomplete="setPlaceholder()"/>
 				<p:commandButton styleClass="refreshPlaylist" style="visibility:hidden;" update="@widgetVar(playlist)" oncomplete="setPlaceholder()"/>
 				

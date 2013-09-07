@@ -36,7 +36,7 @@ public class DjController {
 	private static final Logger log = Logger.getLogger(DjController.class);
 
 	HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-	ServletContext context = request.getSession().getServletContext();
+	ServletContext context = request.getServletContext();
 	PushContext pushContext = PushContextFactory.getDefault().getPushContext();
 
 	private String playingImage;
@@ -51,7 +51,7 @@ public class DjController {
 	private String remoteHostName;
 	private boolean playBooleanButton;
 	private boolean stopBooleanButton;
-	private List<Music> playlist;
+//	private List<Music> playlist;
 	private List<Music> allMusic;
 	private List<Music> filteredPlaylist;
 	private List<Music> filteredAllMusic;
@@ -73,10 +73,10 @@ public class DjController {
 		remoteAddress = request.getRemoteAddr();
 		remoteHostName = NetworkUtils.getInstance().getHostNameByCommandLine(remoteAddress);
 
-		List<Music> list = (List<Music>) context.getAttribute(Constants.SERVLETCONTEXT_PLAYLIST);
-		if(list == null) {
-			playlist = new ArrayList<Music>();
-			context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlist);
+		List<Music> playlistApplication = (List<Music>) context.getAttribute(Constants.SERVLETCONTEXT_PLAYLIST);
+		if(playlistApplication == null) {
+			playlistApplication = new ArrayList<Music>();
+			context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlistApplication);
 		}
 		allMusic = FileUtils.getInstance().getMusicListFromDirectory();
 
@@ -109,28 +109,20 @@ public class DjController {
 		this.filteredAllMusic = filteredAllMusic;
 	}
 	
-	public List<Music> getPlaylist() {
-		playlist = (List<Music>) context.getAttribute(Constants.SERVLETCONTEXT_PLAYLIST);
-		return playlist;
-	}
-
-	public void setPlaylist(List<Music> playlist) {
-		context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlist);
-		this.playlist = playlist;
-	}
-	
 	public void onRowSelect(Music music) {
 		log.debug("Enter onRowSelect");
 		
 		
 		if(filteredAllMusic != null)
 			filteredAllMusic.remove(music);
-//		allMusic.remove(music);
+		allMusic.remove(music);
 		WinampUtils.appendFileToPlaylist(music.getMusicName());
 		
 		music.setRequester(NetworkUtils.getAliasOfHostName(remoteHostName));
-		playlist.add(music);
-		context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlist);
+		
+		List<Music> playlistApplication = (List<Music>) context.getAttribute(Constants.SERVLETCONTEXT_PLAYLIST);
+		playlistApplication.add(music);
+		context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlistApplication);
 
 		log.debug(music.getMusicName() + " by " + music.getRequester());
 
@@ -277,7 +269,7 @@ public class DjController {
 		allMusic.clear();
 		allMusic.addAll(musics);
 
-		context.setAttribute(Constants.SERVLETCONTEXT_ALLMUSIC, allMusic);
+//		context.setAttribute(Constants.SERVLETCONTEXT_ALLMUSIC, allMusic);
 //		pushContext.push(Constants.CHANNEL_REFRESH_ALLMUSIC_TABLE, null);
 		log.debug("Exit reloadDirectory");
 	}

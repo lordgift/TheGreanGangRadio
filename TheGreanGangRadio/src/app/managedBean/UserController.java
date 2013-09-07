@@ -44,7 +44,7 @@ public class UserController {
 	private String githubButtonUrl = "http://ghbtns.com/github-btn.html?user=lordgift&repo=TheGreanGangRadio&type=watch&count=true";
 	private String remoteAddress;
 	private String remoteHostName;
-	private List<Music> playlist;
+//	private List<Music> playlist;
 	private List<Music> allMusic;
 	private List<Music> filteredPlaylist;
 	private List<Music> filteredAllMusic;
@@ -57,10 +57,10 @@ public class UserController {
 		remoteAddress = request.getRemoteAddr();
 		remoteHostName = NetworkUtils.getInstance().getHostNameByCommandLine(remoteAddress);
 		
-		List<Music> list = (List<Music>) context.getAttribute(Constants.SERVLETCONTEXT_PLAYLIST);
-		if(list == null) {
-			playlist = new ArrayList<Music>();
-			context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlist);
+		List<Music> playlistApplication = (List<Music>) context.getAttribute(Constants.SERVLETCONTEXT_PLAYLIST);
+		if(playlistApplication == null) {
+			playlistApplication = new ArrayList<Music>();
+			context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlistApplication);
 		}
 		allMusic = FileUtils.getInstance().getMusicListFromDirectory();
 		
@@ -93,27 +93,18 @@ public class UserController {
 		this.filteredAllMusic = filteredAllMusic;
 	}
 	
-	public List<Music> getPlaylist() {
-		playlist = (List<Music>) context.getAttribute(Constants.SERVLETCONTEXT_PLAYLIST);
-		return playlist;
-	}
-
-	public void setPlaylist(List<Music> playlist) {
-		context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlist);
-		this.playlist = playlist;
-	}
-	
 	public void onRowSelect(Music music) {
 		log.debug("Enter onRowSelect");
 		
 		if(filteredAllMusic != null)
 			filteredAllMusic.remove(music);
-//		allMusic.remove(music);
+		allMusic.remove(music);
 		WinampUtils.appendFileToPlaylist(music.getMusicName());
 		
 		music.setRequester(NetworkUtils.getAliasOfHostName(remoteHostName));
-		playlist.add(music);
-		context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlist);
+		List<Music> playlistApplication = (List<Music>) context.getAttribute(Constants.SERVLETCONTEXT_PLAYLIST);
+		playlistApplication.add(music);
+		context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlistApplication);
 
 		log.debug(music.getMusicName() + " by " + music.getRequester());
 
