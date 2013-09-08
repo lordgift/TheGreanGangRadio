@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.SelectableDataModel;
 import org.primefaces.push.PushContext;
 import org.primefaces.push.PushContextFactory;
 
@@ -52,7 +51,7 @@ public class DjController {
 	private boolean playBooleanButton;
 	private boolean stopBooleanButton;
 //	private List<Music> playlist;
-	private List<Music> allMusic;
+//	private List<Music> allMusic;
 	private List<Music> filteredPlaylist;
 	private List<Music> filteredAllMusic;
 	private String serverMessage;
@@ -61,7 +60,7 @@ public class DjController {
 		ThreadMonitorWinamp.getInstance().start();
 
 		// WinampUtils.clearWinampPlayList();
-
+		
 		try {
 			String hostAddress = InetAddress.getLocalHost().getHostAddress();
 			shareUrl = Constants.PROTOCOL_HTTP + hostAddress + Constants.PORT_JBOSS + Constants.CONTEXT_ROOT;
@@ -78,21 +77,15 @@ public class DjController {
 			playlistApplication = new ArrayList<Music>();
 			context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlistApplication);
 		}
-		allMusic = FileUtils.getInstance().getMusicListFromDirectory();
+		
+		List<Music> allMusicApplication = FileUtils.getInstance().getMusicListFromDirectory();
+		context.setAttribute(Constants.SERVLETCONTEXT_ALLMUSIC, allMusicApplication);
 
 		promptWelcome = "Welcome, ";
 		promptTextHost = "For users : ";
 	}
 
 	/*========	Music Table	========*/
-	public List<Music> getAllMusic() {
-		return allMusic;
-	}
-
-	public void setAllMusic(List<Music> allMusic) {
-		this.allMusic = allMusic;
-	}
-
 	public List<Music> getFilteredPlaylist() {
 		return filteredPlaylist;
 	}
@@ -115,7 +108,11 @@ public class DjController {
 		
 		if(filteredAllMusic != null)
 			filteredAllMusic.remove(music);
-		allMusic.remove(music);
+		
+		List<Music> allMusicApplication = (List<Music>) context.getAttribute(Constants.SERVLETCONTEXT_ALLMUSIC);
+		allMusicApplication.remove(music);
+		context.setAttribute(Constants.SERVLETCONTEXT_ALLMUSIC, allMusicApplication);		
+		
 		WinampUtils.appendFileToPlaylist(music.getMusicName());
 		
 		music.setRequester(NetworkUtils.getAliasOfHostName(remoteHostName));
@@ -166,8 +163,11 @@ public class DjController {
 				FileUtils.getInstance().copyFile(fileName, inputStream);
 
 				Music music = new Music(fileName, null);
-				allMusic.add(music);
-				allMusic = FileUtils.getInstance().checkDuplicateListElement(allMusic, music);
+				List<Music> allMusicApplication = (List<Music>) context.getAttribute(Constants.SERVLETCONTEXT_ALLMUSIC);
+				allMusicApplication.add(music);					
+				allMusicApplication = FileUtils.getInstance().checkDuplicateListElement(allMusicApplication, music);
+				context.setAttribute(Constants.SERVLETCONTEXT_ALLMUSIC, allMusicApplication);		
+				
 				msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Uploaded!", fileName);
 			} else {
 				msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "Already Exist!", fileName);
@@ -265,12 +265,14 @@ public class DjController {
 
 	public void reloadDirectory() {
 		log.debug("Enter reloadDirectory");
-		List<Music> musics = FileUtils.getInstance().getMusicListFromDirectory();
-		allMusic.clear();
-		allMusic.addAll(musics);
 
-//		context.setAttribute(Constants.SERVLETCONTEXT_ALLMUSIC, allMusic);
-//		pushContext.push(Constants.CHANNEL_REFRESH_ALLMUSIC_TABLE, null);
+		List<Music> musics = FileUtils.getInstance().getMusicListFromDirectory();
+		List<Music> allMusicApplication = (List<Music>) context.getAttribute(Constants.SERVLETCONTEXT_ALLMUSIC);
+		allMusicApplication.clear();
+		allMusicApplication.addAll(musics);
+		context.setAttribute(Constants.SERVLETCONTEXT_ALLMUSIC, allMusicApplication);
+		
+		pushContext.push(Constants.CHANNEL_REFRESH_ALLMUSIC_TABLE, null);
 		log.debug("Exit reloadDirectory");
 	}
 	

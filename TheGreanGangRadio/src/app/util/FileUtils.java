@@ -100,6 +100,13 @@ public class FileUtils {
 		}
 	}
 	
+	/**
+	 * avoid duplicate added element of list (for make sure it)
+	 * 
+	 * @param list
+	 * @param element
+	 * @return
+	 */
 	public <T> List<T> checkDuplicateListElement(List<T> list, T element) {
 		List<T> removingList = new ArrayList<T>();
 		

@@ -11,10 +11,6 @@ import org.apache.log4j.Logger;
 import org.primefaces.push.PushContext;
 import org.primefaces.push.PushContextFactory;
 
-import com.qotsa.exception.InvalidHandle;
-import com.qotsa.jni.controller.WinampController;
-import com.sun.management.GarbageCollectorMXBean;
-
 import app.pojo.Music;
 
 public class ThreadMonitorWinamp extends Thread {
