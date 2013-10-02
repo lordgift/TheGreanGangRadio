@@ -103,7 +103,7 @@ public class UserController {
 		playlistApplication.add(music);
 		context.setAttribute(Constants.SERVLETCONTEXT_PLAYLIST, playlistApplication);
 
-		log.debug(music.getMusicName() + " by " + music.getRequester());
+		log.info("Adding " + music.getMusicName() + " by " + music.getRequester());
 
 		FacesMessage msg = new FacesMessage();
 		msg.setSeverity(FacesMessage.SEVERITY_INFO);

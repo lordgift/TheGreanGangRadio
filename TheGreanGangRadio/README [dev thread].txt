@@ -1,9 +1,11 @@
-##### for JavaWinampAPI #####
+##### setup first #####
 1. Server&Project must run on 32-bit JVM
  	- add System variables >>> JAVA_HOME_THE_GREAN_GANG to your java 32bit
 2. to know wpcom.dll
 	- copy wpcom.dll to  <jboss root>\bin 
 		or, add >>>>>  -Djava.library.path="<wpcom.dll directory>" to JVM arguments(on server)
+	
+	
 	
 ##### log4j ##### 
 1. to know Log4j Properties 

@@ -61,10 +61,10 @@ public class ThreadMonitorWinamp extends Thread {
 						}
 					}
 					pushContext.push(Constants.CHANNEL_CHANGING_MUSIC, musicDisplay);
-					log.debug("pushing to client ['"+musicDisplay.getMusicName()+"','"+musicDisplay.getRequester()+"']");
+					log.info("pushing to client ['"+musicDisplay.getMusicName()+"','"+musicDisplay.getRequester()+"']");
 					
 					/* force garbage collector */
-					System.gc();
+//					System.gc();
 					
 //					log.debug(playedMusic);
 //					log.debug(playingMusic);

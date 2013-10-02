@@ -56,10 +56,12 @@ public class FileUtils {
 		
 		File directoryFile = new File(ABSOLUTEPATH_THE_GREAN_GANG_RADIO);		
 		for (File file : directoryFile.listFiles()) {
-			Music music = new Music(file.getName(),null);
-			musics.add(music);
+			//avoid AlbumArt in playlist
+			if( !file.getName().contains(".jpg") ) {
+				Music music = new Music(file.getName(),null);
+				musics.add(music);
+			}
 		}
-//		log.debug(musicNames);		
 		
 		log.debug("Quit getMusicListFromDirectory");
 		return musics;
@@ -92,7 +94,7 @@ public class FileUtils {
 			out.flush();
 			out.close();
 
-			log.debug("uploading : " + fileName);
+			log.info("uploading : " + fileName);
 		} catch (IOException e) {			
 			log.error("Error in copyFile", e);
 		} finally {

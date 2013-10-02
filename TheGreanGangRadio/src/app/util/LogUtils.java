@@ -13,8 +13,7 @@ public class LogUtils {
 		try {
 			Properties log4jProperties = new Properties();
 
-			// if use this must export log4j.properties as .jar then fill path
-			// in .jar into variable
+			// if use this must export log4j.properties as .jar then fill path in .jar into variable
 			String logFile = "log4j/log4j.properties";
 
 			// if use this must place log4j.properties in WEB-INF/classes/
