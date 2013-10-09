@@ -4,7 +4,8 @@
 2. to know wpcom.dll
 	- copy wpcom.dll to  <jboss root>\bin 
 		or, add >>>>>  -Djava.library.path="<wpcom.dll directory>" to JVM arguments(on server)
-	
+3. goto C:\Windows\System32\drivers\etc\hosts then add following host to avoid plugins request to yp.shoutcast.com
+	127.0.0.1	yp.shoutcast.com	
 	
 	
 ##### log4j ##### 
@@ -25,4 +26,4 @@ java.lang.UnsatisfiedLinkError: Native Library ..............\wpcom.dll already 
 FIX by restart server
 
 
-Develop on Eclipse Juno, JBoss AS 7.1
+Develop on Eclipse Kepler, JBoss AS 7.1
