@@ -11,14 +11,14 @@
 		<title>The Grean Gang Radio</title>
 		<link rel="icon" type="image/vnd.microsoft.icon" href="#{request.contextPath}/img/headphone_red.ico"/>
 	</h:head>	
-	<h:body style="background-image:url('#{request.contextPath}/img/Simple-Design-for-Abstract-Wallpaper.jpg');background-attachment:fixed">
+	<h:body style="background-image:url('#{request.contextPath}/img/grey-website-background.jpg');background-attachment:fixed">
 		<h:form>
 				<h:inputHidden value="#{djController.remoteAddress}" id="remoteAddress" />
 				<table width="100%" align="center" >
 					<tr>
-						<td align="center" colspan="2">
-							<img src="#{request.contextPath}/img/TheGreanGangRadioText.png" id="logo" 
-								style="border-radius:25px" />
+						<td colspan="2" style="width:100%;background-color:#e74c3c;height:40px;border-radius:10px;position:inherit">
+							<p:graphicImage value="img/Media-winamp-icon.png" style="width:40px;height:40px;vertical-align:middle"/>
+							<p:outputLabel value="The Grean Gang Radio : DJ by yourself" />
 						</td>
 					</tr>
 					<tr><td>&nbsp;</td></tr>
@@ -46,7 +46,8 @@
 									</f:facet>
 								    <p:dataTable widgetVar="playlist" id="playlist" var="playlist" value="#{applicationScope.playlistApplication}" 
 								    	rowKey="#{playlist}" resizableColumns="true" scrollable="true" scrollHeight="300" 
-								    	filteredValue="#{djController.filteredPlaylist}"> 
+								    	filteredValue="#{djController.filteredPlaylist}"
+								    	style="font-size:smaller"> 
 	       									<p:column filterBy="musicName" filterMatchMode="contains" filterStyleClass="musicNameFilter" filterStyle="width:80%;text-align:center" style="width:70%">
 	           									#{playlist.musicName}
        										</p:column>
@@ -64,7 +65,8 @@
 									
 								    <p:dataTable widgetVar="allMusic" id="allMusic" var="allMusic" value="#{applicationScope.allMusicApplication}" 
 								    	 rowKey="#{allMusic}" scrollable="true" scrollHeight="300" 
-								    	filteredValue="#{djController.filteredAllMusic}">
+								    	filteredValue="#{djController.filteredAllMusic}"
+								    	style="font-size:smaller">
                     
                   							<p:column filterBy="musicName" filterMatchMode="contains" filterStyleClass="musicNameFilter" filterStyle="width:50%;text-align:center">
 	           									<p:commandButton icon="ui-icon-plusthick" actionListener="#{djController.onRowSelect(allMusic)}" style="width:30px;height:30px;" oncomplete="setPlaceholder();" update="@widgetVar(messages)"/>
@@ -142,16 +144,16 @@
 					<tr>
 						<td></td>
 						<td align="center">
-							<p:inplace id="uploader" editor="true" label="upload more file to Server" style="color:gray">
 						    	<p:fileUpload fileUploadListener="#{djController.handleFileUpload}"
 			            			mode="advanced" 
 			            			multiple="true"
 			            			update="messages"
 			            			allowTypes="/(\.|\/)(mp3|flac|wav)$/" 
-			            			label="Choose (.mp3/.flac/.wav)"/>
-		            		</p:inplace>		            		
+			            			label="Choose (.mp3/.flac/.wav)"
+			            			style="font-size:smaller"/>
 		            		&nbsp;
-		            		<p:commandButton styleClass="reloadDirectory" update="@widgetVar(allMusic)" action="#{djController.reloadDirectory}" icon="ui-icon-refresh" style="width:30px;height:30px;"/>
+		            		<BR/>
+		            		<p:commandButton title="Reload Directory" styleClass="reloadDirectory" update="@widgetVar(allMusic)" action="#{djController.reloadDirectory}" icon="ui-icon-refresh" style="width:30px;height:30px;"/>
 						</td>
 					</tr>
 					<tr><td>&nbsp;</td></tr>

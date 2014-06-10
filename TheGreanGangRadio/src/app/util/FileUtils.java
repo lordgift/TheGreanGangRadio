@@ -17,7 +17,7 @@ public class FileUtils {
 	
 	private static final FileUtils INSTANCE = new FileUtils();
 	private static boolean isInitial = false;
-	public static final String ABSOLUTEPATH_THE_GREAN_GANG_RADIO = "D:/My Box Files/TheGreanGangRadio/";
+	public static final String ABSOLUTEPATH_THE_GREAN_GANG_RADIO = "D:/TheGreanGangRadio/";
 
 	
 	private FileUtils(){};

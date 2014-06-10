@@ -117,7 +117,7 @@ public class NetworkUtils {
 
 			session.setAttribute(Constants.SESSION_REMOTE_NETWORK_DETAIL, networkDetail);
 			
-			log.debug("Entering >> " + networkDetail.getHostName() + " [" + networkDetail.getIpAddress() + "]");
+			log.info("Entering >> " + networkDetail.getHostName() + " [" + networkDetail.getIpAddress() + "]");
 		}		
 
 //		log.debug("Quit managingSessionNetworkDetail");
@@ -142,10 +142,10 @@ public class NetworkUtils {
 			alias = "Chocogemⓟ";
 			
 		} else if("pitchapong-b".equalsIgnoreCase(hostName)) {
-			alias = "งัว";
+			alias = "งัว เจอ ลองกอง";
 			
 		} else if("sirinthip-p".equalsIgnoreCase(hostName)) {
-			alias = "หม่ามี้";
+			alias = "Chalapao";
 			
 		} else if("nattapong-t".equalsIgnoreCase(hostName)) {
 			alias = "Akermiji";
@@ -164,6 +164,9 @@ public class NetworkUtils {
 			
 		} else if("CHINJA-PC".equalsIgnoreCase(hostName)) {
 			alias = "Chinja";
+			
+		} else if("ARSIRA-S".equalsIgnoreCase(hostName)) {
+			alias = "Katetiizz";
 			
 		} else if("piyawan-y".equalsIgnoreCase(hostName)) {
 			alias = "JipJup";
