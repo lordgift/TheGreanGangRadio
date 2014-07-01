@@ -22,7 +22,7 @@ public interface Constants {
 	public static final String PROTOCOL_HTTP = "http://";
 	public static final String PORT_SHOUTCAST = ":8000";
 	public static final String PORT_JBOSS = ":7810";
-	public static final String CONTEXT_ROOT = "/TheGreanGangRadio";
+	public static final String CONTEXT_ROOT = "/On-The-Job_Playground";
 	
 	public static final String PAGE_LANDING = "./index.xhtml";
 	public static final String PAGE_USERS = "/indexUser.xhtml";
